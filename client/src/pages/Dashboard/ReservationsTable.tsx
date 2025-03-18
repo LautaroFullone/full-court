@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import ReservationDetailsModal from './ReservationDetailsModal'
 import { Loader2, MoreHorizontal, Plus } from 'lucide-react'
-import { shiftSlots } from '@models'
+import { shiftSlots, Court, reservationTypes } from '@models'
 import { useMobile } from '@hooks'
 import {
    Button,
@@ -14,13 +16,65 @@ import {
    DropdownMenuItem,
    DropdownMenuTrigger,
 } from '@components'
-import ReservationDetailsModal from './ReservationDetailsModal'
+import { useState } from 'react'
 
-interface ReservationsTableProps {}
+interface ReservationsTableProps {
+   reservations: any[]
+   selectedCourt: Court | undefined
+   setReservations: (reservations: any[]) => void
+}
 
-const ReservationsTable = () => {
+const ReservationsTable: React.FC<ReservationsTableProps> = ({
+   selectedCourt,
+   reservations,
+   setReservations,
+}) => {
+   const [openReservationId, setOpenReservationId] = useState<number | null>(null)
+
    const isMobile = useMobile()
-   const isLoading = true
+   const isLoading = false
+
+   function getReservationTypeClass(type: string) {
+      const classes = {
+         clase: 'bg-blue-100 text-blue-800',
+         partido: 'bg-green-100 text-green-800',
+         torneo: 'bg-purple-100 text-purple-800',
+         otro: 'bg-amber-100 text-amber-800',
+      }
+      return classes[type as keyof typeof classes] || 'bg-gray-100 text-gray-800'
+   }
+
+   function handleManageConsumptions(reservationId: string) {
+      console.log('## handleManageConsumptions: ', reservationId)
+   }
+
+   const handleEditReservation = (reservationId: number) => {
+      console.log('## handleEditReservation: ', reservationId)
+      // En lugar de navegar, abrimos el modal de detalles
+      //setOpenReservationId(reservationId)
+   }
+
+   const handleCancelReservation = (reservationId: number) => {
+      console.log(`## handleEditReservation ${reservationId}`)
+   }
+
+   const handleReservationUpdate = (updatedReservation: any) => {
+      // Actualizar la reserva en el estado local
+      const updated = reservations.map((res) =>
+         res.id === updatedReservation.id ? updatedReservation : res
+      )
+      setReservations(updated)
+      // Mantener el modal abierto con los detalles actualizados
+      setOpenReservationId(updatedReservation.id)
+   }
+
+   const handleNewReservation = (timeSlot: string, court: number) => {
+      console.log(`## handleNewReservation`, timeSlot, court)
+
+      //    setSelectedTimeSlot(timeSlot)
+      //    setSelectedCourt(court)
+      //    setIsNewReservationOpen(true)
+   }
 
    return (
       <div className="rounded-lg border">
@@ -38,7 +92,7 @@ const ReservationsTable = () => {
             <div className="grid grid-cols-2 border-b">
                <div className="p-3 font-medium">Horario</div>
                <div className="p-3 font-medium text-center">
-                  Cancha {selectedCourtFilter || 1}
+                  {selectedCourt?.name || 'Cancha X'}
                </div>
             </div>
          )}
@@ -58,7 +112,7 @@ const ReservationsTable = () => {
                      {isMobile
                         ? // Vista móvil: solo mostrar la cancha seleccionada
                           (() => {
-                             const court = selectedCourtFilter || 1
+                             const court = 1 //selectedCourtFilter || 1
                              const reservation = reservations.find(
                                 (r) => r.court === court && r.timeSlot === timeSlot
                              )
@@ -81,9 +135,9 @@ const ReservationsTable = () => {
                                          <DialogTrigger asChild>
                                             <div
                                                className="flex flex-col items-center justify-center cursor-pointer h-full w-full rounded-md transition-colors"
-                                               onClick={() =>
-                                                  setOpenReservationId(reservation.id)
-                                               }
+                                               onClick={() => {
+                                                  //setOpenReservationId(reservation.id)
+                                               }}
                                             >
                                                <span className="font-medium text-sm text-center">
                                                   {reservation.name}
@@ -177,11 +231,11 @@ const ReservationsTable = () => {
                                                   Cancha {court} - {timeSlot}
                                                </DialogDescription>
                                             </DialogHeader>
-                                            <NewReservationForm
+                                            {/* <NewReservationForm
                                                timeSlot={timeSlot}
                                                court={court}
                                                date={currentDate}
-                                            />
+                                            /> */}
                                          </DialogContent>
                                       </Dialog>
                                    )}
@@ -325,4 +379,5 @@ const ReservationsTable = () => {
       </div>
    )
 }
+
 export default ReservationsTable
