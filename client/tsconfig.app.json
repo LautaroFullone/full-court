@@ -28,6 +28,7 @@
          "@components": ["./src/components/index.ts"],
          "@hooks": ["./src/hooks/index.ts"],
          "@lib": ["./src/lib/index.ts"],
+         "@models": ["./src/models/index.ts"],
          "@pages": ["./src/pages/index.ts"]
       }
    },

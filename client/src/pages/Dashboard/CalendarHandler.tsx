@@ -1,6 +1,6 @@
+import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from '@components'
 import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useCalendar } from '@hooks'
-import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from '@components'
 
 const CalendarHandler: React.FC = () => {
    const {

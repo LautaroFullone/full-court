@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useMobile } from '@hooks'
 import { es } from 'date-fns/locale'
 import { useNavigate } from 'react-router-dom'
-import { CalendarHandler, ReservationDetailsModal } from './components'
 import {
    CalendarIcon,
    ChevronLeft,
@@ -33,8 +32,10 @@ import {
    TabsList,
    TabsTrigger,
 } from '@components'
+import CalendarHandler from './CalendarHandler'
+import ReservationDetailsModal from './ReservationDetailsModal'
 
-// Horarios disponibles (8:00 a 00:00 con turnos de 1.5 horas)
+// // Horarios disponibles (8:00 a 00:00 con turnos de 1.5 horas)
 const timeSlots = [
    '8:00 - 9:30',
    '9:30 - 11:00',
@@ -285,16 +286,28 @@ const Dashboard = () => {
                   <div className="mt-4 flex justify-center">
                      <Tabs defaultValue="1" className="w-full">
                         <TabsList className="grid grid-cols-4 w-full">
-                           <TabsTrigger value="1" onClick={() => setSelectedCourtFilter(1)}>
+                           <TabsTrigger
+                              value="1"
+                              onClick={() => setSelectedCourtFilter(1)}
+                           >
                               Cancha 1
                            </TabsTrigger>
-                           <TabsTrigger value="2" onClick={() => setSelectedCourtFilter(2)}>
+                           <TabsTrigger
+                              value="2"
+                              onClick={() => setSelectedCourtFilter(2)}
+                           >
                               Cancha 2
                            </TabsTrigger>
-                           <TabsTrigger value="3" onClick={() => setSelectedCourtFilter(3)}>
+                           <TabsTrigger
+                              value="3"
+                              onClick={() => setSelectedCourtFilter(3)}
+                           >
                               Cancha 3
                            </TabsTrigger>
-                           <TabsTrigger value="4" onClick={() => setSelectedCourtFilter(4)}>
+                           <TabsTrigger
+                              value="4"
+                              onClick={() => setSelectedCourtFilter(4)}
+                           >
                               Cancha 4
                            </TabsTrigger>
                         </TabsList>
@@ -332,7 +345,9 @@ const Dashboard = () => {
                            {timeSlots.map((timeSlot) => (
                               <div
                                  key={timeSlot}
-                                 className={isMobile ? 'grid grid-cols-2' : 'grid grid-cols-5'}
+                                 className={
+                                    isMobile ? 'grid grid-cols-2' : 'grid grid-cols-5'
+                                 }
                               >
                                  <div className="p-3 border-r">{timeSlot}</div>
                                  {isMobile
@@ -340,7 +355,9 @@ const Dashboard = () => {
                                       (() => {
                                          const court = selectedCourtFilter || 1
                                          const reservation = reservations.find(
-                                            (r) => r.court === court && r.timeSlot === timeSlot
+                                            (r) =>
+                                               r.court === court &&
+                                               r.timeSlot === timeSlot
                                          )
                                          return (
                                             <div
@@ -353,16 +370,22 @@ const Dashboard = () => {
                                             >
                                                {reservation ? (
                                                   <Dialog
-                                                     open={openReservationId === reservation.id}
+                                                     open={
+                                                        openReservationId ===
+                                                        reservation.id
+                                                     }
                                                      onOpenChange={(open) =>
-                                                        !open && setOpenReservationId(null)
+                                                        !open &&
+                                                        setOpenReservationId(null)
                                                      }
                                                   >
                                                      <DialogTrigger asChild>
                                                         <div
                                                            className="flex flex-col items-center justify-center cursor-pointer h-full w-full rounded-md transition-colors"
                                                            onClick={() =>
-                                                              setOpenReservationId(reservation.id)
+                                                              setOpenReservationId(
+                                                                 reservation.id
+                                                              )
                                                            }
                                                         >
                                                            <span className="font-medium text-sm text-center">
@@ -425,13 +448,19 @@ const Dashboard = () => {
                                                      <ReservationDetailsModal
                                                         reservation={reservation}
                                                         onEdit={() =>
-                                                           handleEditReservation(reservation.id)
+                                                           handleEditReservation(
+                                                              reservation.id
+                                                           )
                                                         }
                                                         onCancel={() =>
-                                                           handleCancelReservation(reservation.id)
+                                                           handleCancelReservation(
+                                                              reservation.id
+                                                           )
                                                         }
                                                         onManageConsumptions={() =>
-                                                           handleManageConsumptions(reservation.id)
+                                                           handleManageConsumptions(
+                                                              reservation.id
+                                                           )
                                                         }
                                                         onUpdate={handleReservationUpdate}
                                                      />
@@ -444,7 +473,10 @@ const Dashboard = () => {
                                                            size="sm"
                                                            className="w-full h-full flex items-center justify-center"
                                                            onClick={() =>
-                                                              handleNewReservation(timeSlot, court)
+                                                              handleNewReservation(
+                                                                 timeSlot,
+                                                                 court
+                                                              )
                                                            }
                                                         >
                                                            <Plus className="h-4 w-4 mr-1" />
@@ -453,7 +485,9 @@ const Dashboard = () => {
                                                      </DialogTrigger>
                                                      <DialogContent className="sm:max-w-[600px] w-[95%] max-w-[95%] sm:w-auto">
                                                         <DialogHeader>
-                                                           <DialogTitle>Nueva Reserva</DialogTitle>
+                                                           <DialogTitle>
+                                                              Nueva Reserva
+                                                           </DialogTitle>
                                                            <DialogDescription>
                                                               Cancha {court} - {timeSlot}
                                                            </DialogDescription>
@@ -472,7 +506,9 @@ const Dashboard = () => {
                                     : // Vista desktop: mostrar todas las canchas
                                       [1, 2, 3, 4].map((court) => {
                                          const reservation = reservations.find(
-                                            (r) => r.court === court && r.timeSlot === timeSlot
+                                            (r) =>
+                                               r.court === court &&
+                                               r.timeSlot === timeSlot
                                          )
                                          return (
                                             <div
@@ -485,16 +521,22 @@ const Dashboard = () => {
                                             >
                                                {reservation ? (
                                                   <Dialog
-                                                     open={openReservationId === reservation.id}
+                                                     open={
+                                                        openReservationId ===
+                                                        reservation.id
+                                                     }
                                                      onOpenChange={(open) =>
-                                                        !open && setOpenReservationId(null)
+                                                        !open &&
+                                                        setOpenReservationId(null)
                                                      }
                                                   >
                                                      <DialogTrigger asChild>
                                                         <div
                                                            className="flex flex-col items-center justify-center cursor-pointer h-full w-full rounded-md transition-colors"
                                                            onClick={() =>
-                                                              setOpenReservationId(reservation.id)
+                                                              setOpenReservationId(
+                                                                 reservation.id
+                                                              )
                                                            }
                                                         >
                                                            <span className="font-medium text-sm text-center">
@@ -557,13 +599,19 @@ const Dashboard = () => {
                                                      <ReservationDetailsModal
                                                         reservation={reservation}
                                                         onEdit={() =>
-                                                           handleEditReservation(reservation.id)
+                                                           handleEditReservation(
+                                                              reservation.id
+                                                           )
                                                         }
                                                         onCancel={() =>
-                                                           handleCancelReservation(reservation.id)
+                                                           handleCancelReservation(
+                                                              reservation.id
+                                                           )
                                                         }
                                                         onManageConsumptions={() =>
-                                                           handleManageConsumptions(reservation.id)
+                                                           handleManageConsumptions(
+                                                              reservation.id
+                                                           )
                                                         }
                                                         onUpdate={handleReservationUpdate}
                                                      />
@@ -576,7 +624,10 @@ const Dashboard = () => {
                                                            size="sm"
                                                            className="w-full h-full flex items-center justify-center"
                                                            onClick={() =>
-                                                              handleNewReservation(timeSlot, court)
+                                                              handleNewReservation(
+                                                                 timeSlot,
+                                                                 court
+                                                              )
                                                            }
                                                         >
                                                            <Plus className="h-4 w-4 mr-1" />
@@ -585,7 +636,9 @@ const Dashboard = () => {
                                                      </DialogTrigger>
                                                      <DialogContent className="sm:max-w-[600px] w-[95%] max-w-[95%] sm:w-auto">
                                                         <DialogHeader>
-                                                           <DialogTitle>Nueva Reserva</DialogTitle>
+                                                           <DialogTitle>
+                                                              Nueva Reserva
+                                                           </DialogTitle>
                                                            <DialogDescription>
                                                               Cancha {court} - {timeSlot}
                                                            </DialogDescription>
@@ -624,7 +677,9 @@ const Dashboard = () => {
                                  key={reservation.id}
                                  className="grid grid-cols-3 md:grid-cols-5 py-3 items-center"
                               >
-                                 <div className="text-sm md:text-base">{reservation.timeSlot}</div>
+                                 <div className="text-sm md:text-base">
+                                    {reservation.timeSlot}
+                                 </div>
                                  <div className="text-sm md:text-base">
                                     Cancha {reservation.court}
                                  </div>
@@ -650,15 +705,21 @@ const Dashboard = () => {
                                           <Button
                                              variant="outline"
                                              size="sm"
-                                             onClick={() => setSelectedReservation(reservation)}
+                                             onClick={() =>
+                                                setSelectedReservation(reservation)
+                                             }
                                           >
                                              Detalles
                                           </Button>
                                        </DialogTrigger>
                                        <ReservationDetailsModal
                                           reservation={reservation}
-                                          onEdit={() => handleEditReservation(reservation.id)}
-                                          onCancel={() => handleCancelReservation(reservation.id)}
+                                          onEdit={() =>
+                                             handleEditReservation(reservation.id)
+                                          }
+                                          onCancel={() =>
+                                             handleCancelReservation(reservation.id)
+                                          }
                                           onManageConsumptions={() =>
                                              handleManageConsumptions(reservation.id)
                                           }
@@ -684,7 +745,13 @@ export default Dashboard
 function generateRandomReservations(date: Date) {
    const newReservations = []
    const reservationTypes = ['clase', 'partido', 'torneo', 'otro']
-   const names = ['Juan Pérez', 'María López', 'Carlos Rodríguez', 'Ana Martínez', 'Luis González']
+   const names = [
+      'Juan Pérez',
+      'María López',
+      'Carlos Rodríguez',
+      'Ana Martínez',
+      'Luis González',
+   ]
 
    for (let i = 0; i < 10; i++) {
       const court = Math.floor(Math.random() * 4) + 1
