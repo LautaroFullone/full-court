@@ -11,7 +11,6 @@ import {
    AlertDialogHeader,
    AlertDialogTitle,
    Button,
-   DialogClose,
    DialogContent,
    DialogDescription,
    DialogFooter,
@@ -24,8 +23,8 @@ import {
    TableHead,
    TableHeader,
    TableRow,
-} from '@/components'
-import { useMobile } from '@/hooks'
+} from '@components'
+import { useMobile } from '@hooks'
 
 // Tipos de reserva
 const reservationTypes = {
@@ -87,15 +86,21 @@ const ReservationDetailsModal: React.FC<ReservationDetailModalProps> = ({
                      <Clock className="h-5 w-5 text-muted-foreground" />
                      <div>
                         <p className="text-sm font-medium">Horario</p>
-                        <p className="text-sm text-muted-foreground">{reservation.timeSlot}</p>
+                        <p className="text-sm text-muted-foreground">
+                           {reservation.timeSlot}
+                        </p>
                      </div>
                   </div>
                   <div className="flex items-center gap-3">
                      <User className="h-5 w-5 text-muted-foreground" />
                      <div>
                         <p className="text-sm font-medium">Cliente</p>
-                        <p className="text-sm text-muted-foreground">{reservation.name}</p>
-                        <p className="text-xs text-muted-foreground">Tel: {reservation.phone}</p>
+                        <p className="text-sm text-muted-foreground">
+                           {reservation.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                           Tel: {reservation.phone}
+                        </p>
                      </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -105,7 +110,11 @@ const ReservationDetailsModal: React.FC<ReservationDetailModalProps> = ({
                      <div>
                         <p className="text-sm font-medium">Tipo de Reserva</p>
                         <p className="text-sm text-muted-foreground">
-                           {reservationTypes[reservation.type as keyof typeof reservationTypes]}
+                           {
+                              reservationTypes[
+                                 reservation.type as keyof typeof reservationTypes
+                              ]
+                           }
                         </p>
                      </div>
                   </div>
@@ -126,15 +135,21 @@ const ReservationDetailsModal: React.FC<ReservationDetailModalProps> = ({
                            {consumptions.map((item) => (
                               <TableRow key={item.id}>
                                  <TableCell>{item.product}</TableCell>
-                                 <TableCell className="text-center">{item.quantity}</TableCell>
-                                 <TableCell className="text-right">${item.total}</TableCell>
+                                 <TableCell className="text-center">
+                                    {item.quantity}
+                                 </TableCell>
+                                 <TableCell className="text-right">
+                                    ${item.total}
+                                 </TableCell>
                               </TableRow>
                            ))}
                            <TableRow>
                               <TableCell colSpan={2} className="font-semibold">
                                  Total
                               </TableCell>
-                              <TableCell className="text-right font-bold">$1,700</TableCell>
+                              <TableCell className="text-right font-bold">
+                                 $1,700
+                              </TableCell>
                            </TableRow>
                         </TableBody>
                      </Table>
@@ -194,14 +209,18 @@ const ReservationDetailsModal: React.FC<ReservationDetailModalProps> = ({
                   </AlertDialogTitle>
 
                   <AlertDialogDescription>
-                     Esta acción no se puede deshacer. Esto eliminará permanentemente la reserva y
-                     todos los datos asociados.
+                     Esta acción no se puede deshacer. Esto eliminará permanentemente la
+                     reserva y todos los datos asociados.
                   </AlertDialogDescription>
                </AlertDialogHeader>
 
-               <AlertDialogFooter className={isMobile ? 'flex-col space-y-2' : 'sm:space-x-2'}>
+               <AlertDialogFooter
+                  className={isMobile ? 'flex-col space-y-2' : 'sm:space-x-2'}
+               >
                   <AlertDialogCancel>No, mantener reserva</AlertDialogCancel>
-                  <AlertDialogAction onClick={onCancel}>Sí, cancelar reserva</AlertDialogAction>
+                  <AlertDialogAction onClick={onCancel}>
+                     Sí, cancelar reserva
+                  </AlertDialogAction>
                </AlertDialogFooter>
             </AlertDialogContent>
          </AlertDialog>
