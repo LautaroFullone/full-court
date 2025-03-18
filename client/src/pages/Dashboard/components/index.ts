@@ -1,5 +1,5 @@
-import Calendar from './Calendar'
+import CalendarHandler from './CalendarHandler'
 import NewReservationModal from './NewReservationModal'
 import ReservationDetailsModal from './ReservationDetailsModal'
 
-export { Calendar, NewReservationModal, ReservationDetailsModal }
+export { CalendarHandler, NewReservationModal, ReservationDetailsModal }

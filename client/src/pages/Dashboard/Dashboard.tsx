@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { useMobile } from '@/hooks'
+import { useMobile } from '@hooks'
+import { es } from 'date-fns/locale'
 import { useNavigate } from 'react-router-dom'
-import { ReservationDetailsModal } from './components'
+import { CalendarHandler, ReservationDetailsModal } from './components'
 import {
    CalendarIcon,
    ChevronLeft,
@@ -31,7 +32,7 @@ import {
    TabsContent,
    TabsList,
    TabsTrigger,
-} from '@/components'
+} from '@components'
 
 // Horarios disponibles (8:00 a 00:00 con turnos de 1.5 horas)
 const timeSlots = [
@@ -154,45 +155,38 @@ const Dashboard = () => {
    const isMobile = useMobile()
    const navigate = useNavigate()
 
-   const formattedDate = currentDate.toLocaleDateString('es-ES', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-   })
+   // const handleDateChange = (newDate: Date) => {
+   //    setIsLoading(true)
+   //    setCurrentDate(newDate)
 
-   const handleDateChange = (newDate: Date) => {
-      setIsLoading(true)
-      setCurrentDate(newDate)
+   //    // Simular la carga de nuevas reservas
+   //    setTimeout(() => {
+   //       // Aquí normalmente harías una llamada a la API para obtener las reservas de la nueva fecha
+   //       // Por ahora, simplemente generamos nuevas reservas aleatorias
+   //       const newReservations = generateRandomReservations(newDate)
+   //       setReservations(newReservations)
+   //       setIsLoading(false)
+   //    }, 1000)
+   // }
 
-      // Simular la carga de nuevas reservas
-      setTimeout(() => {
-         // Aquí normalmente harías una llamada a la API para obtener las reservas de la nueva fecha
-         // Por ahora, simplemente generamos nuevas reservas aleatorias
-         const newReservations = generateRandomReservations(newDate)
-         setReservations(newReservations)
-         setIsLoading(false)
-      }, 1000)
-   }
+   // const handlePrevDay = () => {
+   //    const newDate = new Date(currentDate)
+   //    newDate.setDate(currentDate.getDate() - 1)
+   //    handleDateChange(newDate)
+   // }
 
-   const handlePrevDay = () => {
-      const newDate = new Date(currentDate)
-      newDate.setDate(currentDate.getDate() - 1)
-      handleDateChange(newDate)
-   }
+   // const handleNextDay = () => {
+   //    const newDate = new Date(currentDate)
+   //    newDate.setDate(currentDate.getDate() + 1)
+   //    handleDateChange(newDate)
+   // }
 
-   const handleNextDay = () => {
-      const newDate = new Date(currentDate)
-      newDate.setDate(currentDate.getDate() + 1)
-      handleDateChange(newDate)
-   }
-
-   const handleDateSelect = (date: Date | undefined) => {
-      if (date) {
-         handleDateChange(date)
-         setIsCalendarOpen(false)
-      }
-   }
+   // const handleDateSelect = (date: Date | undefined) => {
+   //    if (date) {
+   //       handleDateChange(date)
+   //       setIsCalendarOpen(false)
+   //    }
+   // }
 
    const handleNewReservation = (timeSlot: string, court: number) => {
       setSelectedTimeSlot(timeSlot)
@@ -236,16 +230,16 @@ const Dashboard = () => {
    }
 
    // Filtrar reservas por cancha para la vista móvil
-   const filteredReservations = selectedCourtFilter
-      ? reservations.filter((r) => r.court === selectedCourtFilter)
-      : reservations
+   // const filteredReservations = selectedCourtFilter
+   //    ? reservations.filter((r) => r.court === selectedCourtFilter)
+   //    : reservations
 
    return (
       <AppLayout>
          <div className="space-y-4">
             <Tabs defaultValue="grid">
                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0">
-                  <div className="flex items-center space-x-2">
+                  {/* <div className="flex items-center space-x-2">
                      <Button variant="outline" size="icon" onClick={handlePrevDay}>
                         <ChevronLeft className="h-4 w-4" />
                      </Button>
@@ -268,6 +262,7 @@ const Dashboard = () => {
                               mode="single"
                               selected={currentDate}
                               onSelect={handleDateSelect}
+                              locale={es}
                               initialFocus
                            />
                         </PopoverContent>
@@ -276,7 +271,9 @@ const Dashboard = () => {
                      <Button variant="outline" size="icon" onClick={handleNextDay}>
                         <ChevronRight className="h-4 w-4" />
                      </Button>
-                  </div>
+                  </div> */}
+
+                  <CalendarHandler />
 
                   <TabsList className="w-full sm:w-auto">
                      <TabsTrigger value="grid">Vista Grilla</TabsTrigger>
@@ -316,6 +313,7 @@ const Dashboard = () => {
                            <div className="p-3 font-medium text-center">Cancha 4</div>
                         </div>
                      )}
+
                      {isMobile && (
                         <div className="grid grid-cols-2 border-b">
                            <div className="p-3 font-medium">Horario</div>
@@ -324,6 +322,7 @@ const Dashboard = () => {
                            </div>
                         </div>
                      )}
+
                      {isLoading ? (
                         <div className="flex items-center justify-center h-96">
                            <Loader2 className="h-8 w-8 animate-spin" />
