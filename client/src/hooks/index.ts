@@ -1,4 +1,5 @@
+import useAppTheme from './useAppTheme'
 import useCalendar from './useCalendar'
 import useMobile from './useMobile'
 
-export { useCalendar, useMobile }
+export { useAppTheme, useCalendar, useMobile }
