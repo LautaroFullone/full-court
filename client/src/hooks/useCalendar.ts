@@ -1,8 +1,13 @@
 import { useState } from 'react'
+// import { useAppStore } from '@stores'
 
 const useCalendar = () => {
    const [isCalendarOpen, setIsCalendarOpen] = useState(false)
-   const [currentDate, setCurrentDate] = useState(new Date())
+   const [selectedDate, setSelectedDate] = useState(new Date())
+   // const {
+   //    selectedDate,
+   //    appActions: { dispatchSelectedDate },
+   // } = useAppStore()
 
    const toggleCalendar = () => {
       setIsCalendarOpen(!isCalendarOpen)
@@ -11,7 +16,8 @@ const useCalendar = () => {
    const goToDate = (date: Date | undefined) => {
       if (date) {
          console.log('## date change: ', date)
-         setCurrentDate(date)
+         // dispatchSelectedDate(date)
+         setSelectedDate(date)
          setIsCalendarOpen(false)
 
          //TODO: fetch date reservations
@@ -19,19 +25,19 @@ const useCalendar = () => {
    }
 
    const goOneDayBack = () => {
-      const newDate = new Date(currentDate)
-      newDate.setDate(currentDate.getDate() - 1)
+      const newDate = new Date(selectedDate)
+      newDate.setDate(selectedDate.getDate() - 1)
       goToDate(newDate)
    }
 
    const goOneDayNext = () => {
-      const newDate = new Date(currentDate)
-      newDate.setDate(currentDate.getDate() + 1)
+      const newDate = new Date(selectedDate)
+      newDate.setDate(selectedDate.getDate() + 1)
       goToDate(newDate)
    }
 
    return {
-      currentDate,
+      selectedDate,
       isCalendarOpen,
       goToDate,
       goOneDayBack,

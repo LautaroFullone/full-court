@@ -9,7 +9,7 @@ const NewReservationModal = () => {
                Cancha {court} - {timeSlot}
             </DialogDescription>
          </DialogHeader>
-         {/* <NewReservationForm timeSlot={timeSlot} court={court} date={currentDate} /> */}
+         {/* <NewReservationForm timeSlot={timeSlot} court={court} date={selectedDate} /> */}
 
          <div className="space-y-4 py-4 max-h-[80vh] overflow-y-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

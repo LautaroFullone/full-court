@@ -2,9 +2,9 @@ import { AppLayout, Tabs, TabsContent, TabsList, TabsTrigger } from '@components
 import ReservationsViewHandler from './ReservationsViewHandler'
 import ReservationsTable from './ReservationsTable'
 import ReservationsList from './ReservationsList'
+import { useCalendar, useMobile } from '@hooks'
 import CalendarHandler from './CalendarHandler'
 import { Court, courts } from '@models'
-import { useCalendar, useMobile } from '@hooks'
 import { useState } from 'react'
 
 const mockReservations = [
@@ -95,8 +95,8 @@ const Dashboard = () => {
    const [reservations, setReservations] = useState(mockReservations)
 
    const isMobile = useMobile()
-   const { currentDate } = useCalendar()
-   console.log(currentDate)
+   const { selectedDate } = useCalendar()
+   console.log(selectedDate)
 
    // Filtrar reservas por cancha para la vista móvil
    // const filteredReservations = selectedCourt

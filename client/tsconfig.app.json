@@ -29,7 +29,8 @@
          "@hooks": ["./src/hooks/index.ts"],
          "@lib": ["./src/lib/index.ts"],
          "@models": ["./src/models/index.ts"],
-         "@pages": ["./src/pages/index.ts"]
+         "@pages": ["./src/pages/index.ts"],
+         "@stores": ["./src/stores/index.ts"]
       }
    },
    "include": ["src"]

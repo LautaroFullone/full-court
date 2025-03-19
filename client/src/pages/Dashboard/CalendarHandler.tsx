@@ -1,10 +1,11 @@
 import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from '@components'
 import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useCalendar } from '@hooks'
+import { es } from 'date-fns/locale'
 
 const CalendarHandler: React.FC = () => {
    const {
-      currentDate,
+      selectedDate,
       isCalendarOpen,
       toggleCalendar,
       goToDate,
@@ -12,7 +13,7 @@ const CalendarHandler: React.FC = () => {
       goOneDayNext,
    } = useCalendar()
 
-   const formattedDate = currentDate.toLocaleDateString('es-ES', {
+   const formattedDate = selectedDate.toLocaleDateString('es-ES', {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
@@ -32,6 +33,7 @@ const CalendarHandler: React.FC = () => {
                   className="flex items-center gap-2 flex-1 sm:flex-initial"
                >
                   <CalendarIcon className="h-4 w-4" />
+
                   <span className="font-medium capitalize text-sm sm:text-base truncate">
                      {formattedDate}
                   </span>
@@ -40,10 +42,10 @@ const CalendarHandler: React.FC = () => {
 
             <PopoverContent className="w-auto p-0" align="start">
                <Calendar
-                  mode="single"
-                  selected={currentDate}
+                  selected={selectedDate}
                   onSelect={goToDate}
-                  initialFocus
+                  mode="single"
+                  locale={es}
                />
             </PopoverContent>
          </Popover>

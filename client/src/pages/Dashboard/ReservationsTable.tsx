@@ -234,7 +234,7 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
                                             {/* <NewReservationForm
                                                timeSlot={timeSlot}
                                                court={court}
-                                               date={currentDate}
+                                               date={selectedDate}
                                             /> */}
                                          </DialogContent>
                                       </Dialog>
@@ -364,7 +364,7 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
                                             {/* <NewReservationForm
                                        timeSlot={timeSlot}
                                        court={court}
-                                       date={currentDate}
+                                       date={selectedDate}
                                     /> */}
                                          </DialogContent>
                                       </Dialog>
