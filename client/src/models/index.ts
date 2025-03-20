@@ -1,4 +1,4 @@
-export * from './courts.model'
+export * from './court.model'
 export * from './layout.model'
-export * from './reservations.model'
-export * from './shifts.model'
+export * from './reservation.model'
+export * from './shift.model'

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ReservationDetailsModal from './ReservationDetailsModal'
-import { Button, Dialog, DialogTrigger } from '@components'
+import { Button, Dialog, DialogTrigger } from '@shadcn'
 import { reservationTypes } from '@models'
 import { useState } from 'react'
 

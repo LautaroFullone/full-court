@@ -1,4 +1,4 @@
-import { Button, Sheet, SheetContent, SheetTrigger } from '@components'
+import { Button, Sheet, SheetContent, SheetTrigger } from '@shadcn'
 import { Link, useLocation } from 'react-router-dom'
 import { LogOut, Menu } from 'lucide-react'
 import { NavItem } from '@models'

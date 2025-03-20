@@ -3,9 +3,9 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import MobileSidebar from './MobileSidebar'
 import ThemeHandler from './ThemeHandler'
 import ActivityLog from './ActivityLog'
-import { Button } from '@components'
 import { ReactNode } from 'react'
-import { NavItem } from '@models'
+import { NavItem } from '@models/layout.model'
+import { Button } from '@shadcn'
 
 const navItems: NavItem[] = [
    { url: '/clientes', label: 'Clientes', icon: <Users className="h-4 w-4" /> },

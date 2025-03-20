@@ -1,6 +1,6 @@
 import { Moon, Sun } from 'lucide-react'
 import { useAppStore } from '@stores'
-import { Button } from '@components'
+import { Button } from '@shadcn'
 
 const ThemeHandler = () => {
    const {

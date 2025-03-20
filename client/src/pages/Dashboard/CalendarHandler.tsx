@@ -1,4 +1,4 @@
-import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from '@components'
+import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from '@shadcn'
 import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useCalendar } from '@hooks'
 import { es } from 'date-fns/locale'

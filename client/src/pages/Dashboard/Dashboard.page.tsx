@@ -1,91 +1,103 @@
-import { AppLayout, Tabs, TabsContent, TabsList, TabsTrigger } from '@components'
 import ReservationsViewHandler from './ReservationsViewHandler'
+import CourtHandlerMobile from './CourtHandlerMobile'
 import ReservationsTable from './ReservationsTable'
 import ReservationsList from './ReservationsList'
 import { useCalendar, useMobile } from '@hooks'
 import CalendarHandler from './CalendarHandler'
-import { Court, courts } from '@models'
+import { Court, Reservation } from '@models'
+import { Tabs, TabsContent } from '@shadcn'
+import { AppLayout } from '@shared'
 import { useState } from 'react'
 
-const mockReservations = [
+const mockReservations: Reservation[] = [
    {
-      id: 1,
-      court: 1,
-      timeSlot: '8:00 - 9:30',
-      name: 'Carlos Rodríguez',
-      phone: '555-1234',
+      id: '1',
+      date: '24/05/2023',
+      courtId: '1',
+      turnId: '1',
+      owner: 'Carlos Rodríguez',
+      price: 100,
       type: 'clase',
    },
    {
-      id: 2,
-      court: 2,
-      timeSlot: '9:30 - 11:00',
-      name: 'Ana Martínez',
-      phone: '555-5678',
+      id: '2',
+      date: '24/05/2023',
+      courtId: '2',
+      turnId: '2',
+      owner: 'Ana Martínez',
+      price: 150,
       type: 'partido',
    },
    {
-      id: 3,
-      court: 3,
-      timeSlot: '11:00 - 12:30',
-      name: 'Luis González',
-      phone: '555-9012',
+      id: '3',
+      date: '24/05/2023',
+      courtId: '3',
+      turnId: '3',
+      owner: 'Luis González',
+      price: 200,
       type: 'torneo',
    },
    {
-      id: 4,
-      court: 4,
-      timeSlot: '12:30 - 14:00',
-      name: 'María López',
-      phone: '555-3456',
+      id: '4',
+      date: '24/05/2023',
+      courtId: '4',
+      turnId: '4',
+      owner: 'María López',
+      price: 100,
       type: 'clase',
    },
    {
-      id: 5,
-      court: 1,
-      timeSlot: '14:00 - 15:30',
-      name: 'Juan Pérez',
-      phone: '555-7890',
+      id: '5',
+      date: '24/05/2023',
+      courtId: '1',
+      turnId: '5',
+      owner: 'Juan Pérez',
+      price: 150,
       type: 'partido',
    },
    {
-      id: 6,
-      court: 2,
-      timeSlot: '15:30 - 17:00',
-      name: 'Sofía Ramírez',
-      phone: '555-2345',
+      id: '6',
+      date: '24/05/2023',
+      courtId: '2',
+      turnId: '6',
+      owner: 'Sofía Ramírez',
+      price: 120,
       type: 'otro',
    },
    {
-      id: 7,
-      court: 3,
-      timeSlot: '17:00 - 18:30',
-      name: 'Diego Fernández',
-      phone: '555-6789',
+      id: '7',
+      date: '24/05/2023',
+      courtId: '3',
+      turnId: '7',
+      owner: 'Diego Fernández',
+      price: 100,
       type: 'clase',
    },
    {
-      id: 8,
-      court: 4,
-      timeSlot: '18:30 - 20:00',
-      name: 'Laura Torres',
-      phone: '555-0123',
+      id: '8',
+      date: '24/05/2023',
+      courtId: '4',
+      turnId: '8',
+      owner: 'Laura Torres',
+      price: 150,
       type: 'partido',
    },
    {
-      id: 9,
-      court: 1,
-      timeSlot: '20:00 - 21:30',
-      name: 'Pablo Sánchez',
-      phone: '555-4567',
+      id: '9',
+      date: '24/05/2023',
+      courtId: '1',
+      turnId: '9',
+      owner: 'Pablo Sánchez',
+      price: 200,
       type: 'torneo',
    },
    {
-      id: 10,
-      court: 2,
-      timeSlot: '21:30 - 23:00',
-      name: 'Valentina Díaz',
-      phone: '555-8901',
+      id: '10',
+      date: '24/05/2023',
+      courtId: '2',
+      turnId: '10',
+      owner: 'Valentina Díaz',
+      price: 150,
       type: 'partido',
    },
 ]
@@ -112,22 +124,7 @@ const Dashboard = () => {
                   <ReservationsViewHandler />
                </div>
 
-               {isMobile && (
-                  <div className="mt-4 flex justify-center">
-                     <Tabs defaultValue="1" className="w-full">
-                        <TabsList className="grid grid-cols-4 w-full">
-                           {courts.map((court) => (
-                              <TabsTrigger
-                                 value={String(court.id)}
-                                 onClick={() => setSelectedCourt(court)}
-                              >
-                                 {court.name}
-                              </TabsTrigger>
-                           ))}
-                        </TabsList>
-                     </Tabs>
-                  </div>
-               )}
+               {isMobile && <CourtHandlerMobile setSelectedCourt={setSelectedCourt} />}
 
                <TabsContent value="grid" className="mt-4">
                   <div className="rounded-lg border">

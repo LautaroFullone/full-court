@@ -1,6 +1,7 @@
-import { useState } from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CalendarDays, Clock, Edit, ShoppingCart, Trash2, User } from 'lucide-react'
-
+import { useMobile } from '@hooks'
+import { useState } from 'react'
 import {
    AlertDialog,
    AlertDialogAction,
@@ -23,9 +24,7 @@ import {
    TableHead,
    TableHeader,
    TableRow,
-} from '@components'
-import { useMobile } from '@hooks'
-
+} from '@shadcn'
 // Tipos de reserva
 const reservationTypes = {
    clase: 'Clase',

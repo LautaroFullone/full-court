@@ -5,12 +5,12 @@
       "baseUrl": ".",
       "paths": {
          "@/*": ["./src/*"],
-         "@components": ["./src/components/index.ts"],
          "@hooks": ["./src/hooks/index.ts"],
-         "@lib": ["./src/lib/index.ts"],
-         "@models": ["./src/models/index.ts"],
-         "@pages": ["./src/pages/index.ts"],
-         "@stores": ["./src/stores/index.ts"]
+         "@lib/*": ["./src/lib/*"],
+         "@models/*": ["./src/models/*"],
+         "@pages/*": ["./src/pages/*"],
+         "@stores/*": ["./src/stores/*"],
+         "@shared/*": ["./src/shared/*"]
       }
    }
 }

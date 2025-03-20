@@ -1,15 +1,5 @@
 import {
-   CheckCircle,
-   AlertCircle,
-   PencilLine,
-   Clock,
    Activity,
-   CircleCheck,
-   Trash,
-   Trash2,
-   Trash2Icon,
-   TicketCheck,
-   ShieldCheck,
    CalendarCheck,
    CalendarCog,
    CalendarX,
@@ -20,7 +10,7 @@ import {
    PackageMinus,
    PackageSearch,
 } from 'lucide-react'
-import { Button, Popover, PopoverContent, PopoverTrigger } from '@components'
+import { Button, Popover, PopoverContent, PopoverTrigger } from '@shadcn'
 
 type Activity = {
    id: number
@@ -49,6 +39,15 @@ const activities: Activity[] = [
       entity: 'cliente',
       entityId: 5,
       entityName: 'Luis González',
+      timestamp: '2023-05-23 10:15',
+   },
+   {
+      id: 22,
+      user: 'admin',
+      action: 'update',
+      entity: 'reserva',
+      entityId: 5,
+      entityName: 'Cancha 2 - 08:00',
       timestamp: '2023-05-23 10:15',
    },
    {

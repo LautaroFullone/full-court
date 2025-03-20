@@ -1,4 +1,4 @@
-import { TabsList, TabsTrigger } from '@components'
+import { TabsList, TabsTrigger } from '@shadcn'
 
 const ReservationsViewHandler = () => {
    return (

@@ -1,2 +1,4 @@
-export * from './Dashboard'
-export * from './Products'
+import Dashboard from './Dashboard/Dashboard.page'
+import Products from './Products/Products'
+
+export { Dashboard, Products }

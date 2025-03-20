@@ -1,4 +1,4 @@
-import { Button } from '@components'
+import { Button } from '@shadcn'
 
 const Products = () => {
    return (

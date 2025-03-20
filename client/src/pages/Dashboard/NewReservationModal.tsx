@@ -1,4 +1,4 @@
-import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components'
+import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@shadcn'
 
 const NewReservationModal = () => {
    return (
