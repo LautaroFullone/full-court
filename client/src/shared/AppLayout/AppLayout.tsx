@@ -4,8 +4,13 @@ import MobileSidebar from './MobileSidebar'
 import ThemeHandler from './ThemeHandler'
 import ActivityLog from './ActivityLog'
 import { ReactNode } from 'react'
-import { NavItem } from '@models/layout.model'
 import { Button } from '@shadcn'
+
+export type NavItem = {
+   url: string
+   label: string
+   icon: ReactNode
+}
 
 const navItems: NavItem[] = [
    { url: '/clientes', label: 'Clientes', icon: <Users className="h-4 w-4" /> },

@@ -105,7 +105,7 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
                           (() => {
                              const court = '1'
                              const reservation = reservations.find(
-                                (r) => r.court === court && r.timeSlot === timeSlot
+                                (r) => r.courtId === court && r.timeSlot === timeSlot
                              )
                              return (
                                 <Shift

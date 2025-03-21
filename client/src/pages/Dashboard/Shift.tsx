@@ -1,20 +1,16 @@
 import ReservationDetailsModal from './ReservationDetailsModal'
+import NewReservationModal from './NewReservationModal'
 import { Reservation, ReservationType } from '@models'
+import { MoreHorizontal, Plus } from 'lucide-react'
 import {
    Button,
    Dialog,
-   DialogContent,
-   DialogDescription,
-   DialogHeader,
-   DialogTitle,
    DialogTrigger,
    DropdownMenu,
    DropdownMenuContent,
    DropdownMenuItem,
    DropdownMenuTrigger,
 } from '@shadcn'
-import { MoreHorizontal, Plus } from 'lucide-react'
-import NewReservationModal from './NewReservationModal'
 
 interface ShiftProps {
    court: string
@@ -42,8 +38,8 @@ const Shift: React.FC<ShiftProps> = ({ court, timeSlot, reservation }) => {
       >
          {reservation ? (
             <Dialog
-               open={openReservationId === reservation.id}
-               onOpenChange={(open) => !open && setOpenReservationId(null)}
+               open={false} //openReservationId === reservation.id}
+               onOpenChange={(open) => !open} //&& setOpenReservationId(null)}
             >
                <DialogTrigger asChild>
                   <div
