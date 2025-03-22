@@ -1,3 +1,5 @@
+import { ShiftType } from './shift.model'
+
 interface Item {
    name: string
    price: number
@@ -9,6 +11,7 @@ export type ReservationType = 'clase' | 'partido' | 'torneo' | 'otro'
 export interface Reservation {
    id: string
    date: string
+   shift: ShiftType
    courtId: string
    turnId: string
    owner: string

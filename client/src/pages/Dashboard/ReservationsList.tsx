@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ReservationDetailsModal from './ReservationDetailsModal'
 import { Button, Dialog, DialogTrigger } from '@shadcn'
-import { reservationTypes } from '@models'
 import { useState } from 'react'
 
 interface ReservationsListProps {
@@ -13,9 +12,22 @@ const ReservationsList: React.FC<ReservationsListProps> = ({
    reservations,
    setReservations,
 }) => {
-   const [openReservationId, setOpenReservationId] = useState<number | null>(null)
+   const [, setOpenReservationId] = useState<number | null>(null)
 
-   function getReservationTypeClass(type: string) {
+   // function getReservationTypeClasses(type: string) {
+   //    const classes: Record<ReservationType, string> = {
+   //       clase: 'bg-blue-100 text-blue-800',
+   //       partido: 'bg-green-100 text-green-800',
+   //       torneo: 'bg-purple-100 text-purple-800',
+   //       otro: 'bg-amber-100 text-amber-800',
+   //    }
+   //    const mainClasses =
+   //       classes[type as keyof typeof classes] || 'bg-gray-100 text-gray-800'
+
+   //    return `text-xs px-2 py-0.5 rounded-full ${mainClasses}`
+   // }
+
+   function getReservationTypeClasses(type: string) {
       const classes = {
          clase: 'bg-blue-100 text-blue-800',
          partido: 'bg-green-100 text-green-800',
@@ -49,14 +61,6 @@ const ReservationsList: React.FC<ReservationsListProps> = ({
       setOpenReservationId(updatedReservation.id)
    }
 
-   // const handleNewReservation = (timeSlot: string, court: number) => {
-   //    console.log(`## handleNewReservation`, timeSlot, court)
-
-   //    //    setSelectedTimeSlot(timeSlot)
-   //    //    setSelectedCourt(court)
-   //    //    setIsNewReservationOpen(true)
-   // }
-
    return (
       <div className="p-4">
          <div className="grid grid-cols-3 md:grid-cols-5 font-medium border-b pb-2">
@@ -66,6 +70,7 @@ const ReservationsList: React.FC<ReservationsListProps> = ({
             <div className="hidden md:block">Tipo</div>
             <div>Acciones</div>
          </div>
+
          <div className="divide-y">
             {reservations.map((reservation) => (
                <div
@@ -74,22 +79,22 @@ const ReservationsList: React.FC<ReservationsListProps> = ({
                >
                   <div className="text-sm md:text-base">{reservation.timeSlot}</div>
                   <div className="text-sm md:text-base">Cancha {reservation.court}</div>
+
                   <div className="hidden md:block">
                      <div>{reservation.name}</div>
                   </div>
+
                   <div className="hidden md:block">
+                     {/* <span className={getReservationTypeClasses(reservation.type)}>
+                        {reservation.type}
+                     </span> */}
                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full ${getReservationTypeClass(
+                        className={`text-xs px-2 py-0.5 rounded-full ${getReservationTypeClasses(
                            reservation.type
                         )}`}
-                     >
-                        {
-                           reservationTypes[
-                              reservation.type as keyof typeof reservationTypes
-                           ]
-                        }
-                     </span>
+                     ></span>
                   </div>
+
                   <div className="flex space-x-2">
                      <Dialog>
                         <DialogTrigger asChild>
@@ -104,6 +109,7 @@ const ReservationsList: React.FC<ReservationsListProps> = ({
                               Detalles
                            </Button>
                         </DialogTrigger>
+
                         <ReservationDetailsModal
                            reservation={reservation}
                            onEdit={() => handleEditReservation(reservation.id)}

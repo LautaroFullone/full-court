@@ -15,7 +15,7 @@ const useCalendar = () => {
 
    const goToDate = (date: Date | undefined) => {
       if (date) {
-         console.log('## date change: ', date)
+         // console.log('## date change: ', date)
          // dispatchSelectedDate(date)W
          setSelectedDate(date)
          setIsCalendarOpen(false)

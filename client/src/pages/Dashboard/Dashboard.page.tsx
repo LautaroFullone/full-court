@@ -13,6 +13,7 @@ const mockReservations: Reservation[] = [
    {
       id: '1',
       date: '24/05/2023',
+      shift: '8:00 - 9:30',
       courtId: '1',
       turnId: '1',
       owner: 'Carlos Rodríguez',
@@ -22,6 +23,7 @@ const mockReservations: Reservation[] = [
    {
       id: '2',
       date: '24/05/2023',
+      shift: '17:00 - 18:30',
       courtId: '2',
       turnId: '2',
       owner: 'Ana Martínez',
@@ -31,6 +33,7 @@ const mockReservations: Reservation[] = [
    {
       id: '3',
       date: '24/05/2023',
+      shift: '23:00 - 00:30',
       courtId: '3',
       turnId: '3',
       owner: 'Luis González',
@@ -40,6 +43,7 @@ const mockReservations: Reservation[] = [
    {
       id: '4',
       date: '24/05/2023',
+      shift: '11:00 - 12:30',
       courtId: '4',
       turnId: '4',
       owner: 'María López',
@@ -49,6 +53,7 @@ const mockReservations: Reservation[] = [
    {
       id: '5',
       date: '24/05/2023',
+      shift: '21:30 - 23:00',
       courtId: '1',
       turnId: '5',
       owner: 'Juan Pérez',
@@ -58,6 +63,7 @@ const mockReservations: Reservation[] = [
    {
       id: '6',
       date: '24/05/2023',
+      shift: '14:00 - 15:30',
       courtId: '2',
       turnId: '6',
       owner: 'Sofía Ramírez',
@@ -67,6 +73,7 @@ const mockReservations: Reservation[] = [
    {
       id: '7',
       date: '24/05/2023',
+      shift: '18:30 - 20:00',
       courtId: '3',
       turnId: '7',
       owner: 'Diego Fernández',
@@ -76,6 +83,7 @@ const mockReservations: Reservation[] = [
    {
       id: '8',
       date: '24/05/2023',
+      shift: '20:00 - 21:30',
       courtId: '4',
       turnId: '8',
       owner: 'Laura Torres',
@@ -85,6 +93,7 @@ const mockReservations: Reservation[] = [
    {
       id: '9',
       date: '24/05/2023',
+      shift: '8:00 - 9:30',
       courtId: '1',
       turnId: '9',
       owner: 'Pablo Sánchez',
@@ -94,6 +103,7 @@ const mockReservations: Reservation[] = [
    {
       id: '10',
       date: '24/05/2023',
+      shift: '9:30 - 11:00',
       courtId: '2',
       turnId: '10',
       owner: 'Valentina Díaz',
@@ -108,11 +118,11 @@ const Dashboard = () => {
 
    const isMobile = useMobile()
    const { selectedDate } = useCalendar()
-   console.log(selectedDate)
+   console.log('## Dashboard selectedDate: ', selectedDate)
 
-   // Filtrar reservas por cancha para la vista móvil
+   //Filtrar reservas por cancha para la vista móvil
    // const filteredReservations = selectedCourt
-   //    ? reservations.filter((r) => r.court === selectedCourt)
+   //    ? reservations.filter((r) => r.courtId === selectedCourt)
    //    : reservations
 
    return (

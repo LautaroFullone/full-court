@@ -18,4 +18,6 @@ export const shiftSlots = [
    '20:00 - 21:30',
    '21:30 - 23:00',
    '23:00 - 00:30',
-]
+] as const
+
+export type ShiftType = (typeof shiftSlots)[number]
