@@ -1,6 +1,6 @@
 import ReservationDetailsModal from './ReservationDetailsModal'
 import NewReservationModal from './NewReservationModal'
-import { Reservation, ReservationType } from '@models'
+import { Court, Reservation, ReservationType } from '@models'
 import { MoreHorizontal, Plus } from 'lucide-react'
 import {
    Button,
@@ -13,12 +13,12 @@ import {
 } from '@shadcn'
 
 interface ShiftProps {
-   court: string
+   courtId: Court['id']
    timeSlot: string
    reservation: Reservation | undefined
 }
 
-const Shift: React.FC<ShiftProps> = ({ court, timeSlot, reservation }) => {
+const Shift: React.FC<ShiftProps> = ({ courtId, timeSlot, reservation }) => {
    function getReservationTypeClass(type: ReservationType) {
       const classes = {
          clase: 'bg-blue-100 text-blue-800',
@@ -31,7 +31,7 @@ const Shift: React.FC<ShiftProps> = ({ court, timeSlot, reservation }) => {
 
    return (
       <div
-         key={`${timeSlot}-${court}`}
+         key={`${timeSlot}-${courtId}`}
          className={`p-2 relative h-20 ${
             reservation ? 'bg-primary/5 hover:bg-primary/10' : 'hover:bg-muted/50'
          }`}

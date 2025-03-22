@@ -1,8 +1,8 @@
 export type Shift = {
    id: string
-   date: string
-   timeSlot: string
-   isAvailable: boolean
+   time_from: string
+   time_to: string
+   isReserved?: boolean
 }
 
 // Horarios disponibles (8:00 a 00:00 con turnos de 1.5 horas)

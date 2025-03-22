@@ -18,6 +18,7 @@ import {
    DropdownMenuTrigger,
 } from '@shadcn'
 import Shift from './Shift'
+import { COURTS } from '@config'
 
 interface ReservationsTableProps {
    reservations: Reservation[]
@@ -72,7 +73,7 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
          {!isMobile && (
             <div className="grid grid-cols-5 border-b">
                <div className="p-3 font-medium">Horario</div>
-               {courts.map((court) => (
+               {COURTS.map((court) => (
                   <div className="p-3 font-medium text-center">{court.name}</div>
                ))}
             </div>
@@ -105,20 +106,20 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
                           (() => {
                              const court = '1'
                              const reservation = reservations.find(
-                                (r) => r.courtId === court && r.timeSlot === timeSlot
+                                (r) => r.courtId === court && r.date === timeSlot
                              )
                              return (
                                 <Shift
-                                   court={court}
+                                   courtId={court}
                                    timeSlot={timeSlot}
                                    reservation={reservation}
                                 />
                              )
                           })()
                         : // Vista desktop: mostrar todas las canchas
-                          [1, 2, 3, 4].map((court) => {
+                          COURTS.map((court) => {
                              const reservation = reservations.find(
-                                (r) => r.court === court && r.timeSlot === timeSlot
+                                (r) => r.courtId === court.id && r.date === timeSlot
                              )
                              return (
                                 <div
@@ -129,119 +130,11 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
                                          : 'hover:bg-muted/50'
                                    }`}
                                 >
-                                   {reservation ? (
-                                      <Dialog
-                                         open={openReservationId === reservation.id}
-                                         onOpenChange={(open) =>
-                                            !open && setOpenReservationId(null)
-                                         }
-                                      >
-                                         <DialogTrigger asChild>
-                                            <div
-                                               className="flex flex-col items-center justify-center cursor-pointer h-full w-full rounded-md transition-colors"
-                                               onClick={() =>
-                                                  setOpenReservationId(reservation.id)
-                                               }
-                                            >
-                                               <span className="font-medium text-sm text-center">
-                                                  {reservation.name}
-                                               </span>
-                                               <span
-                                                  className={`text-xs px-2 py-0.5 rounded-full mt-1 ${getReservationTypeClass(
-                                                     reservation.type
-                                                  )}`}
-                                               >
-                                                  {
-                                                     reservationTypes[
-                                                        reservation.type as keyof typeof reservationTypes
-                                                     ]
-                                                  }
-                                               </span>
-                                            </div>
-                                         </DialogTrigger>
-                                         <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                               <Button
-                                                  variant="ghost"
-                                                  size="icon"
-                                                  className="absolute top-0 right-0 h-6 w-6"
-                                               >
-                                                  <MoreHorizontal className="h-4 w-4" />
-                                               </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                               <DropdownMenuItem
-                                                  onSelect={() =>
-                                                     handleManageConsumptions(
-                                                        reservation.id
-                                                     )
-                                                  }
-                                               >
-                                                  Gestionar consumos
-                                               </DropdownMenuItem>
-                                               <DropdownMenuItem
-                                                  onSelect={() =>
-                                                     handleEditReservation(reservation.id)
-                                                  }
-                                               >
-                                                  Editar reserva
-                                               </DropdownMenuItem>
-                                               <DropdownMenuItem
-                                                  onSelect={() =>
-                                                     handleCancelReservation(
-                                                        reservation.id
-                                                     )
-                                                  }
-                                                  className="text-destructive"
-                                               >
-                                                  Cancelar reserva
-                                               </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                         </DropdownMenu>
-                                         <ReservationDetailsModal
-                                            reservation={reservation}
-                                            onEdit={() =>
-                                               handleEditReservation(reservation.id)
-                                            }
-                                            onCancel={() =>
-                                               handleCancelReservation(reservation.id)
-                                            }
-                                            onManageConsumptions={() =>
-                                               handleManageConsumptions(reservation.id)
-                                            }
-                                            onUpdate={handleReservationUpdate}
-                                         />
-                                      </Dialog>
-                                   ) : (
-                                      <Dialog>
-                                         <DialogTrigger asChild>
-                                            <Button
-                                               variant="ghost"
-                                               size="sm"
-                                               className="w-full h-full flex items-center justify-center"
-                                               onClick={() =>
-                                                  handleNewReservation(timeSlot, court)
-                                               }
-                                            >
-                                               <Plus className="h-4 w-4 mr-1" />
-                                               Reservar
-                                            </Button>
-                                         </DialogTrigger>
-                                         <DialogContent className="sm:max-w-[600px] w-[95%] max-w-[95%] sm:w-auto">
-                                            <DialogHeader>
-                                               <DialogTitle>Nueva Reserva</DialogTitle>
-                                               <DialogDescription>
-                                                  Cancha {court} - {timeSlot}
-                                               </DialogDescription>
-                                            </DialogHeader>
-                                            {/* <NewReservationForm
-                                       timeSlot={timeSlot}
-                                       court={court}
-                                       date={selectedDate}
-                                    /> */}
-                                         </DialogContent>
-                                      </Dialog>
-                                   )}
+                                   <Shift
+                                      courtId={court.id}
+                                      reservation={reservation}
+                                      timeSlot={''}
+                                   />
                                 </div>
                              )
                           })}

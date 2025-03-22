@@ -1,8 +1,7 @@
-import { Court } from '../models/Court'
-import { Turn } from '../models/Turn'
+import { Court, Shift } from '@models'
 
 //esto deberia devolver el back... desde el front se le puede agregar el isReserved
-export const TURNS_SLOTS: Turn[] = [
+export const SHIFT_SLOTS: Shift[] = [
    { time_from: '08:00', time_to: '09:30', id: '0800' },
    { time_from: '09:30', time_to: '11:00', id: '0930' },
    { time_from: '11:00', time_to: '12:30', id: '1100' },
@@ -21,5 +20,3 @@ export const COURTS: Court[] = [
    { id: 'court_3', name: 'Cancha 3' },
    { id: 'court_4', name: 'Cancha 4' },
 ]
-
-export const DAYS_IN_WEEK: string[] = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']

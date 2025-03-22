@@ -24,6 +24,7 @@
 
       "baseUrl": ".",
       "paths": {
+         "@config": ["./src/config/constants.ts"],
          "@hooks": ["./src/hooks/index.ts"],
          "@lib/*": ["./src/lib/*"],
          "@models": ["./src/models/index.ts"],

@@ -4,13 +4,14 @@
    "compilerOptions": {
       "baseUrl": ".",
       "paths": {
-         "@/*": ["./src/*"],
+         "@config": ["./src/config/constants.ts"],
          "@hooks": ["./src/hooks/index.ts"],
          "@lib/*": ["./src/lib/*"],
-         "@models/*": ["./src/models/*"],
+         "@models": ["./src/models/index.ts"],
          "@pages/*": ["./src/pages/*"],
-         "@stores/*": ["./src/stores/*"],
-         "@shared/*": ["./src/shared/*"]
+         "@stores": ["./src/stores/index.ts"],
+         "@shared": ["./src/shared/index.ts"],
+         "@shadcn": ["./src/shared/ui/index.ts"]
       }
    }
 }
