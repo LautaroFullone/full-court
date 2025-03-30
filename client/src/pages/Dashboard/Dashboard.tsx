@@ -1,13 +1,15 @@
-import ReservationsViewHandler from './ReservationsViewHandler'
-import CourtHandlerMobile from './CourtHandlerMobile'
-import ReservationsTable from './ReservationsTable'
-import ReservationsList from './ReservationsList'
 import { useCalendar, useMobile } from '@hooks'
-import CalendarHandler from './CalendarHandler'
 import { Court, Reservation } from '@models'
 import { Tabs, TabsContent } from '@shadcn'
+import { useMemo, useState } from 'react'
 import { AppLayout } from '@shared'
-import { useState } from 'react'
+import {
+   CalendarHandler,
+   CourtHandlerMobile,
+   ReservationsList,
+   ReservationsTable,
+   ReservationsViewHandler,
+} from './components'
 
 const mockReservations: Reservation[] = [
    {
@@ -124,6 +126,13 @@ const Dashboard = () => {
    // const filteredReservations = selectedCourt
    //    ? reservations.filter((r) => r.courtId === selectedCourt)
    //    : reservations
+
+   // Memoize the filtered reservations to avoid unnecessary re-renders
+   const filteredReservations = useMemo(() => {
+      return selectedCourt
+         ? reservations.filter((reservation) => reservation.courtId === selectedCourt.id)
+         : reservations
+   }, [selectedCourt, reservations])
 
    return (
       <AppLayout>

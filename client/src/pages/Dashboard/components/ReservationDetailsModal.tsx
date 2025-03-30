@@ -25,6 +25,7 @@ import {
    TableHeader,
    TableRow,
 } from '@shadcn'
+
 // Tipos de reserva
 const reservationTypes = {
    clase: 'Clase',
@@ -39,6 +40,7 @@ const consumptions = [
    { id: 2, product: 'Grip', quantity: 1, price: 800, total: 800 },
    { id: 3, product: 'Gaseosa', quantity: 3, price: 200, total: 600 },
 ]
+
 interface ReservationDetailModalProps {
    reservation: any
    onEdit: () => void

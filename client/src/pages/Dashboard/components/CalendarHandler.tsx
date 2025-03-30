@@ -1,7 +1,9 @@
 import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from '@shadcn'
 import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
+import { formatDateToString } from '@lib/formatDateToString'
 import { useCalendar } from '@hooks'
 import { es } from 'date-fns/locale'
+import { useMemo } from 'react'
 
 const CalendarHandler: React.FC = () => {
    const {
@@ -13,12 +15,7 @@ const CalendarHandler: React.FC = () => {
       goOneDayNext,
    } = useCalendar()
 
-   const formattedDate = selectedDate.toLocaleDateString('es-ES', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-   })
+   const formated = useMemo(() => formatDateToString(selectedDate, true), [selectedDate])
 
    return (
       <div className="flex items-center space-x-2">
@@ -35,7 +32,7 @@ const CalendarHandler: React.FC = () => {
                   <CalendarIcon className="h-4 w-4" />
 
                   <span className="font-medium capitalize text-sm sm:text-base truncate">
-                     {formattedDate}
+                     {formated}
                   </span>
                </Button>
             </PopoverTrigger>

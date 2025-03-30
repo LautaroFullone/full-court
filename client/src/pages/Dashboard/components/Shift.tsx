@@ -1,4 +1,3 @@
-import ReservationDetailsModal from './ReservationDetailsModal'
 import { Court, Reservation, ReservationType } from '@models'
 import { MoreHorizontal, Plus } from 'lucide-react'
 import {
@@ -10,6 +9,7 @@ import {
    DropdownMenuItem,
    DropdownMenuTrigger,
 } from '@shadcn'
+import ReservationDetailsModal from './ReservationDetailsModal'
 
 interface ShiftProps {
    courtId: Court['id']
