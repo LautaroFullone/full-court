@@ -1,5 +1,6 @@
-import { Court, Reservation, ReservationType } from '@models'
+import { Court, Reservation, ReservationType, ShiftType } from '@models'
 import { MoreHorizontal, Plus } from 'lucide-react'
+import { useAppStore } from '@stores'
 import {
    Button,
    Dialog,
@@ -9,15 +10,19 @@ import {
    DropdownMenuItem,
    DropdownMenuTrigger,
 } from '@shadcn'
-import ReservationDetailsModal from './ReservationDetailsModal'
 
 interface ShiftProps {
-   courtId: Court['id']
-   timeSlot: string
+   court: Court
    reservation: Reservation | undefined
+   shiftSlot: ShiftType
 }
 
-const Shift: React.FC<ShiftProps> = ({ reservation }) => {
+const Shift: React.FC<ShiftProps> = ({ reservation, shiftSlot, court }) => {
+   const {
+      selectedReservation,
+      appActions: { dispatchSelectedReservation },
+   } = useAppStore()
+
    function getReservationTypeClass(type: ReservationType) {
       const classes = {
          clase: 'bg-blue-100 text-blue-800',
@@ -31,15 +36,13 @@ const Shift: React.FC<ShiftProps> = ({ reservation }) => {
    if (reservation) {
       return (
          <Dialog
-            open={false} //openReservationId === reservation.id}
+            open={true} //openReservationId === reservation.id}
             onOpenChange={(open) => !open} //&& setOpenReservationId(null)}
          >
             <DialogTrigger asChild>
                <div
                   className="flex flex-col items-center justify-center cursor-pointer h-full w-full rounded-md transition-colors"
-                  onClick={() => {
-                     //setOpenReservationId(reservation.id)
-                  }}
+                  onClick={() => dispatchSelectedReservation(reservation)}
                >
                   <span className="font-medium text-sm text-center">
                      {reservation.owner}
@@ -79,13 +82,7 @@ const Shift: React.FC<ShiftProps> = ({ reservation }) => {
                </DropdownMenuContent>
             </DropdownMenu>
 
-            <ReservationDetailsModal
-               reservation={reservation}
-               onEdit={() => {}}
-               onCancel={() => {}}
-               onManageConsumptions={() => {}}
-               onUpdate={() => {}}
-            />
+            {/* <ReservationDetailsModal /> */}
          </Dialog>
       )
    }
@@ -104,7 +101,7 @@ const Shift: React.FC<ShiftProps> = ({ reservation }) => {
             </Button>
          </DialogTrigger>
 
-         {/* <NewReservationModal /> */}
+         {/* <NewReservationModal court={court} shiftSlot={shiftSlot} /> */}
       </Dialog>
    )
 }

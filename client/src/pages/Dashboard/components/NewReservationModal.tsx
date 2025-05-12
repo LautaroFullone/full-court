@@ -1,12 +1,39 @@
-import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@shadcn'
+import { Label } from '@radix-ui/react-dropdown-menu'
+import { formatDateToString } from '@lib'
+import { Court, ShiftType } from '@models'
+import { useCalendar } from '@hooks'
+import { useMemo } from 'react'
+import {
+   Button,
+   DialogContent,
+   DialogDescription,
+   DialogHeader,
+   DialogTitle,
+   Tabs,
+   TabsContent,
+   TabsList,
+   TabsTrigger,
+} from '@shadcn'
 
-const NewReservationModal = () => {
+interface NewReservationModalProp {
+   court: Court
+   shiftSlot: ShiftType
+}
+
+const NewReservationModal: React.FC<NewReservationModalProp> = ({ court, shiftSlot }) => {
+   const { selectedDate } = useCalendar()
+
+   const formatedDate = useMemo(
+      () => formatDateToString(selectedDate, true),
+      [selectedDate]
+   )
+
    return (
       <DialogContent className="sm:max-w-[600px] w-[95%] max-w-[95%] sm:w-auto">
          <DialogHeader>
             <DialogTitle>Nueva Reserva</DialogTitle>
             <DialogDescription>
-               Cancha {court} - {timeSlot}
+               {court.name} - {shiftSlot}
             </DialogDescription>
          </DialogHeader>
          {/* <NewReservationForm timeSlot={timeSlot} court={court} date={selectedDate} /> */}
@@ -15,11 +42,11 @@ const NewReservationModal = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                <div className="space-y-2">
                   <Label>Fecha</Label>
-                  <div className="p-2 border rounded-md bg-muted/50">{formattedDate}</div>
+                  <div className="p-2 border rounded-md bg-muted/50">{formatedDate}</div>
                </div>
                <div className="space-y-2">
                   <Label>Horario</Label>
-                  <div className="p-2 border rounded-md bg-muted/50">{timeSlot}</div>
+                  <div className="p-2 border rounded-md bg-muted/50">XXX</div>
                </div>
             </div>
 

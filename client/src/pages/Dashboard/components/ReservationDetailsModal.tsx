@@ -1,79 +1,54 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { CalendarDays, Clock, Edit, ShoppingCart, Trash2, User } from 'lucide-react'
+import { Edit, ShoppingCart, Trash2 } from 'lucide-react'
+import { useAppStore } from '@stores'
 import { useMobile } from '@hooks'
 import { useState } from 'react'
 import {
-   AlertDialog,
-   AlertDialogAction,
-   AlertDialogCancel,
-   AlertDialogContent,
-   AlertDialogDescription,
-   AlertDialogFooter,
-   AlertDialogHeader,
-   AlertDialogTitle,
    Button,
    DialogContent,
    DialogDescription,
    DialogFooter,
    DialogHeader,
    DialogTitle,
-   ScrollArea,
-   Table,
-   TableBody,
-   TableCell,
-   TableHead,
-   TableHeader,
-   TableRow,
 } from '@shadcn'
 
 // Tipos de reserva
-const reservationTypes = {
-   clase: 'Clase',
-   partido: 'Partido',
-   torneo: 'Torneo',
-   entrenamiento: 'Entrenamiento',
-}
+// const reservationTypes = {
+//    clase: 'Clase',
+//    partido: 'Partido',
+//    torneo: 'Torneo',
+//    entrenamiento: 'Entrenamiento',
+// }
 
 // Datos de ejemplo para los consumos
-const consumptions = [
-   { id: 1, product: 'Café', quantity: 2, price: 150, total: 300 },
-   { id: 2, product: 'Grip', quantity: 1, price: 800, total: 800 },
-   { id: 3, product: 'Gaseosa', quantity: 3, price: 200, total: 600 },
-]
+// const consumptions = [
+//    { id: 1, product: 'Café', quantity: 2, price: 150, total: 300 },
+//    { id: 2, product: 'Grip', quantity: 1, price: 800, total: 800 },
+//    { id: 3, product: 'Gaseosa', quantity: 3, price: 200, total: 600 },
+// ]
 
-interface ReservationDetailModalProps {
-   reservation: any
-   onEdit: () => void
-   onCancel: () => void
-   onManageConsumptions: () => void
-   onUpdate: (updatedReservation: any) => void
-}
-
-const ReservationDetailsModal: React.FC<ReservationDetailModalProps> = ({
-   reservation,
-   onEdit,
-   onCancel,
-   onManageConsumptions,
-   onUpdate,
-}) => {
+const ReservationDetailsModal: React.FC = () => {
    const [showCancelAlert, setShowCancelAlert] = useState(false)
    const [isEditing, setIsEditing] = useState(false)
-   const [editedReservation, setEditedReservation] = useState(reservation)
+
    const isMobile = useMobile()
 
-   const handleSave = () => {
-      onUpdate(editedReservation)
-      setIsEditing(false)
-   }
+   const { selectedReservation } = useAppStore()
+
+   // const handleSave = () => {
+   //    onUpdate(editedReservation)
+   //    setIsEditing(false)
+   // }
+
+   // return null
 
    return (
       <DialogContent className="sm:max-w-[700px] w-[95%] max-w-[95%] sm:w-auto">
          <DialogHeader>
-            <DialogTitle>Detalle de Reserva #{reservation.id}</DialogTitle>
+            <DialogTitle>Detalle de Reserva #{selectedReservation?.id}</DialogTitle>
             <DialogDescription>Información completa de la reserva</DialogDescription>
          </DialogHeader>
 
-         <ScrollArea className="h-[400px] pr-4 -mr-4">
+         {/* <ScrollArea className="h-[400px] pr-4 -mr-4">
             <div className="grid gap-6 grid-cols-1 md:grid-cols-2 py-4 pr-4">
                <div className="space-y-4">
                   <div className="flex items-center gap-3">
@@ -88,7 +63,7 @@ const ReservationDetailsModal: React.FC<ReservationDetailModalProps> = ({
                      <div>
                         <p className="text-sm font-medium">Horario</p>
                         <p className="text-sm text-muted-foreground">
-                           {reservation.timeSlot}
+                           {selectedReservation?.shift}
                         </p>
                      </div>
                   </div>
@@ -97,11 +72,9 @@ const ReservationDetailsModal: React.FC<ReservationDetailModalProps> = ({
                      <div>
                         <p className="text-sm font-medium">Cliente</p>
                         <p className="text-sm text-muted-foreground">
-                           {reservation.name}
+                           {selectedReservation?.owner}
                         </p>
-                        <p className="text-xs text-muted-foreground">
-                           Tel: {reservation.phone}
-                        </p>
+                        <p className="text-xs text-muted-foreground">Tel: 2236984284</p>
                      </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -113,7 +86,7 @@ const ReservationDetailsModal: React.FC<ReservationDetailModalProps> = ({
                         <p className="text-sm text-muted-foreground">
                            {
                               reservationTypes[
-                                 reservation.type as keyof typeof reservationTypes
+                                 selectedReservation?.type as keyof typeof reservationTypes
                               ]
                            }
                         </p>
@@ -157,16 +130,15 @@ const ReservationDetailsModal: React.FC<ReservationDetailModalProps> = ({
                   </div>
                </div>
             </div>
-         </ScrollArea>
+         </ScrollArea> */}
 
          {isEditing ? (
-            <div>
-               {/* Aquí irían los campos editables */}
-               <Button onClick={handleSave}>Guardar Cambios</Button>
-               <Button variant="outline" onClick={() => setIsEditing(false)}>
+            <>
+               <Button onClick={() => {}}>Guardar Cambios</Button>
+               <Button variant="outline" onClick={() => {}}>
                   Cancelar
                </Button>
-            </div>
+            </>
          ) : (
             <DialogFooter
                className={`flex ${
@@ -183,6 +155,7 @@ const ReservationDetailsModal: React.FC<ReservationDetailModalProps> = ({
                      <Edit className="h-4 w-4" />
                      Editar
                   </Button>
+
                   <Button
                      variant="destructive"
                      size="sm"
@@ -194,7 +167,7 @@ const ReservationDetailsModal: React.FC<ReservationDetailModalProps> = ({
                   </Button>
                </div>
                <div className="flex gap-2">
-                  <Button size="sm" className="gap-1" onClick={onManageConsumptions}>
+                  <Button size="sm" className="gap-1" onClick={() => {}}>
                      <ShoppingCart className="h-4 w-4" />
                      Gestionar Consumos
                   </Button>
@@ -202,7 +175,10 @@ const ReservationDetailsModal: React.FC<ReservationDetailModalProps> = ({
             </DialogFooter>
          )}
 
-         <AlertDialog open={showCancelAlert} onOpenChange={setShowCancelAlert}>
+         {/* <AlertDialog
+            open={showCancelAlert}
+            onOpenChange={() => setShowCancelAlert(false)}
+         >
             <AlertDialogContent className="w-[95%] max-w-[95%] sm:w-auto sm:max-w-md">
                <AlertDialogHeader>
                   <AlertDialogTitle>
@@ -219,12 +195,12 @@ const ReservationDetailsModal: React.FC<ReservationDetailModalProps> = ({
                   className={isMobile ? 'flex-col space-y-2' : 'sm:space-x-2'}
                >
                   <AlertDialogCancel>No, mantener reserva</AlertDialogCancel>
-                  <AlertDialogAction onClick={onCancel}>
+                  <AlertDialogAction onClick={() => {}}>
                      Sí, cancelar reserva
                   </AlertDialogAction>
                </AlertDialogFooter>
             </AlertDialogContent>
-         </AlertDialog>
+         </AlertDialog> */}
       </DialogContent>
    )
 }

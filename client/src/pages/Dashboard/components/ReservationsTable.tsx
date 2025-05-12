@@ -105,7 +105,7 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
                         : // Vista desktop: mostrar todas las canchas
                           COURTS.map((court) => {
                              const reservation = reservations.find(
-                                (r) => r.courtId === court.id && r.date === timeSlot
+                                (r) => r.courtId === court.id && r.shift === timeSlot
                              )
                              return (
                                 <div
@@ -117,9 +117,9 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
                                    }`}
                                 >
                                    <Shift
-                                      courtId={court.id}
+                                      court={court}
+                                      shiftSlot={timeSlot}
                                       reservation={reservation}
-                                      timeSlot={''}
                                    />
                                 </div>
                              )

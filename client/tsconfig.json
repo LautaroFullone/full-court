@@ -6,7 +6,7 @@
       "paths": {
          "@config": ["./src/config/constants.ts"],
          "@hooks": ["./src/hooks/index.ts"],
-         "@lib/*": ["./src/lib/*"],
+         "@lib": ["./src/lib/index.ts"],
          "@models": ["./src/models/index.ts"],
          "@pages/*": ["./src/pages/*"],
          "@stores": ["./src/stores/index.ts"],

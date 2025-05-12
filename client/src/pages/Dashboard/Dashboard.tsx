@@ -1,6 +1,7 @@
 import { useCalendar, useMobile } from '@hooks'
 import { Court, Reservation } from '@models'
 import { Tabs, TabsContent } from '@shadcn'
+import { formatDateToString } from '@lib'
 import { useMemo, useState } from 'react'
 import { AppLayout } from '@shared'
 import {
@@ -14,9 +15,9 @@ import {
 const mockReservations: Reservation[] = [
    {
       id: '1',
-      date: '24/05/2023',
+      date: '11/05/2025',
       shift: '8:00 - 9:30',
-      courtId: '1',
+      courtId: 'court_1',
       turnId: '1',
       owner: 'Carlos Rodríguez',
       price: 100,
@@ -24,9 +25,9 @@ const mockReservations: Reservation[] = [
    },
    {
       id: '2',
-      date: '24/05/2023',
+      date: '11/05/2025',
       shift: '17:00 - 18:30',
-      courtId: '2',
+      courtId: 'court_2',
       turnId: '2',
       owner: 'Ana Martínez',
       price: 150,
@@ -34,9 +35,9 @@ const mockReservations: Reservation[] = [
    },
    {
       id: '3',
-      date: '24/05/2023',
+      date: '11/05/2025',
       shift: '23:00 - 00:30',
-      courtId: '3',
+      courtId: 'court_3',
       turnId: '3',
       owner: 'Luis González',
       price: 200,
@@ -44,9 +45,9 @@ const mockReservations: Reservation[] = [
    },
    {
       id: '4',
-      date: '24/05/2023',
+      date: '11/05/2025',
       shift: '11:00 - 12:30',
-      courtId: '4',
+      courtId: 'court_4',
       turnId: '4',
       owner: 'María López',
       price: 100,
@@ -54,9 +55,9 @@ const mockReservations: Reservation[] = [
    },
    {
       id: '5',
-      date: '24/05/2023',
+      date: '11/05/2025',
       shift: '21:30 - 23:00',
-      courtId: '1',
+      courtId: 'court_1',
       turnId: '5',
       owner: 'Juan Pérez',
       price: 150,
@@ -64,9 +65,9 @@ const mockReservations: Reservation[] = [
    },
    {
       id: '6',
-      date: '24/05/2023',
+      date: '11/05/2025',
       shift: '14:00 - 15:30',
-      courtId: '2',
+      courtId: 'court_2',
       turnId: '6',
       owner: 'Sofía Ramírez',
       price: 120,
@@ -74,9 +75,9 @@ const mockReservations: Reservation[] = [
    },
    {
       id: '7',
-      date: '24/05/2023',
+      date: '11/05/2025',
       shift: '18:30 - 20:00',
-      courtId: '3',
+      courtId: 'court_3',
       turnId: '7',
       owner: 'Diego Fernández',
       price: 100,
@@ -84,9 +85,9 @@ const mockReservations: Reservation[] = [
    },
    {
       id: '8',
-      date: '24/05/2023',
+      date: '11/05/2025',
       shift: '20:00 - 21:30',
-      courtId: '4',
+      courtId: 'court_4',
       turnId: '8',
       owner: 'Laura Torres',
       price: 150,
@@ -94,9 +95,9 @@ const mockReservations: Reservation[] = [
    },
    {
       id: '9',
-      date: '24/05/2023',
+      date: '11/05/2025',
       shift: '8:00 - 9:30',
-      courtId: '1',
+      courtId: 'court_1',
       turnId: '9',
       owner: 'Pablo Sánchez',
       price: 200,
@@ -104,9 +105,9 @@ const mockReservations: Reservation[] = [
    },
    {
       id: '10',
-      date: '24/05/2023',
+      date: '11/05/2025',
       shift: '9:30 - 11:00',
-      courtId: '2',
+      courtId: 'court_2',
       turnId: '10',
       owner: 'Valentina Díaz',
       price: 150,
@@ -123,17 +124,19 @@ const Dashboard = () => {
    console.log('## Dashboard selectedDate: ', selectedDate)
 
    //Filtrar reservas por cancha para la vista móvil
-   // const filteredReservations = selectedCourt
+   // const reservationsBySelectedDay = selectedCourt
    //    ? reservations.filter((r) => r.courtId === selectedCourt)
    //    : reservations
 
    // Memoize the filtered reservations to avoid unnecessary re-renders
-   const filteredReservations = useMemo(() => {
-      return selectedCourt
-         ? reservations.filter((reservation) => reservation.courtId === selectedCourt.id)
-         : reservations
-   }, [selectedCourt, reservations])
+   const reservationsBySelectedDay = useMemo(() => {
+      return reservations.filter(
+         (reservation) => reservation.date === formatDateToString(selectedDate)
+      )
+   }, [reservations, selectedDate])
 
+   console.log('## Dashboard reservationsBySelectedDay: ', reservationsBySelectedDay)
+   console.log('$$$ formatDateToString: ', formatDateToString(selectedDate))
    return (
       <AppLayout>
          <div className="space-y-4">
@@ -149,7 +152,7 @@ const Dashboard = () => {
                   <div className="rounded-lg border">
                      <ReservationsTable
                         selectedCourt={selectedCourt}
-                        reservations={reservations}
+                        reservations={reservationsBySelectedDay}
                         setReservations={setReservations}
                      />
                   </div>

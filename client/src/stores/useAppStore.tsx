@@ -1,19 +1,23 @@
 import { devtools } from 'zustand/middleware'
 import { create } from 'zustand'
+import { Reservation } from '@models'
 
 interface AppStoreProps {
    theme: 'light' | 'dark'
    selectedDate: Date
+   selectedReservation: Reservation | null
 
    appActions: {
       toggleTheme: () => void
       dispatchSelectedDate: (date: Date) => void
+      dispatchSelectedReservation: (reservation: Reservation | null) => void
    }
 }
 
 const INITIAL_STATE: Omit<AppStoreProps, 'appActions'> = {
-   theme: 'light',
+   theme: 'dark',
    selectedDate: new Date(),
+   selectedReservation: null,
 }
 
 const useAppStore = create<AppStoreProps>()(
@@ -31,6 +35,9 @@ const useAppStore = create<AppStoreProps>()(
             }
          },
          dispatchSelectedDate: (date: Date) => {
+            set({ selectedDate: date })
+         },
+         dispatchSelectedReservation: (date: Date) => {
             set({ selectedDate: date })
          },
       },
