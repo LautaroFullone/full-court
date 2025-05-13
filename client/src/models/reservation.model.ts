@@ -6,7 +6,7 @@ interface Item {
    amount: number
 }
 
-export const reservationTypeValues = ['Clase', 'Partido', 'Torneo', 'Otro'] as const
+export const reservationTypeValues = ['clase', 'partido', 'torneo', 'otro'] as const
 
 export type ReservationType = (typeof reservationTypeValues)[number]
 

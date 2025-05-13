@@ -1,6 +1,4 @@
-import { Label } from '@radix-ui/react-dropdown-menu'
 import { formatDateToString } from '@lib'
-import { Court, ShiftType } from '@models'
 import { useCalendar } from '@hooks'
 import { useMemo } from 'react'
 import {
@@ -14,14 +12,16 @@ import {
    TabsList,
    TabsTrigger,
 } from '@shadcn'
+import { useAppStore } from '@stores'
 
-interface NewReservationModalProp {
-   court: Court
-   shiftSlot: ShiftType
-}
-
-const NewReservationModal: React.FC<NewReservationModalProp> = ({ court, shiftSlot }) => {
+const NewReservationModal: React.FC = () => {
    const { selectedDate } = useCalendar()
+
+   const { selectedCourt, selectedShift } = useAppStore()
+
+   console.log('## NewReservationModal')
+   console.log('selectedCourt', selectedCourt)
+   console.log('selectedShift', selectedShift)
 
    const formatedDate = useMemo(
       () => formatDateToString(selectedDate, true),
@@ -33,7 +33,7 @@ const NewReservationModal: React.FC<NewReservationModalProp> = ({ court, shiftSl
          <DialogHeader>
             <DialogTitle>Nueva Reserva</DialogTitle>
             <DialogDescription>
-               {court.name} - {shiftSlot}
+               {selectedCourt?.name} - {selectedShift}
             </DialogDescription>
          </DialogHeader>
          {/* <NewReservationForm timeSlot={timeSlot} court={court} date={selectedDate} /> */}
@@ -52,7 +52,9 @@ const NewReservationModal: React.FC<NewReservationModalProp> = ({ court, shiftSl
 
             <div className="space-y-2">
                <Label>Cancha</Label>
-               <div className="p-2 border rounded-md bg-muted/50">Cancha {court}</div>
+               <div className="p-2 border rounded-md bg-muted/50">
+                  Cancha {selectedCourt?.name}
+               </div>
             </div>
 
             <Tabs defaultValue="cliente-existente" className="mt-6">
