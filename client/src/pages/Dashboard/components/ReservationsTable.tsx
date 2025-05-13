@@ -1,4 +1,4 @@
-import { shiftSlots, Court, Reservation } from '@models'
+import { shiftTypeValues, Court, Reservation } from '@models'
 import { Loader2 } from 'lucide-react'
 import { useMobile } from '@hooks'
 import { COURTS } from '@config'
@@ -80,7 +80,7 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
             </div>
          ) : (
             <div className="divide-y">
-               {shiftSlots.map((timeSlot) => (
+               {shiftTypeValues.map((timeSlot) => (
                   <div
                      key={`time-${timeSlot}`}
                      className={isMobile ? 'grid grid-cols-2' : 'grid grid-cols-5'}

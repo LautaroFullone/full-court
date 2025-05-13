@@ -5,8 +5,8 @@ export type Shift = {
    isReserved?: boolean
 }
 
-// Horarios disponibles (8:00 a 00:00 con turnos de 1.5 horas)
-export const shiftSlots = [
+// Horario disponibles de 8:00 a 00:00 con turnos de 1.5 horas
+export const shiftTypeValues = [
    '8:00 - 9:30',
    '9:30 - 11:00',
    '11:00 - 12:30',
@@ -20,4 +20,4 @@ export const shiftSlots = [
    '23:00 - 00:30',
 ] as const
 
-export type ShiftType = (typeof shiftSlots)[number]
+export type ShiftType = (typeof shiftTypeValues)[number]
