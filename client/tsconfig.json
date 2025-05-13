@@ -11,7 +11,7 @@
          "@pages/*": ["./src/pages/*"],
          "@stores": ["./src/stores/index.ts"],
          "@shared": ["./src/shared/index.ts"],
-         "@shadcn": ["./src/shared/ui/index.ts"]
+         "@shadcn": ["./src/shared/ui"]
       }
    }
 }
