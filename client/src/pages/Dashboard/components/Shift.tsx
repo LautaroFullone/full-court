@@ -20,6 +20,7 @@ interface ShiftProps {
 const Shift: React.FC<ShiftProps> = ({ reservation, shiftSlot, court }) => {
    const {
       selectedReservation,
+      selectedDate,
       appActions: { dispatchSelectedReservation },
    } = useAppStore()
 
@@ -31,6 +32,12 @@ const Shift: React.FC<ShiftProps> = ({ reservation, shiftSlot, court }) => {
          otro: 'bg-amber-100 text-amber-800',
       }
       return classes[type] || 'bg-gray-100 text-gray-800'
+   }
+
+   function isPastDate(date: Date) {
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      return date < today
    }
 
    if (reservation) {
@@ -95,6 +102,7 @@ const Shift: React.FC<ShiftProps> = ({ reservation, shiftSlot, court }) => {
                size="sm"
                className="w-full h-full flex items-center justify-center"
                onClick={() => {}}
+               disabled={isPastDate(selectedDate)}
             >
                <Plus className="h-4 w-4 mr-1" />
                Reservar
