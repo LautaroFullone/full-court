@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useStyles } from '@hooks'
 import ReservationDetailsModal from './ReservationDetailsModal'
 import { Button, Dialog, DialogTrigger } from '@shadcn'
 import { useState } from 'react'
@@ -14,28 +15,7 @@ const ReservationsList: React.FC<ReservationsListProps> = ({
 }) => {
    const [, setOpenReservationId] = useState<number | null>(null)
 
-   // function getReservationTypeClasses(type: string) {
-   //    const classes: Record<ReservationType, string> = {
-   //       clase: 'bg-blue-100 text-blue-800',
-   //       partido: 'bg-green-100 text-green-800',
-   //       torneo: 'bg-purple-100 text-purple-800',
-   //       otro: 'bg-amber-100 text-amber-800',
-   //    }
-   //    const mainClasses =
-   //       classes[type as keyof typeof classes] || 'bg-gray-100 text-gray-800'
-
-   //    return `text-xs px-2 py-0.5 rounded-full ${mainClasses}`
-   // }
-
-   function getReservationTypeClasses(type: string) {
-      const classes = {
-         clase: 'bg-blue-100 text-blue-800',
-         partido: 'bg-green-100 text-green-800',
-         torneo: 'bg-purple-100 text-purple-800',
-         otro: 'bg-amber-100 text-amber-800',
-      }
-      return classes[type as keyof typeof classes] || 'bg-gray-100 text-gray-800'
-   }
+   const { getReservationTypeClass } = useStyles()
 
    function handleManageConsumptions(reservationId: string) {
       console.log('## handleManageConsumptions: ', reservationId)
@@ -85,11 +65,8 @@ const ReservationsList: React.FC<ReservationsListProps> = ({
                   </div>
 
                   <div className="hidden md:block">
-                     {/* <span className={getReservationTypeClasses(reservation.type)}>
-                        {reservation.type}
-                     </span> */}
                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full ${getReservationTypeClasses(
+                        className={`text-xs px-2 py-0.5 rounded-full ${getReservationTypeClass(
                            reservation.type
                         )}`}
                      ></span>

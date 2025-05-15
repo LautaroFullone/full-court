@@ -1,3 +1,4 @@
 import useAppStore from './useAppStore'
+import useModalStore from './useModalStore'
 
-export { useAppStore }
+export { useAppStore, useModalStore }

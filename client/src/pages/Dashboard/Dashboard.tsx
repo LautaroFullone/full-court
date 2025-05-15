@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCalendar, useMobile, useMock } from '@hooks'
-import { Court, Reservation } from '@models'
 import { Tabs, TabsContent } from '@shadcn'
 import { formatDateToString } from '@lib'
 import { useMemo, useState } from 'react'
 import { AppLayout } from '@shared'
+import { Court } from '@models'
 import {
    CalendarHandler,
    CourtHandlerMobile,
+   NewReservationModal,
    ReservationsList,
    ReservationsTable,
    ReservationsViewHandler,
@@ -33,8 +34,6 @@ const Dashboard = () => {
       )
    }, [reservations, selectedDate])
 
-   console.log('## Dashboard reservationsBySelectedDay: ', reservationsBySelectedDay)
-   console.log('$$$ formatDateToString: ', formatDateToString(selectedDate))
    return (
       <AppLayout>
          <div className="space-y-4">
@@ -49,9 +48,9 @@ const Dashboard = () => {
                <TabsContent value="grid" className="mt-4">
                   <div className="rounded-lg border">
                      <ReservationsTable
+                        selectedDate={selectedDate}
                         selectedCourt={selectedCourt}
                         reservations={reservationsBySelectedDay}
-                        setReservations={setReservations}
                      />
                   </div>
                </TabsContent>
@@ -66,6 +65,7 @@ const Dashboard = () => {
                </TabsContent>
             </Tabs>
          </div>
+         <NewReservationModal />
       </AppLayout>
    )
 }

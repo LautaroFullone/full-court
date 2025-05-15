@@ -1,6 +1,6 @@
-import { Court, Reservation, ReservationType, ShiftType } from '@models'
+import { Court, Reservation, ShiftType } from '@models'
 import { MoreHorizontal, Plus } from 'lucide-react'
-import { useAppStore } from '@stores'
+import { useAppStore, useModalStore } from '@stores'
 import {
    Button,
    Dialog,
@@ -10,29 +10,22 @@ import {
    DropdownMenuItem,
    DropdownMenuTrigger,
 } from '@shadcn'
+import { useStyles } from '@hooks'
+import NewReservationModal from './NewReservationModal'
 
 interface ShiftProps {
-   court: Court
+   court: Court | undefined
    reservation: Reservation | undefined
    shiftSlot: ShiftType
 }
 
-const Shift: React.FC<ShiftProps> = ({ reservation, shiftSlot, court }) => {
+const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
+   const { getReservationTypeClass } = useStyles()
    const {
-      selectedReservation,
       selectedDate,
       appActions: { dispatchSelectedReservation },
    } = useAppStore()
-
-   function getReservationTypeClass(type: ReservationType) {
-      const classes = {
-         clase: 'bg-blue-100 text-blue-800',
-         partido: 'bg-green-100 text-green-800',
-         torneo: 'bg-purple-100 text-purple-800',
-         otro: 'bg-amber-100 text-amber-800',
-      }
-      return classes[type] || 'bg-gray-100 text-gray-800'
-   }
+   const { modalActions } = useModalStore()
 
    function isPastDate(date: Date) {
       const today = new Date()
@@ -43,7 +36,7 @@ const Shift: React.FC<ShiftProps> = ({ reservation, shiftSlot, court }) => {
    if (reservation) {
       return (
          <Dialog
-            open={true} //openReservationId === reservation.id}
+            open={false} //openReservationId === reservation.id}
             onOpenChange={(open) => !open} //&& setOpenReservationId(null)}
          >
             <DialogTrigger asChild>
@@ -52,11 +45,11 @@ const Shift: React.FC<ShiftProps> = ({ reservation, shiftSlot, court }) => {
                   onClick={() => dispatchSelectedReservation(reservation)}
                >
                   <span className="font-medium text-sm text-center">
-                     {reservation.owner}
+                     {reservation.owner.name}
                   </span>
 
                   <span
-                     className={`text-xs px-2 py-0.5 rounded-full mt-1 ${getReservationTypeClass(
+                     className={`text-xs px-2 py-0.5 rounded-full mt-1 capitalize ${getReservationTypeClass(
                         reservation.type
                      )}`}
                   >
@@ -95,22 +88,22 @@ const Shift: React.FC<ShiftProps> = ({ reservation, shiftSlot, court }) => {
    }
 
    return (
-      <Dialog>
-         <DialogTrigger asChild>
-            <Button
-               variant="ghost"
-               size="sm"
-               className="w-full h-full flex items-center justify-center"
-               onClick={() => {}}
-               disabled={isPastDate(selectedDate)}
-            >
-               <Plus className="h-4 w-4 mr-1" />
-               Reservar
-            </Button>
-         </DialogTrigger>
-
-         {/* <NewReservationModal court={court} shiftSlot={shiftSlot} /> */}
-      </Dialog>
+      <Button
+         variant="ghost"
+         size="sm"
+         className="w-full h-full flex items-center justify-center"
+         onClick={() => {
+            modalActions.openModal({
+               modal: 'new-reservation',
+               selectedCourt: court,
+               selectedShift: shiftSlot,
+            })
+         }}
+         disabled={isPastDate(selectedDate)}
+      >
+         <Plus className="h-4 w-4 mr-1" />
+         Reservar
+      </Button>
    )
 }
 export default Shift

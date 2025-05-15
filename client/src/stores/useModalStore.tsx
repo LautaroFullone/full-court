@@ -2,34 +2,76 @@ import { create } from 'zustand'
 import useAppStore from './useAppStore'
 import { Court, ShiftType } from '@models'
 
+// Define los nombres de los modales como un tipo
+type ModalType = 'new-reservation' | 'edit-reservation' | 'delete-reservation'
+
+// Define el tipo del payload para cada modal
+type ModalPayload =
+   | {
+        modal: 'new-reservation'
+        selectedCourt: Court | undefined
+        selectedShift: ShiftType
+     }
+   | { modal: 'edit-reservation'; reservationId: string }
+   | { modal: 'delete-reservation'; reservationId: string }
+
 interface ModalStoreProps {
-   isNewReservationModalOpen: boolean
+   modalFlags: Record<ModalType, boolean>
 
    modalActions: {
-      openNewReservationModal: (selectedCourt: Court, selectedShift: ShiftType) => void
-      closeNewReservationModal: () => void
+      openModal: (payload: ModalPayload) => void
+      closeModal: (modal: ModalType) => void
    }
 }
 
 const INITIAL_STATE: Omit<ModalStoreProps, 'modalActions'> = {
-   isNewReservationModalOpen: false,
+   modalFlags: {
+      'new-reservation': false,
+      'edit-reservation': false,
+      'delete-reservation': false,
+   },
 }
 
 export const useModalStore = create<ModalStoreProps>((set) => {
    const { appActions } = useAppStore.getState()
 
    return {
-      ...INITIAL_STATE,
+      modalFlags: { ...INITIAL_STATE.modalFlags },
 
       modalActions: {
-         openNewReservationModal: (selectedCourt: Court, selectedShift: ShiftType) => {
-            //TODO: terminar este metodo
-            appActions.dispatchSelectedCourt(selectedCourt)
-            appActions.dispatchSelectedShift(selectedShift)
-            set({ isNewReservationModalOpen: true })
+         openModal: (payload) => {
+            switch (payload.modal) {
+               case 'new-reservation':
+                  appActions.dispatchSelectedCourt(payload.selectedCourt)
+                  appActions.dispatchSelectedShift(payload.selectedShift)
+                  set((state) => ({
+                     modalFlags: { ...state.modalFlags, 'new-reservation': true },
+                  }))
+                  break
+
+               case 'edit-reservation':
+                  console.log(`Editing reservation with ID: ${payload.reservationId}`)
+                  set((state) => ({
+                     modalFlags: { ...state.modalFlags, 'edit-reservation': true },
+                  }))
+                  break
+
+               case 'delete-reservation':
+                  console.log(`Deleting reservation with ID: ${payload.reservationId}`)
+                  set((state) => ({
+                     modalFlags: { ...state.modalFlags, 'delete-reservation': true },
+                  }))
+                  break
+
+               default:
+                  console.warn(`Modal is not defined`)
+                  break
+            }
          },
-         closeNewReservationModal: () => {
-            set({ isNewReservationModalOpen: false })
+         closeModal: (modal) => {
+            set((state) => ({
+               modalFlags: { ...state.modalFlags, [modal]: false },
+            }))
          },
       },
    }

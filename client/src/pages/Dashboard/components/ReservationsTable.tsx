@@ -1,4 +1,5 @@
-import { shiftTypeValues, Court, Reservation } from '@models'
+import { SHIFT_VALUES, Court, Reservation, ShiftType } from '@models'
+import { formatDateToString } from '@lib'
 import { Loader2 } from 'lucide-react'
 import { useMobile } from '@hooks'
 import { COURTS } from '@config'
@@ -6,57 +7,68 @@ import Shift from './Shift'
 
 interface ReservationsTableProps {
    reservations: Reservation[]
+   selectedDate: Date
    selectedCourt: Court | undefined
-   setReservations: (reservations: Reservation[]) => void
 }
 
 const ReservationsTable: React.FC<ReservationsTableProps> = ({
    selectedCourt,
    reservations,
-   //setReservations,
+   selectedDate,
 }) => {
    // const [openReservationId, setOpenReservationId] = useState<number | null>(null)
 
    const isMobile = useMobile()
    const isLoading = false
 
-   // function handleManageConsumptions(reservationId: string) {
-   //    console.log('## handleManageConsumptions: ', reservationId)
-   // }
+   function generateMobileShiftView(shiftSlot: ShiftType) {
+      const hasReservation = reservations.find(
+         (r) =>
+            r.date == formatDateToString(selectedDate) &&
+            r.courtId === selectedCourt?.id &&
+            r.shift === shiftSlot
+      )
 
-   // const handleEditReservation = (reservationId: number) => {
-   //    console.log('## handleEditReservation: ', reservationId)
-   //    // En lugar de navegar, abrimos el modal de detalles
-   //    //setOpenReservationId(reservationId)
-   // }
+      return (
+         <Shift
+            shiftSlot={shiftSlot}
+            court={selectedCourt}
+            reservation={hasReservation}
+         />
+      )
+   }
 
-   // const handleCancelReservation = (reservationId: number) => {
-   //    console.log(`## handleEditReservation ${reservationId}`)
-   // }
+   function generateDesktopShiftView(shiftSlot: ShiftType) {
+      return COURTS.map((court) => {
+         const hasReservation = reservations.find(
+            (r) =>
+               r.date == formatDateToString(selectedDate) &&
+               r.courtId === court?.id &&
+               r.shift === shiftSlot
+         )
 
-   // const handleReservationUpdate = (updatedReservation: any) => {
-   //    // Actualizar la reserva en el estado local
-   //    const updated = reservations.map((res) =>
-   //       res.id === updatedReservation.id ? updatedReservation : res
-   //    )
-   //    setReservations(updated)
-   //    // Mantener el modal abierto con los detalles actualizados
-   //    setOpenReservationId(updatedReservation.id)
-   // }
-
-   // const handleNewReservation = (timeSlot: string, court: number) => {
-   //    console.log(`## handleNewReservation`, timeSlot, court)
-
-   //    //    setSelectedTimeSlot(timeSlot)
-   //    //    setSelectedCourt(court)
-   //    //    setIsNewReservationOpen(true)
-   // }
+         return (
+            <div
+               key={`${'shift'}-${court.id}-${shiftSlot}`}
+               className={`p-2 relative h-20 ${
+                  hasReservation
+                     ? 'bg-primary/5 hover:bg-primary/10'
+                     : 'hover:bg-muted/50'
+               }`}
+            >
+               <Shift shiftSlot={shiftSlot} court={court} reservation={hasReservation} />
+            </div>
+         )
+      })
+   }
 
    return (
       <div className="rounded-lg border">
+         {/* CREACION DE LAS 5 COLUMNAS EN DESKTOP */}
          {!isMobile && (
             <div className="grid grid-cols-5 border-b">
                <div className="p-3 font-medium">Horario</div>
+
                {COURTS.map((court) => (
                   <div key={`court-${court.id}`} className="p-3 font-medium text-center">
                      {court.name}
@@ -65,6 +77,7 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
             </div>
          )}
 
+         {/* CREACION LA UNICA COLUMNA EN MOBILE */}
          {isMobile && (
             <div className="grid grid-cols-2 border-b">
                <div className="p-3 font-medium">Horario</div>
@@ -80,50 +93,17 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
             </div>
          ) : (
             <div className="divide-y">
-               {shiftTypeValues.map((timeSlot) => (
+               {/* SE RECORREN LOS SHIFT -> POR CADA TURNO SE COMPLETA PARA CADA CANCHA */}
+               {SHIFT_VALUES.map((shiftSlot) => (
                   <div
-                     key={`time-${timeSlot}`}
+                     key={`shift-${shiftSlot}`}
                      className={isMobile ? 'grid grid-cols-2' : 'grid grid-cols-5'}
                   >
-                     <div className="p-3 border-r">{timeSlot}</div>
+                     <div className="p-3 border-r">{shiftSlot}</div>
 
                      {isMobile
-                        ? // Vista móvil: solo mostrar la cancha seleccionada
-                          (() => {
-                             const court = 'cancha_1'
-                             const reservation = reservations.find(
-                                (r) => r.courtId === court && r.date === timeSlot
-                             )
-                             return (
-                                <Shift
-                                   courtId={court}
-                                   timeSlot={timeSlot}
-                                   reservation={reservation}
-                                />
-                             )
-                          })()
-                        : // Vista desktop: mostrar todas las canchas
-                          COURTS.map((court) => {
-                             const reservation = reservations.find(
-                                (r) => r.courtId === court.id && r.shift === timeSlot
-                             )
-                             return (
-                                <div
-                                   key={`${timeSlot}-${court.id}`}
-                                   className={`p-2 relative h-20 ${
-                                      reservation
-                                         ? 'bg-primary/5 hover:bg-primary/10'
-                                         : 'hover:bg-muted/50'
-                                   }`}
-                                >
-                                   <Shift
-                                      court={court}
-                                      shiftSlot={timeSlot}
-                                      reservation={reservation}
-                                   />
-                                </div>
-                             )
-                          })}
+                        ? generateMobileShiftView(shiftSlot)
+                        : generateDesktopShiftView(shiftSlot)}
                   </div>
                ))}
             </div>

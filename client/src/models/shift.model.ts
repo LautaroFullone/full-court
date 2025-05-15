@@ -6,7 +6,7 @@ export type Shift = {
 }
 
 // Horario disponibles de 8:00 a 00:00 con turnos de 1.5 horas
-export const shiftTypeValues = [
+export const SHIFT_VALUES = [
    '8:00 - 9:30',
    '9:30 - 11:00',
    '11:00 - 12:30',
@@ -20,4 +20,4 @@ export const shiftTypeValues = [
    '23:00 - 00:30',
 ] as const
 
-export type ShiftType = (typeof shiftTypeValues)[number]
+export type ShiftType = (typeof SHIFT_VALUES)[number]
