@@ -3,8 +3,7 @@ import { useState } from 'react'
 const useBasicForm = <T>(initialState: T) => {
    const [formData, setFormData] = useState<T>(initialState)
 
-   function handleChange(evt: React.ChangeEvent<HTMLInputElement>) {
-      const { name, value } = evt.target
+   function handleChange(name: keyof T, value: T[keyof T]) {
       setFormData((prevData) => ({
          ...prevData,
          [name]: value,

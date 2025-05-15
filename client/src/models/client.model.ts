@@ -5,6 +5,8 @@ export interface Client {
    email: string
 }
 
+export type ClientType = 'new-client' | 'existing-client'
+
 export const CLIENTS = [
    {
       id: 'client_1',

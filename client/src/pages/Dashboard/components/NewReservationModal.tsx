@@ -1,12 +1,17 @@
 import { formatDateToString } from '@lib'
 import { useMemo, useState } from 'react'
-import { Client, CLIENTS, RESERVATION_TYPES_VALUES } from '@models'
+import {
+   Client,
+   CLIENTS,
+   ClientType,
+   RESERVATION_TYPES_VALUES,
+   ReservationType,
+} from '@models'
 import { useAppStore, useModalStore } from '@stores'
 import { useBasicForm, useCalendar, useMobile } from '@hooks'
 import {
    Button,
    Dialog,
-   DialogClose,
    DialogContent,
    DialogDescription,
    DialogFooter,
@@ -22,23 +27,29 @@ import {
    TabsTrigger,
 } from '@shadcn'
 
+interface NewReservationForm {
+   clientType: ClientType
+   name: string
+   phone: string
+   email: string
+   reservationType: ReservationType
+}
+const initialFormData: NewReservationForm = {
+   clientType: 'new-client',
+   name: '',
+   phone: '',
+   email: '',
+   reservationType: 'clase',
+}
+
 const NewReservationModal: React.FC = () => {
    const isMobile = useMobile()
    const { selectedDate } = useCalendar()
    const { selectedCourt, selectedShift } = useAppStore()
    const { modalFlags, modalActions } = useModalStore()
-   const { formData, handleChange, resetForm } = useBasicForm({
-      name: '',
-      phone: '',
-      email: '',
-      reservationType: 'partido',
-   })
+   const { formData, handleChange, resetForm } = useBasicForm(initialFormData)
 
    const [selectedClient, setSelectedClient] = useState<Client | undefined>()
-
-   console.log('## NewReservationModal')
-   // console.log('selectedCourt', selectedCourt)
-   // console.log('selectedShift', selectedShift)
 
    const formatedDate = useMemo(
       () => formatDateToString(selectedDate, true),
@@ -47,9 +58,17 @@ const NewReservationModal: React.FC = () => {
 
    async function handleSubmit(evt: React.FormEvent) {
       evt.preventDefault()
-      //await loginUser(formData)
+      //await createReservation(formData)
       resetForm()
       modalActions.closeModal('new-reservation')
+   }
+
+   function handleSelectClient(client: Client) {
+      if (selectedClient?.id === client.id) {
+         setSelectedClient(undefined)
+      } else {
+         setSelectedClient(client)
+      }
    }
 
    return (
@@ -57,7 +76,7 @@ const NewReservationModal: React.FC = () => {
          open={modalFlags['new-reservation']}
          onOpenChange={() => modalActions.closeModal('new-reservation')}
       >
-         <DialogContent className="sm:max-w-[600px] w-[95%] max-w-[95%] sm:w-auto ">
+         <DialogContent className="w-[500px] h-[70vh]">
             <DialogHeader>
                <DialogTitle>Nueva Reserva</DialogTitle>
                <DialogDescription className="capitalize">
@@ -67,7 +86,7 @@ const NewReservationModal: React.FC = () => {
 
             {/* <NewReservationForm timeSlot={timeSlot} court={court} date={selectedDate} /> */}
 
-            <div className="space-y-4 py-4 md:max-h-[70vh] overflow-y-auto md:w-[35vw] ">
+            <div className="space-y-4 py-4  overflow-y-auto">
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
                   <div className="space-y-2 ">
                      <Label>Cancha</Label>
@@ -84,24 +103,22 @@ const NewReservationModal: React.FC = () => {
                   </div>
                </div>
 
-               {/* <div className="space-y-2">
-                  <Label>Cancha</Label>
-                  <div className="p-2 border rounded-md bg-muted/50">
-                     Cancha {selectedCourt?.name}
-                  </div>
-               </div> */}
-
-               <Tabs defaultValue="cliente-existente" className="mt-6">
+               <Tabs
+                  defaultValue="existing-client"
+                  className="mt-6"
+                  onValueChange={(value) => handleChange('clientType', value)}
+               >
                   <TabsList className="grid w-full grid-cols-2">
-                     <TabsTrigger value="cliente-nuevo" className="cursor-pointer">
+                     <TabsTrigger value="new-client" className="cursor-pointer">
                         Cliente Nuevo
                      </TabsTrigger>
-                     <TabsTrigger value="cliente-existente" className="cursor-pointer">
+
+                     <TabsTrigger value="existing-client" className="cursor-pointer">
                         Cliente Existente
                      </TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="cliente-existente" className="space-y-4 mt-4">
+                  <TabsContent value="existing-client" className="space-y-4 mt-4">
                      <div className="space-y-2">
                         <Label htmlFor="search-client">Buscar Cliente</Label>
                         <Input
@@ -123,15 +140,16 @@ const NewReservationModal: React.FC = () => {
                                        {client.phone}
                                     </div>
                                  </div>
+
                                  <Button
                                     size="sm"
+                                    className="w-full sm:w-auto"
                                     variant={
                                        selectedClient?.id === client.id
                                           ? 'default'
                                           : 'outline'
                                     }
-                                    onClick={() => setSelectedClient(client)}
-                                    className="w-full sm:w-auto"
+                                    onClick={() => handleSelectClient(client)}
                                  >
                                     {selectedClient?.id === client.id
                                        ? 'Seleccionado'
@@ -143,25 +161,27 @@ const NewReservationModal: React.FC = () => {
                      </div>
                   </TabsContent>
 
-                  <TabsContent value="cliente-nuevo" className="space-y-4 mt-4">
+                  <TabsContent value="new-client" className="space-y-4 mt-4">
                      <div className="space-y-2">
                         <Label htmlFor="name">Nombre y Apellido</Label>
                         <Input
                            id="name"
                            placeholder="Ej: Juan Pérez"
                            value={formData.name}
-                           onChange={handleChange}
+                           onChange={(evt) => handleChange('name', evt.target.value)}
                         />
                      </div>
+
                      <div className="space-y-2">
                         <Label htmlFor="phone">Teléfono</Label>
                         <Input
                            id="phone"
                            placeholder="Ej: 555-1234"
                            value={formData.phone}
-                           onChange={handleChange}
+                           onChange={(evt) => handleChange('phone', evt.target.value)}
                         />
                      </div>
+
                      <div className="space-y-2">
                         <Label htmlFor="email">Email (opcional)</Label>
                         <Input
@@ -169,7 +189,7 @@ const NewReservationModal: React.FC = () => {
                            type="email"
                            placeholder="Ej: juan@ejemplo.com"
                            value={formData.email}
-                           onChange={handleChange}
+                           onChange={(evt) => handleChange('email', evt.target.value)}
                         />
                      </div>
                   </TabsContent>
@@ -180,8 +200,7 @@ const NewReservationModal: React.FC = () => {
                   <RadioGroup
                      defaultValue="partido"
                      value={formData.reservationType}
-                     onChange={handleChange}
-                     // onValueChange={(evt) => handleChange(evt.target.)}
+                     onValueChange={(value) => handleChange('reservationType', value)}
                      className="grid grid-cols-2 sm:grid-cols-4 gap-4"
                   >
                      {RESERVATION_TYPES_VALUES.map((type) => (
@@ -197,7 +216,6 @@ const NewReservationModal: React.FC = () => {
                                  rounded-md border-2 border-muted bg-popover p-4 
                                  hover:bg-accent hover:text-accent-foreground 
                                  peer-data-[state=checked]:border-primary 
-                                 [&:has([data-state=checked])]:border-primary
                                  cursor-pointer capitalize"
                            >
                               {type}
@@ -209,16 +227,18 @@ const NewReservationModal: React.FC = () => {
 
                <div className="space-y-2">
                   <Label htmlFor="notes">Notas adicionales (opcional)</Label>
-                  <Input id="notes" placeholder="Ej: Solicita préstamo de raquetas" />
+                  <Input id="notes" placeholder="Ej: Solicita préstamo de paletas" />
                </div>
             </div>
 
             <DialogFooter className={`${isMobile ? 'flex-col space-y-2' : ''}`}>
-               <DialogClose asChild>
-                  <Button variant="outline" className={isMobile ? 'w-full' : ''}>
-                     Cancelar
-                  </Button>
-               </DialogClose>
+               <Button
+                  variant="outline"
+                  className={isMobile ? 'w-full' : ''}
+                  onClick={() => modalActions.closeModal('new-reservation')}
+               >
+                  Cancelar
+               </Button>
 
                <Button
                   type="submit"
