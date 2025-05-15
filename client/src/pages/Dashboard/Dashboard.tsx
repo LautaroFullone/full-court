@@ -22,12 +22,8 @@ const Dashboard = () => {
    const [selectedCourt, setSelectedCourt] = useState<Court>()
    const [reservations, setReservations] = useState(generateMockReservations())
 
-   //Filtrar reservas por cancha para la vista móvil
-   // const reservationsBySelectedDay = selectedCourt
-   //    ? reservations.filter((r) => r.courtId === selectedCourt)
-   //    : reservations
+   console.log('## reservations: ', reservations)
 
-   // Memoize the filtered reservations to avoid unnecessary re-renders
    const reservationsBySelectedDay = useMemo(() => {
       return reservations.filter(
          (reservation) => reservation.date === formatDateToString(selectedDate)
@@ -57,10 +53,7 @@ const Dashboard = () => {
 
                <TabsContent value="list" className="mt-4">
                   <div className="rounded-lg border">
-                     <ReservationsList
-                        reservations={reservations}
-                        setReservations={setReservations}
-                     />
+                     <ReservationsList reservations={reservationsBySelectedDay} />
                   </div>
                </TabsContent>
             </Tabs>

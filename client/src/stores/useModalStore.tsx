@@ -1,15 +1,13 @@
-import { create } from 'zustand'
-import useAppStore from './useAppStore'
 import { Court, ShiftType } from '@models'
+import useAppStore from './useAppStore'
+import { create } from 'zustand'
 
-// Define los nombres de los modales como un tipo
 type ModalType = 'new-reservation' | 'edit-reservation' | 'delete-reservation'
 
-// Define el tipo del payload para cada modal
 type ModalPayload =
    | {
         modal: 'new-reservation'
-        selectedCourt: Court | undefined
+        selectedCourt: Court
         selectedShift: ShiftType
      }
    | { modal: 'edit-reservation'; reservationId: string }

@@ -21,10 +21,15 @@ const useMock = () => {
             const shift = SHIFT_VALUES[Math.floor(Math.random() * SHIFT_VALUES.length)]
             const courtId = courtIds[i % courtIds.length]
             const turnId = `${idCounter}`
-            const owner = CLIENTS[(i + offset * 3) % CLIENTS.length]
+            const clientIndex =
+               (((i + offset * 3) % CLIENTS.length) + CLIENTS.length) % CLIENTS.length
+            const owner = CLIENTS[clientIndex]
             const price = 100 + Math.floor(Math.random() * 101) // entre 100 y 200
-            const type =
-               RESERVATION_TYPES_VALUES[(i + offset) % RESERVATION_TYPES_VALUES.length]
+            const typeIndex =
+               (((i + offset) % RESERVATION_TYPES_VALUES.length) +
+                  RESERVATION_TYPES_VALUES.length) %
+               RESERVATION_TYPES_VALUES.length
+            const type = RESERVATION_TYPES_VALUES[typeIndex]
 
             reservations.push({
                id: `${idCounter}`,
