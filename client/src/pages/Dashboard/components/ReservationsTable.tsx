@@ -4,19 +4,14 @@ import { Loader2 } from 'lucide-react'
 import { useMobile } from '@hooks'
 import { COURTS } from '@config'
 import Shift from './Shift'
+import { useAppStore } from '@stores'
 
 interface ReservationsTableProps {
    reservations: Reservation[]
-   selectedDate: Date
-   selectedCourt: Court | undefined
 }
 
-const ReservationsTable: React.FC<ReservationsTableProps> = ({
-   selectedCourt,
-   reservations,
-   selectedDate,
-}) => {
-   // const [openReservationId, setOpenReservationId] = useState<number | null>(null)
+const ReservationsTable: React.FC<ReservationsTableProps> = ({ reservations }) => {
+   const { selectedCourt, selectedDate } = useAppStore()
 
    const isMobile = useMobile()
    const isLoading = false
@@ -32,7 +27,7 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({
       return (
          <Shift
             shiftSlot={shiftSlot}
-            court={selectedCourt}
+            court={{ id: 'x', name: 'Cancha X' }}
             reservation={hasReservation}
          />
       )

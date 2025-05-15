@@ -19,8 +19,7 @@ const Dashboard = () => {
    const { selectedDate } = useCalendar()
    const { generateMockReservations } = useMock()
 
-   const [selectedCourt, setSelectedCourt] = useState<Court>()
-   const [reservations, setReservations] = useState(generateMockReservations())
+   const [reservations] = useState(generateMockReservations())
 
    console.log('## reservations: ', reservations)
 
@@ -39,15 +38,11 @@ const Dashboard = () => {
                   <ReservationsViewHandler />
                </div>
 
-               {isMobile && <CourtHandlerMobile setSelectedCourt={setSelectedCourt} />}
+               {isMobile && <CourtHandlerMobile />}
 
                <TabsContent value="grid" className="mt-4">
                   <div className="rounded-lg border">
-                     <ReservationsTable
-                        selectedDate={selectedDate}
-                        selectedCourt={selectedCourt}
-                        reservations={reservationsBySelectedDay}
-                     />
+                     <ReservationsTable reservations={reservationsBySelectedDay} />
                   </div>
                </TabsContent>
 
