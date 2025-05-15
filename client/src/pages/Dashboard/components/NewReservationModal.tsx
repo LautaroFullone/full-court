@@ -1,14 +1,7 @@
+import { useBasicForm, useCalendar, useMobile } from '@hooks'
+import { useAppStore, useModalStore } from '@stores'
 import { formatDateToString } from '@lib'
 import { useMemo, useState } from 'react'
-import {
-   Client,
-   CLIENTS,
-   ClientType,
-   RESERVATION_TYPES_VALUES,
-   ReservationType,
-} from '@models'
-import { useAppStore, useModalStore } from '@stores'
-import { useBasicForm, useCalendar, useMobile } from '@hooks'
 import {
    Button,
    Dialog,
@@ -26,6 +19,13 @@ import {
    TabsList,
    TabsTrigger,
 } from '@shadcn'
+import {
+   Client,
+   CLIENTS,
+   ClientType,
+   RESERVATION_TYPES_VALUES,
+   ReservationType,
+} from '@models'
 
 interface NewReservationForm {
    clientType: ClientType
@@ -34,6 +34,7 @@ interface NewReservationForm {
    email: string
    reservationType: ReservationType
 }
+
 const initialFormData: NewReservationForm = {
    clientType: 'new-client',
    name: '',
@@ -204,7 +205,7 @@ const NewReservationModal: React.FC = () => {
                      className="grid grid-cols-2 sm:grid-cols-4 gap-4"
                   >
                      {RESERVATION_TYPES_VALUES.map((type) => (
-                        <div>
+                        <div key={`reservation-type-${type}`}>
                            <RadioGroupItem
                               value={type}
                               id={type}

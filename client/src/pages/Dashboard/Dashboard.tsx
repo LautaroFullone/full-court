@@ -58,6 +58,7 @@ const Dashboard = () => {
                </TabsContent>
             </Tabs>
          </div>
+
          <NewReservationModal />
       </AppLayout>
    )

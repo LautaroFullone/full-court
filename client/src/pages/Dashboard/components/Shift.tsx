@@ -1,31 +1,28 @@
 import { Court, Reservation, ShiftType } from '@models'
-import { MoreHorizontal, Plus } from 'lucide-react'
 import { useAppStore, useModalStore } from '@stores'
+import { MoreHorizontal, Plus } from 'lucide-react'
+import { useStyles } from '@hooks'
 import {
    Button,
-   Dialog,
-   DialogTrigger,
    DropdownMenu,
    DropdownMenuContent,
    DropdownMenuItem,
    DropdownMenuTrigger,
 } from '@shadcn'
-import { useStyles } from '@hooks'
-import NewReservationModal from './NewReservationModal'
 
 interface ShiftProps {
-   court: Court | undefined
+   court: Court
    reservation: Reservation | undefined
    shiftSlot: ShiftType
 }
 
 const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
-   const { getReservationTypeClass } = useStyles()
    const {
       selectedDate,
       appActions: { dispatchSelectedReservation },
    } = useAppStore()
    const { modalActions } = useModalStore()
+   const { getReservationTypeClass } = useStyles()
 
    function isPastDate(date: Date) {
       const today = new Date()
@@ -35,28 +32,23 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
 
    if (reservation) {
       return (
-         <Dialog
-            open={false} //openReservationId === reservation.id}
-            onOpenChange={(open) => !open} //&& setOpenReservationId(null)}
-         >
-            <DialogTrigger asChild>
-               <div
-                  className="flex flex-col items-center justify-center cursor-pointer h-full w-full rounded-md transition-colors"
-                  onClick={() => dispatchSelectedReservation(reservation)}
-               >
-                  <span className="font-medium text-sm text-center">
-                     {reservation.owner.name}
-                  </span>
+         <div className="h-full">
+            <div
+               className="flex flex-col items-center justify-center cursor-pointer h-full w-full rounded-md transition-colors"
+               onClick={() => dispatchSelectedReservation(reservation)}
+            >
+               <span className="font-medium text-sm text-center">
+                  {reservation.owner.name}
+               </span>
 
-                  <span
-                     className={`text-xs px-2 py-0.5 rounded-full mt-1 capitalize ${getReservationTypeClass(
-                        reservation.type
-                     )}`}
-                  >
-                     {reservation.type}
-                  </span>
-               </div>
-            </DialogTrigger>
+               <span
+                  className={`text-xs px-2 py-0.5 rounded-full mt-1 capitalize ${getReservationTypeClass(
+                     reservation.type
+                  )}`}
+               >
+                  {reservation.type}
+               </span>
+            </div>
 
             <DropdownMenu>
                <DropdownMenuTrigger asChild>
@@ -81,9 +73,7 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
                   </DropdownMenuItem>
                </DropdownMenuContent>
             </DropdownMenu>
-
-            {/* <ReservationDetailsModal /> */}
-         </Dialog>
+         </div>
       )
    }
 
