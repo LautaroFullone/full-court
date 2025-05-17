@@ -1,5 +1,5 @@
-import { useBasicForm, useCalendar, useMobile } from '@hooks'
 import { useAppStore, useModalStore } from '@stores'
+import { useBasicForm, useMobile } from '@hooks'
 import { formatDateToString } from '@lib'
 import { useMemo, useState } from 'react'
 import {
@@ -45,9 +45,12 @@ const initialFormData: NewReservationForm = {
 
 const NewReservationModal: React.FC = () => {
    const isMobile = useMobile()
-   const { selectedDate } = useCalendar()
+   const { selectedDate } = useAppStore()
    const { selectedCourt, selectedShift } = useAppStore()
-   const { modalFlags, modalActions } = useModalStore()
+   const {
+      modalFlags,
+      modalActions: { closeModal },
+   } = useModalStore()
    const { formData, handleChange, resetForm } = useBasicForm(initialFormData)
 
    const [selectedClient, setSelectedClient] = useState<Client | undefined>()
@@ -61,7 +64,7 @@ const NewReservationModal: React.FC = () => {
       evt.preventDefault()
       //await createReservation(formData)
       resetForm()
-      modalActions.closeModal('new-reservation')
+      closeModal('new-reservation')
    }
 
    function handleSelectClient(client: Client) {
@@ -75,7 +78,7 @@ const NewReservationModal: React.FC = () => {
    return (
       <Dialog
          open={modalFlags['new-reservation']}
-         onOpenChange={() => modalActions.closeModal('new-reservation')}
+         onOpenChange={() => closeModal('new-reservation')}
       >
          <DialogContent className="w-[500px] h-[70vh]">
             <DialogHeader>
@@ -236,7 +239,7 @@ const NewReservationModal: React.FC = () => {
                <Button
                   variant="outline"
                   className={isMobile ? 'w-full' : ''}
-                  onClick={() => modalActions.closeModal('new-reservation')}
+                  onClick={() => closeModal('new-reservation')}
                >
                   Cancelar
                </Button>

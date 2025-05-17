@@ -1,10 +1,10 @@
-import { SHIFT_VALUES, Court, Reservation, ShiftType } from '@models'
+import { SHIFT_VALUES, Reservation, ShiftType } from '@models'
 import { formatDateToString } from '@lib'
 import { Loader2 } from 'lucide-react'
+import { useAppStore } from '@stores'
 import { useMobile } from '@hooks'
 import { COURTS } from '@config'
 import Shift from './Shift'
-import { useAppStore } from '@stores'
 
 interface ReservationsTableProps {
    reservations: Reservation[]

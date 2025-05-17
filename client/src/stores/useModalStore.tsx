@@ -1,8 +1,8 @@
-import { Court, ShiftType } from '@models'
+import { Court, Reservation, ShiftType } from '@models'
 import useAppStore from './useAppStore'
 import { create } from 'zustand'
 
-type ModalType = 'new-reservation' | 'edit-reservation' | 'delete-reservation'
+type ModalType = 'new-reservation' | 'details-reservation'
 
 type ModalPayload =
    | {
@@ -10,8 +10,7 @@ type ModalPayload =
         selectedCourt: Court
         selectedShift: ShiftType
      }
-   | { modal: 'edit-reservation'; reservationId: string }
-   | { modal: 'delete-reservation'; reservationId: string }
+   | { modal: 'details-reservation'; reservation: Reservation }
 
 interface ModalStoreProps {
    modalFlags: Record<ModalType, boolean>
@@ -25,8 +24,7 @@ interface ModalStoreProps {
 const INITIAL_STATE: Omit<ModalStoreProps, 'modalActions'> = {
    modalFlags: {
       'new-reservation': false,
-      'edit-reservation': false,
-      'delete-reservation': false,
+      'details-reservation': false,
    },
 }
 
@@ -47,17 +45,10 @@ export const useModalStore = create<ModalStoreProps>((set) => {
                   }))
                   break
 
-               case 'edit-reservation':
-                  console.log(`Editing reservation with ID: ${payload.reservationId}`)
+               case 'details-reservation':
+                  appActions.dispatchSelectedReservation(payload.reservation)
                   set((state) => ({
-                     modalFlags: { ...state.modalFlags, 'edit-reservation': true },
-                  }))
-                  break
-
-               case 'delete-reservation':
-                  console.log(`Deleting reservation with ID: ${payload.reservationId}`)
-                  set((state) => ({
-                     modalFlags: { ...state.modalFlags, 'delete-reservation': true },
+                     modalFlags: { ...state.modalFlags, 'details-reservation': true },
                   }))
                   break
 

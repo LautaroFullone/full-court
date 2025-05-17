@@ -1,19 +1,15 @@
 import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from '@shadcn'
 import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
 import { formatDateToString } from '@lib'
+import { useAppStore } from '@stores'
 import { useCalendar } from '@hooks'
 import { es } from 'date-fns/locale'
 import { useMemo } from 'react'
 
 const CalendarHandler: React.FC = () => {
-   const {
-      selectedDate,
-      isCalendarOpen,
-      toggleCalendar,
-      goToDate,
-      goOneDayBack,
-      goOneDayNext,
-   } = useCalendar()
+   const { selectedDate } = useAppStore()
+   const { isCalendarOpen, toggleCalendar, goToDate, goOneDayBack, goOneDayNext } =
+      useCalendar()
 
    const formatedDate = useMemo(
       () => formatDateToString(selectedDate, true),

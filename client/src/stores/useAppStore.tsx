@@ -12,9 +12,9 @@ interface AppStoreProps {
    appActions: {
       toggleTheme: () => void
       dispatchSelectedDate: (date: Date) => void
-      dispatchSelectedCourt: (court: Court | null) => void
-      dispatchSelectedShift: (shift: ShiftType | null) => void
-      dispatchSelectedReservation: (reservation: Reservation | null) => void
+      dispatchSelectedCourt: (court: Court) => void
+      dispatchSelectedShift: (shift: ShiftType) => void
+      dispatchSelectedReservation: (reservation: Reservation) => void
    }
 }
 
@@ -49,8 +49,8 @@ const useAppStore = create<AppStoreProps>()(
          dispatchSelectedShift: (shift: ShiftType) => {
             set({ selectedShift: shift })
          },
-         dispatchSelectedReservation: (date: Date) => {
-            set({ selectedDate: date })
+         dispatchSelectedReservation: (reservation: Reservation) => {
+            set({ selectedReservation: reservation })
          },
       },
    }))

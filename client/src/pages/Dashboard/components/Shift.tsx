@@ -17,10 +17,7 @@ interface ShiftProps {
 }
 
 const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
-   const {
-      selectedDate,
-      appActions: { dispatchSelectedReservation },
-   } = useAppStore()
+   const { selectedDate } = useAppStore()
    const { modalActions } = useModalStore()
    const { getReservationTypeClass } = useStyles()
 
@@ -35,7 +32,12 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
          <div className="h-full">
             <div
                className="flex flex-col items-center justify-center cursor-pointer h-full w-full rounded-md transition-colors"
-               onClick={() => dispatchSelectedReservation(reservation)}
+               onClick={() => {
+                  modalActions.openModal({
+                     modal: 'details-reservation',
+                     reservation,
+                  })
+               }}
             >
                <span className="font-medium text-sm text-center">
                   {reservation.owner.name}

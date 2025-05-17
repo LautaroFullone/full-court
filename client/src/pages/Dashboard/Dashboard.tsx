@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCalendar, useMobile, useMock } from '@hooks'
+import { DetailsReservationModal, NewReservationModal } from './modals'
+import { useMobile, useMock } from '@hooks'
 import { Tabs, TabsContent } from '@shadcn'
 import { formatDateToString } from '@lib'
 import { useMemo, useState } from 'react'
+import { useAppStore } from '@stores'
 import { AppLayout } from '@shared'
-import { Court } from '@models'
 import {
    CalendarHandler,
    CourtHandlerMobile,
-   NewReservationModal,
    ReservationsList,
    ReservationsTable,
    ReservationsViewHandler,
@@ -16,12 +16,10 @@ import {
 
 const Dashboard = () => {
    const isMobile = useMobile()
-   const { selectedDate } = useCalendar()
+   const { selectedDate } = useAppStore()
    const { generateMockReservations } = useMock()
 
    const [reservations] = useState(generateMockReservations())
-
-   console.log('## reservations: ', reservations)
 
    const reservationsBySelectedDay = useMemo(() => {
       return reservations.filter(
@@ -55,6 +53,7 @@ const Dashboard = () => {
          </div>
 
          <NewReservationModal />
+         <DetailsReservationModal />
       </AppLayout>
    )
 }
