@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useStyles } from '@hooks'
-import ReservationDetailsModal from './ReservationDetailsModal'
 import { Button, Dialog, DialogTrigger } from '@shadcn'
 import { useState } from 'react'
 import { Reservation } from '@models'

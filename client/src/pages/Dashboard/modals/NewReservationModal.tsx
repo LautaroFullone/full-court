@@ -236,21 +236,36 @@ const NewReservationModal: React.FC = () => {
             </div>
 
             <DialogFooter className={`${isMobile ? 'flex-col space-y-2' : ''}`}>
-               <Button
+               {/* <Button
                   variant="outline"
+                  size="lg"
                   className={isMobile ? 'w-full' : ''}
                   onClick={() => closeModal('new-reservation')}
                >
-                  Cancelar
-               </Button>
+                  Cerrar
+               </Button> */}
 
                <Button
                   type="submit"
+                  size="lg"
                   onClick={handleSubmit}
                   className={isMobile ? 'w-full' : ''}
                >
                   Crear Reserva
                </Button>
+
+               {/* Version 2 del boton Crear Reserva */}
+               {/* <Button
+                  type="submit"
+                  variant="destructive"
+                  size="lg"
+                  onClick={handleSubmit}
+                  className={`bg-green-500 hover:bg-green-500/90 ${
+                     isMobile ? 'w-full' : ''
+                  }`}
+               >
+                  Crear Reserva
+               </Button> */}
             </DialogFooter>
          </DialogContent>
       </Dialog>

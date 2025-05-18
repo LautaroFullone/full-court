@@ -1,6 +1,15 @@
 import { CLIENTS, Reservation, RESERVATION_TYPES_VALUES, SHIFT_VALUES } from '@models'
 import { format } from 'date-fns'
 
+const possibleItems = [
+   { id: '1', name: 'Café', price: 300 },
+   { id: '2', name: 'Tubo de pelotas', price: 1200 },
+   { id: '3', name: 'Agua', price: 500 },
+   { id: '4', name: 'Gaseosa', price: 800 },
+   { id: '5', name: 'Barrita energética', price: 650 },
+   { id: '6', name: 'Toalla', price: 1000 },
+]
+
 const courtIds = ['court_1', 'court_2', 'court_3', 'court_4']
 
 const useMock = () => {
@@ -31,6 +40,17 @@ const useMock = () => {
                RESERVATION_TYPES_VALUES.length
             const type = RESERVATION_TYPES_VALUES[typeIndex]
 
+            const numberOfItems = Math.floor(Math.random() * 6)
+            const selectedItems = [...possibleItems]
+               .sort(() => 0.5 - Math.random())
+               .slice(0, numberOfItems)
+               .map((item) => ({
+                  id: item.id,
+                  name: item.name,
+                  price: item.price,
+                  amount: Math.floor(Math.random() * 3) + 1, // entre 1 y 3
+               }))
+
             reservations.push({
                id: `${idCounter}`,
                date: formattedDate,
@@ -39,6 +59,7 @@ const useMock = () => {
                turnId,
                owner,
                price,
+               items: selectedItems,
                type,
             })
 

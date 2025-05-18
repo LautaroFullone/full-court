@@ -2,6 +2,7 @@ import { Client } from './client.model'
 import { ShiftType } from './shift.model'
 
 interface Item {
+   id: string
    name: string
    price: number
    amount: number
