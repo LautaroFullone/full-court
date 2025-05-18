@@ -2,14 +2,6 @@ import { CalendarDays, Clock, Edit, ShoppingCart, Trash2, User } from 'lucide-re
 import { useAppStore, useModalStore } from '@stores'
 import { useMobile, useStyles } from '@hooks'
 import {
-   AlertDialog,
-   AlertDialogAction,
-   AlertDialogCancel,
-   AlertDialogContent,
-   AlertDialogDescription,
-   AlertDialogFooter,
-   AlertDialogHeader,
-   AlertDialogTitle,
    Button,
    Dialog,
    DialogContent,
@@ -33,7 +25,7 @@ const DetailsReservationModal: React.FC = () => {
    const { getReservationTypeClass } = useStyles()
    const {
       modalFlags,
-      modalActions: { closeModal },
+      modalActions: { openModal, closeModal },
    } = useModalStore()
 
    const hasConsumptions = useMemo(
@@ -61,7 +53,7 @@ const DetailsReservationModal: React.FC = () => {
                         <div className="flex items-center gap-3">
                            <CalendarDays className="h-5 w-5 text-muted-foreground" />
                            <div>
-                              <p className="text-sm font-medium select-none">Fecha</p>
+                              <p className="text-md font-medium select-none">Fecha</p>
                               <p className="text-sm text-muted-foreground">
                                  15 de Marzo, 2025
                               </p>
@@ -71,7 +63,7 @@ const DetailsReservationModal: React.FC = () => {
                         <div className="flex items-center gap-3">
                            <Clock className="h-5 w-5 text-muted-foreground" />
                            <div>
-                              <p className="text-sm font-medium">Horario</p>
+                              <p className="text-md font-medium">Horario</p>
                               <p className="text-sm text-muted-foreground">
                                  {selectedReservation.shift}
                               </p>
@@ -81,7 +73,7 @@ const DetailsReservationModal: React.FC = () => {
                         <div className="flex items-center gap-3">
                            <User className="h-5 w-5 text-muted-foreground" />
                            <div>
-                              <p className="text-sm font-medium">Cliente</p>
+                              <p className="text-md font-medium">Cliente</p>
                               <p className="text-sm text-muted-foreground">
                                  {selectedReservation.owner.name}
                               </p>
@@ -96,7 +88,7 @@ const DetailsReservationModal: React.FC = () => {
                               <span className="text-sm font-bold">T</span>
                            </div>
                            <div>
-                              <p className="text-sm font-medium">Tipo de Reserva</p>
+                              <p className="text-md font-medium">Tipo de Reserva</p>
                               <p className="text-sm text-muted-foreground capitalize">
                                  <span
                                     className={`text-xs px-2 py-0.5 rounded-full ${getReservationTypeClass(
@@ -111,15 +103,13 @@ const DetailsReservationModal: React.FC = () => {
                      </div>
 
                      <div className="w-full">
-                        <h3 className="text-sm font-medium mb-2">Consumos</h3>
+                        <h3 className="text-md font-medium mb-2">Consumos</h3>
                         <div className="overflow-x-auto select-none">
                            <Table>
                               <TableHeader>
                                  <TableRow>
-                                    <TableHead>Producto</TableHead>
-
+                                    <TableHead className="">Producto</TableHead>
                                     <TableHead className="text-center">Cant.</TableHead>
-
                                     <TableHead className="text-right">Valor</TableHead>
                                  </TableRow>
                               </TableHeader>
@@ -206,7 +196,7 @@ const DetailsReservationModal: React.FC = () => {
                         variant="destructive"
                         size="lg"
                         className="gap-1"
-                        onClick={() => {}}
+                        onClick={() => openModal({ modal: 'confirm-reservation' })}
                      >
                         <Trash2 className="h-4 w-4" />
                         Cancelar
@@ -229,31 +219,6 @@ const DetailsReservationModal: React.FC = () => {
                      </Button>
                   </div>
                </DialogFooter>
-
-               <AlertDialog open={false} onOpenChange={() => {}}>
-                  <AlertDialogContent className="w-[95%] max-w-[95%] sm:w-auto sm:max-w-md">
-                     <AlertDialogHeader>
-                        <AlertDialogTitle>
-                           ¿Estás seguro de que quieres cancelar esta reserva?
-                        </AlertDialogTitle>
-
-                        <AlertDialogDescription>
-                           Esta acción no se puede deshacer. Esto eliminará
-                           permanentemente la reserva y todos los datos asociados.
-                        </AlertDialogDescription>
-                     </AlertDialogHeader>
-
-                     <AlertDialogFooter
-                        className={isMobile ? 'flex-col space-y-2' : 'sm:space-x-2'}
-                     >
-                        <AlertDialogCancel>No, mantener reserva</AlertDialogCancel>
-
-                        <AlertDialogAction onClick={() => {}}>
-                           Sí, cancelar reserva
-                        </AlertDialogAction>
-                     </AlertDialogFooter>
-                  </AlertDialogContent>
-               </AlertDialog>
             </DialogContent>
          </Dialog>
       )

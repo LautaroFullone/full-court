@@ -1,5 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { DetailsReservationModal, NewReservationModal } from './modals'
+import {
+   ConfirmReservationModal,
+   DetailsReservationModal,
+   NewReservationModal,
+} from './modals'
 import { useMobile, useMock } from '@hooks'
 import { Tabs, TabsContent } from '@shadcn'
 import { formatDateToString } from '@lib'
@@ -54,6 +58,7 @@ const Dashboard = () => {
 
          <NewReservationModal />
          <DetailsReservationModal />
+         <ConfirmReservationModal />
       </AppLayout>
    )
 }
