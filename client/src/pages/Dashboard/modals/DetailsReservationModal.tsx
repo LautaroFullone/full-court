@@ -192,6 +192,7 @@ const DetailsReservationModal: React.FC = () => {
                         <Edit className="h-4 w-4" />
                         Editar
                      </Button>
+
                      <Button
                         variant="destructive"
                         size="lg"

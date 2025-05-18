@@ -1,17 +1,12 @@
-import { Client } from './client.model'
 import { ShiftType } from './shift.model'
-
-interface Item {
-   id: string
-   name: string
-   price: number
-   amount: number
-}
+import { Product } from './product.model'
+import { Client } from './client.model'
 
 export const RESERVATION_TYPES_VALUES = ['clase', 'partido', 'torneo', 'otro'] as const
 
 export type ReservationType = (typeof RESERVATION_TYPES_VALUES)[number]
 
+type ReservationItem = Omit<Product, 'stock'> & { amount: number }
 export interface Reservation {
    id: string
    date: string
@@ -20,6 +15,6 @@ export interface Reservation {
    turnId: string
    owner: Client
    price: number
-   items?: Item[]
+   items?: ReservationItem[]
    type: ReservationType
 }
