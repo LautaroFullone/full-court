@@ -1,3 +1,5 @@
+import { CalendarDays, Clock, Edit, ShoppingCart, Trash2, User } from 'lucide-react'
+import { useAppStore, useModalStore } from '@stores'
 import { useMobile, useStyles } from '@hooks'
 import {
    AlertDialog,
@@ -10,7 +12,6 @@ import {
    AlertDialogTitle,
    Button,
    Dialog,
-   DialogClose,
    DialogContent,
    DialogDescription,
    DialogFooter,
@@ -24,13 +25,9 @@ import {
    TableHeader,
    TableRow,
 } from '@shadcn'
-import { useAppStore, useModalStore } from '@stores'
-import { CalendarDays, Clock, Edit, ShoppingCart, Trash2, User } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo } from 'react'
 
 const DetailsReservationModal: React.FC = () => {
-   const [showCancelAlert, setShowCancelAlert] = useState(false)
-   // const [editedReservation, setEditedReservation] = useState(reservation)
    const isMobile = useMobile()
    const { selectedReservation } = useAppStore()
    const { getReservationTypeClass } = useStyles()
@@ -39,9 +36,10 @@ const DetailsReservationModal: React.FC = () => {
       modalActions: { closeModal },
    } = useModalStore()
 
-   const handleSave = () => {
-      // onUpdate(editedReservation)
-   }
+   const hasConsumptions = useMemo(
+      () => Boolean(selectedReservation?.items?.length),
+      [selectedReservation]
+   )
 
    if (selectedReservation) {
       return (
@@ -49,7 +47,7 @@ const DetailsReservationModal: React.FC = () => {
             open={modalFlags['details-reservation']}
             onOpenChange={() => closeModal('details-reservation')}
          >
-            <DialogContent className="sm:max-w-[700px] w-[95%] max-w-[95%] sm:w-auto">
+            <DialogContent className="sm:max-w-[650px] w-[95%] max-w-[95%]">
                <DialogHeader>
                   <DialogTitle>Detalle de Reserva #{selectedReservation.id}</DialogTitle>
                   <DialogDescription>
@@ -57,8 +55,8 @@ const DetailsReservationModal: React.FC = () => {
                   </DialogDescription>
                </DialogHeader>
 
-               <ScrollArea className="h-[400px] pr-4 -mr-4">
-                  <div className="grid gap-6 grid-cols-1 md:grid-cols-2 py-4 pr-4">
+               <ScrollArea className="h-[350px] pr-4 -mr-4">
+                  <div className="grid gap-6 grid-cols-1 md:grid-cols-[40%_60%] py-4 pr-4 ">
                      <div className="space-y-4">
                         <div className="flex items-center gap-3">
                            <CalendarDays className="h-5 w-5 text-muted-foreground" />
@@ -112,49 +110,80 @@ const DetailsReservationModal: React.FC = () => {
                         </div>
                      </div>
 
-                     {selectedReservation.items && (
-                        <div>
-                           <h3 className="text-sm font-medium mb-2">Consumos</h3>
-                           <div className="overflow-x-auto">
-                              <Table>
-                                 <TableHeader>
-                                    <TableRow>
-                                       <TableHead>Producto</TableHead>
-                                       <TableHead className="text-center">
-                                          Cant.
-                                       </TableHead>
-                                       <TableHead className="text-right">Valor</TableHead>
-                                    </TableRow>
-                                 </TableHeader>
+                     <div className="w-full">
+                        <h3 className="text-sm font-medium mb-2">Consumos</h3>
+                        <div className="overflow-x-auto select-none">
+                           <Table>
+                              <TableHeader>
+                                 <TableRow>
+                                    <TableHead>Producto</TableHead>
 
+                                    <TableHead className="text-center">Cant.</TableHead>
+
+                                    <TableHead className="text-right">Valor</TableHead>
+                                 </TableRow>
+                              </TableHeader>
+
+                              {hasConsumptions ? (
                                  <TableBody>
-                                    {selectedReservation.items.map((item) => (
-                                       <TableRow key={item.id}>
+                                    {selectedReservation?.items?.map((item) => (
+                                       <TableRow key={item.id} className="select-text">
                                           <TableCell>{item.name}</TableCell>
+
                                           <TableCell className="text-center">
                                              {item.amount}
                                           </TableCell>
+
                                           <TableCell className="text-right">
                                              ${item.price.toLocaleString('es-CL')}
                                           </TableCell>
                                        </TableRow>
                                     ))}
-                                    <TableRow>
+
+                                    <TableRow className="select-text">
                                        <TableCell colSpan={2} className="font-semibold">
                                           Total
                                        </TableCell>
+
                                        <TableCell className="text-right font-bold">
                                           $
-                                          {selectedReservation.items
-                                             .reduce((acc, item) => acc + item.price, 0)
+                                          {selectedReservation
+                                             ?.items!.reduce(
+                                                (acc, item) => acc + item.price,
+                                                0
+                                             )
                                              .toLocaleString('es-CL')}
                                        </TableCell>
                                     </TableRow>
                                  </TableBody>
-                              </Table>
-                           </div>
+                              ) : (
+                                 <TableBody>
+                                    <TableRow>
+                                       <TableCell
+                                          colSpan={3}
+                                          className="h-32 text-center"
+                                       >
+                                          <div className="flex flex-col items-center justify-center">
+                                             <ShoppingCart className="h-8 w-8 text-muted-foreground mb-2" />
+                                             <p className="text-sm text-muted-foreground mb-3 text-wrap">
+                                                No hay consumos registrados <br /> para
+                                                esta reserva
+                                             </p>
+                                             {/* <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => {}}
+                                             >
+                                                Agregar consumos
+                                             </Button> */}
+                                          </div>
+                                       </TableCell>
+                                    </TableRow>
+                                 </TableBody>
+                              )}
+                           </Table>
                         </div>
-                     )}
+                     </div>
                   </div>
                </ScrollArea>
 
@@ -192,7 +221,7 @@ const DetailsReservationModal: React.FC = () => {
                      <Button
                         size="lg"
                         className="gap-1"
-                        variant="outline"
+                        variant="default"
                         onClick={() => {}}
                      >
                         <ShoppingCart className="h-4 w-4" />
@@ -201,7 +230,7 @@ const DetailsReservationModal: React.FC = () => {
                   </div>
                </DialogFooter>
 
-               <AlertDialog open={showCancelAlert} onOpenChange={setShowCancelAlert}>
+               <AlertDialog open={false} onOpenChange={() => {}}>
                   <AlertDialogContent className="w-[95%] max-w-[95%] sm:w-auto sm:max-w-md">
                      <AlertDialogHeader>
                         <AlertDialogTitle>

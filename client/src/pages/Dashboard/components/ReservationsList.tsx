@@ -1,42 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useStyles } from '@hooks'
 import { Button, Dialog, DialogTrigger } from '@shadcn'
-import { useState } from 'react'
 import { Reservation } from '@models'
 import { COURTS } from '@config'
+import { useModalStore } from '@stores'
 
 interface ReservationsListProps {
    reservations: Reservation[]
 }
 
 const ReservationsList: React.FC<ReservationsListProps> = ({ reservations }) => {
-   const [, setOpenReservationId] = useState<number | null>(null)
-
+   const {
+      modalActions: { openModal },
+   } = useModalStore()
    const { getReservationTypeClass } = useStyles()
-
-   // function handleManageConsumptions(reservationId: string) {
-   //    console.log('## handleManageConsumptions: ', reservationId)
-   // }
-
-   // const handleEditReservation = (reservationId: number) => {
-   //    console.log('## handleEditReservation: ', reservationId)
-   //    // En lugar de navegar, abrimos el modal de detalles
-   //    //setOpenReservationId(reservationId)
-   // }
-
-   // const handleCancelReservation = (reservationId: number) => {
-   //    console.log(`## handleEditReservation ${reservationId}`)
-   // }
-
-   // const handleReservationUpdate = (updatedReservation: any) => {
-   //    // Actualizar la reserva en el estado local
-   //    const updated = reservations.map((res) =>
-   //       res.id === updatedReservation.id ? updatedReservation : res
-   //    )
-   //    setReservations(updated)
-   //    // Mantener el modal abierto con los detalles actualizados
-   //    setOpenReservationId(updatedReservation.id)
-   // }
 
    return (
       <div className="p-4">
@@ -79,24 +55,16 @@ const ReservationsList: React.FC<ReservationsListProps> = ({ reservations }) => 
                               <Button
                                  variant="outline"
                                  size="sm"
-                                 onClick={() => {
-                                    console.log('hola')
-                                    //setSelectedReservation(reservation)}
-                                 }}
+                                 onClick={() =>
+                                    openModal({
+                                       modal: 'details-reservation',
+                                       reservation,
+                                    })
+                                 }
                               >
                                  Detalles
                               </Button>
                            </DialogTrigger>
-
-                           {/* <ReservationDetailsModal
-                           reservation={reservation}
-                           onEdit={() => handleEditReservation(reservation.id)}
-                           onCancel={() => handleCancelReservation(reservation.id)}
-                           onManageConsumptions={() =>
-                              handleManageConsumptions(reservation.id)
-                           }
-                           onUpdate={handleReservationUpdate}
-                        /> */}
                         </Dialog>
                      </div>
                   </div>
