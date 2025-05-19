@@ -1,3 +1,4 @@
 import ProductsTable from './ProductsTable'
+import ProducsPagination from './ProductsPagination'
 
-export { ProductsTable }
+export { ProductsTable, ProducsPagination }
