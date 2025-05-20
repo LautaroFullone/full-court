@@ -46,12 +46,12 @@ const initialFormData: NewReservationForm = {
 
 const NewReservationModal: React.FC = () => {
    const isMobile = useMobile()
-   const { selectedDate } = useAppStore()
-   const { selectedCourt, selectedShift } = useAppStore()
-   const {
-      modalFlags,
-      modalActions: { closeModal },
-   } = useModalStore()
+
+   const selectedDate = useAppStore((state) => state.selectedDate)
+   const selectedCourt = useAppStore((state) => state.selectedCourt)
+   const selectedShift = useAppStore((state) => state.selectedShift)
+   const modalFlags = useModalStore((state) => state.modalFlags)
+   const closeModal = useModalStore((state) => state.modalActions.closeModal)
    const { formData, handleChange, resetForm } = useBasicForm(initialFormData)
 
    const [selectedClient, setSelectedClient] = useState<Client | undefined>()
@@ -81,7 +81,7 @@ const NewReservationModal: React.FC = () => {
          open={modalFlags['new-reservation']}
          onOpenChange={() => closeModal('new-reservation')}
       >
-         <DialogContent className="w-[500px] ">
+         <DialogContent className="w-[500px]">
             <DialogHeader>
                <DialogTitle>Nueva Reserva</DialogTitle>
                <DialogDescription className="capitalize">
@@ -89,7 +89,6 @@ const NewReservationModal: React.FC = () => {
                </DialogDescription>
             </DialogHeader>
 
-            {/* <NewReservationForm timeSlot={timeSlot} court={court} date={selectedDate} /> */}
             <ScrollArea className="h-[400px] pr-4 -mr-4 space-y-4 py-4">
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
                   <div className="space-y-2 ">

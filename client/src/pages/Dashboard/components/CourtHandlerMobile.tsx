@@ -3,9 +3,9 @@ import { useAppStore } from '@stores'
 import { COURTS } from '@config'
 
 const CourtHandlerMobile: React.FC = () => {
-   const {
-      appActions: { dispatchSelectedCourt },
-   } = useAppStore()
+   const dispatchSelectedCourt = useAppStore(
+      (state) => state.appActions.dispatchSelectedCourt
+   )
 
    return (
       <div className="mt-4 flex justify-center">

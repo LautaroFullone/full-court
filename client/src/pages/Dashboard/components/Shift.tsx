@@ -17,8 +17,8 @@ interface ShiftProps {
 }
 
 const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
-   const { selectedDate } = useAppStore()
-   const { modalActions } = useModalStore()
+   const selectedDate = useAppStore((state) => state.selectedDate)
+   const modalActions = useModalStore((state) => state.modalActions)
    const { getReservationTypeClass } = useStyles()
 
    function isPastDate(date: Date) {

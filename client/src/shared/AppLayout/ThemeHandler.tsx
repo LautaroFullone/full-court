@@ -3,10 +3,8 @@ import { useAppStore } from '@stores'
 import { Button } from '@shadcn'
 
 const ThemeHandler = () => {
-   const {
-      theme,
-      appActions: { toggleTheme },
-   } = useAppStore()
+   const theme = useAppStore((state) => state.theme)
+   const toggleTheme = useAppStore((state) => state.appActions.toggleTheme)
 
    return (
       <Button variant="outline" size="icon" onClick={toggleTheme}>

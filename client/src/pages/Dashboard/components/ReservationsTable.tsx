@@ -11,7 +11,8 @@ interface ReservationsTableProps {
 }
 
 const ReservationsTable: React.FC<ReservationsTableProps> = ({ reservations }) => {
-   const { selectedCourt, selectedDate } = useAppStore()
+   const selectedCourt = useAppStore((state) => state.selectedCourt)
+   const selectedDate = useAppStore((state) => state.selectedDate)
 
    const isMobile = useMobile()
    const isLoading = false

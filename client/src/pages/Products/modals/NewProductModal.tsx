@@ -23,16 +23,13 @@ const initialFormData: ProductFormData = {
 }
 
 const NewProductModal: React.FC = () => {
+   const modalFlags = useModalStore((state) => state.modalFlags)
+   const closeModal = useModalStore((state) => state.modalActions.closeModal)
+   const selectedProduct = useAppStore((state) => state.selectedProduct)
+   const dispatchSelectedProduct = useAppStore(
+      (state) => state.appActions.dispatchSelectedProduct
+   )
    const isMobile = useMobile()
-   const {
-      modalFlags,
-      modalActions: { closeModal },
-   } = useModalStore()
-
-   const {
-      selectedProduct,
-      appActions: { dispatchSelectedProduct },
-   } = useAppStore()
 
    const { formData, handleChange, setFormData, resetForm } =
       useBasicForm(initialFormData)

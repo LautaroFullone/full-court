@@ -12,10 +12,9 @@ import {
 
 const ConfirmReservationModal = () => {
    const isMobile = useMobile()
-   const {
-      modalFlags,
-      modalActions: { closeModal },
-   } = useModalStore()
+
+   const modalFlags = useModalStore((state) => state.modalFlags)
+   const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
    function handleDeleteReservation() {
       console.log('Deleting reservation...')

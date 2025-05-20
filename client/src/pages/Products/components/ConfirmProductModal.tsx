@@ -11,13 +11,11 @@ import {
 } from '@shadcn'
 
 const ConfirmProductModal = () => {
-   const isMobile = useMobile()
-   const { selectedProduct } = useAppStore()
+   const selectedProduct = useAppStore((state) => state.selectedProduct)
+   const modalFlags = useModalStore((state) => state.modalFlags)
+   const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
-   const {
-      modalFlags,
-      modalActions: { closeModal },
-   } = useModalStore()
+   const isMobile = useMobile()
 
    function handleDeleteProduct() {
       console.log('Deleting product...')

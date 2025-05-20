@@ -51,13 +51,8 @@ const initialFormData = {
 }
 
 export default function ProductsPage() {
-   const {
-      modalActions: { openModal },
-   } = useModalStore()
-   const {
-      selectedCategory,
-      appActions: { dispatchSelectedCategory },
-   } = useAppStore()
+   // const {  modalActions: { openModal }} = useModalStore()
+   const openModal = useModalStore((state) => state.modalActions.openModal)
    const { formData, handleChange } = useBasicForm(initialFormData)
 
    return (

@@ -42,7 +42,7 @@ const INITIAL_STATE: Omit<ModalStoreProps, 'modalActions'> = {
 
 export const useModalStore = create<ModalStoreProps>()(
    devtools((set) => {
-      const { appActions } = useAppStore.getState()
+      const appActions = useAppStore.getState().appActions
 
       return {
          modalFlags: { ...INITIAL_STATE.modalFlags },

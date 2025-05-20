@@ -20,7 +20,7 @@ import {
 
 const Dashboard = () => {
    const isMobile = useMobile()
-   const { selectedDate } = useAppStore()
+   const selectedDate = useAppStore((state) => state.selectedDate)
    const { generateMockReservations } = useMock()
 
    const [reservations] = useState(generateMockReservations())

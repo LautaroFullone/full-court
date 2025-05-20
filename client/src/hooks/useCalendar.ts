@@ -1,14 +1,13 @@
-// import { useAppStore } from '@stores'
 import { useAppStore } from '@stores'
 import { useState } from 'react'
 
 const useCalendar = () => {
    const [isCalendarOpen, setIsCalendarOpen] = useState(false)
 
-   const {
-      selectedDate,
-      appActions: { dispatchSelectedDate },
-   } = useAppStore()
+   const selectedDate = useAppStore((state) => state.selectedDate)
+   const dispatchSelectedDate = useAppStore(
+      (state) => state.appActions.dispatchSelectedDate
+   )
 
    const toggleCalendar = () => {
       setIsCalendarOpen(!isCalendarOpen)

@@ -26,11 +26,10 @@ const PRODUCTS_PER_PAGE = 10
 
 const ProductsTable: React.FC<ProductsTableProps> = ({ products, searchTerm = '' }) => {
    const isMobile = useMobile()
-   const { selectedCategory } = useAppStore()
+   const selectedCategory = useAppStore((state) => state.selectedCategory)
    const { getCategoryColorClass } = useStyles()
-   const {
-      modalActions: { openModal },
-   } = useModalStore()
+
+   const openModal = useModalStore((state) => state.modalActions.openModal)
 
    const [currentPage, setCurrentPage] = useState(1)
 

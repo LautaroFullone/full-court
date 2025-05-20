@@ -7,7 +7,7 @@ import { es } from 'date-fns/locale'
 import { useMemo } from 'react'
 
 const CalendarHandler: React.FC = () => {
-   const { selectedDate } = useAppStore()
+   const selectedDate = useAppStore((state) => state.selectedDate)
    const { isCalendarOpen, toggleCalendar, goToDate, goOneDayBack, goOneDayNext } =
       useCalendar()
 
