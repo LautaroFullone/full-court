@@ -1,18 +1,25 @@
-import { Court, Reservation, ShiftType } from '@models'
+import { Court, Product, Reservation, ShiftType } from '@models'
+import { devtools } from 'zustand/middleware'
 import useAppStore from './useAppStore'
 import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
 
-type ModalType = 'new-reservation' | 'details-reservation' | 'confirm-reservation'
+type ModalType =
+   | 'new-reservation'
+   | 'details-reservation'
+   | 'confirm-reservation'
+   | 'new-product'
+   | 'confirm-product'
 
 type ModalPayload =
    | {
-        modal: 'new-reservation'
+        name: 'new-reservation'
         selectedCourt: Court
         selectedShift: ShiftType
      }
-   | { modal: 'details-reservation'; reservation: Reservation }
-   | { modal: 'confirm-reservation' }
+   | { name: 'details-reservation'; reservation: Reservation }
+   | { name: 'confirm-reservation' }
+   | { name: 'new-product' }
+   | { name: 'confirm-product'; product: Product }
 
 interface ModalStoreProps {
    modalFlags: Record<ModalType, boolean>
@@ -28,6 +35,8 @@ const INITIAL_STATE: Omit<ModalStoreProps, 'modalActions'> = {
       'new-reservation': false,
       'details-reservation': false,
       'confirm-reservation': false,
+      'new-product': false,
+      'confirm-product': false,
    },
 }
 
@@ -40,7 +49,7 @@ export const useModalStore = create<ModalStoreProps>()(
 
          modalActions: {
             openModal: (payload) => {
-               switch (payload.modal) {
+               switch (payload.name) {
                   case 'new-reservation':
                      appActions.dispatchSelectedCourt(payload.selectedCourt)
                      appActions.dispatchSelectedShift(payload.selectedShift)
@@ -58,6 +67,17 @@ export const useModalStore = create<ModalStoreProps>()(
                   case 'confirm-reservation':
                      set((state) => ({
                         modalFlags: { ...state.modalFlags, 'confirm-reservation': true },
+                     }))
+                     break
+                  case 'new-product':
+                     set((state) => ({
+                        modalFlags: { ...state.modalFlags, 'new-product': true },
+                     }))
+                     break
+                  case 'confirm-product':
+                     appActions.dispatchSelectedProduct(payload.product)
+                     set((state) => ({
+                        modalFlags: { ...state.modalFlags, 'confirm-product': true },
                      }))
                      break
 

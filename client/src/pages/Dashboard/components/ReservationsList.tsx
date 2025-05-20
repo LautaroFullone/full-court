@@ -57,7 +57,7 @@ const ReservationsList: React.FC<ReservationsListProps> = ({ reservations }) => 
                                  size="sm"
                                  onClick={() =>
                                     openModal({
-                                       modal: 'details-reservation',
+                                       name: 'details-reservation',
                                        reservation,
                                     })
                                  }

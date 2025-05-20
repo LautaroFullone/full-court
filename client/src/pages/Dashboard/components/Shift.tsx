@@ -34,7 +34,7 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
                className="flex flex-col items-center justify-center cursor-pointer h-full w-full rounded-md transition-colors"
                onClick={() => {
                   modalActions.openModal({
-                     modal: 'details-reservation',
+                     name: 'details-reservation',
                      reservation,
                   })
                }}
@@ -86,7 +86,7 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
          className="w-full h-full flex items-center justify-center"
          onClick={() => {
             modalActions.openModal({
-               modal: 'new-reservation',
+               name: 'new-reservation',
                selectedCourt: court,
                selectedShift: shiftSlot,
             })

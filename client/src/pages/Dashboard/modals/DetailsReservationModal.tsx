@@ -17,7 +17,6 @@ import {
    TableHeader,
    TableRow,
 } from '@shadcn'
-import { useMemo } from 'react'
 
 const DetailsReservationModal: React.FC = () => {
    const isMobile = useMobile()
@@ -27,11 +26,6 @@ const DetailsReservationModal: React.FC = () => {
       modalFlags,
       modalActions: { openModal, closeModal },
    } = useModalStore()
-
-   const hasConsumptions = useMemo(
-      () => Boolean(selectedReservation?.items?.length),
-      [selectedReservation]
-   )
 
    if (selectedReservation) {
       return (
@@ -114,7 +108,7 @@ const DetailsReservationModal: React.FC = () => {
                                  </TableRow>
                               </TableHeader>
 
-                              {hasConsumptions ? (
+                              {selectedReservation.items ? (
                                  <TableBody>
                                     {selectedReservation?.items?.map((item) => (
                                        <TableRow key={item.id} className="select-text">
@@ -125,7 +119,7 @@ const DetailsReservationModal: React.FC = () => {
                                           </TableCell>
 
                                           <TableCell className="text-right">
-                                             ${item.price.toLocaleString('es-CL')}
+                                             ${Number(item.price).toLocaleString('es-AR')}
                                           </TableCell>
                                        </TableRow>
                                     ))}
@@ -137,12 +131,9 @@ const DetailsReservationModal: React.FC = () => {
 
                                        <TableCell className="text-right font-bold">
                                           $
-                                          {selectedReservation
-                                             ?.items!.reduce(
-                                                (acc, item) => acc + item.price,
-                                                0
-                                             )
-                                             .toLocaleString('es-CL')}
+                                          {selectedReservation.items
+                                             .reduce((acc, item) => acc + item.price, 0)
+                                             .toLocaleString('es-AR')}
                                        </TableCell>
                                     </TableRow>
                                  </TableBody>
@@ -186,7 +177,7 @@ const DetailsReservationModal: React.FC = () => {
                      <Button
                         variant="destructive"
                         size="lg"
-                        className="gap-1 bg-amber-500 hover:bg-amber-500/90"
+                        className="gap-1 bg-amber-500 hover:bg-amber-500/90 dark:bg-amber-500/60"
                         onClick={() => {}}
                      >
                         <Edit className="h-4 w-4" />
@@ -197,7 +188,7 @@ const DetailsReservationModal: React.FC = () => {
                         variant="destructive"
                         size="lg"
                         className="gap-1"
-                        onClick={() => openModal({ modal: 'confirm-reservation' })}
+                        onClick={() => openModal({ name: 'confirm-reservation' })}
                      >
                         <Trash2 className="h-4 w-4" />
                         Cancelar

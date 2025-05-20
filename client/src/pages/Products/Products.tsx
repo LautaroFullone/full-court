@@ -1,9 +1,12 @@
-import { useState } from 'react'
-import { ArrowLeft, LayoutGrid, Table2 } from 'lucide-react'
-import { Link } from 'react-router-dom'
-import { Tabs, TabsList, TabsTrigger } from '@shadcn'
+import { Button, Input, Tabs, TabsList, TabsTrigger } from '@shadcn'
 import { ProductsTable } from './components'
+import { Plus, Search } from 'lucide-react'
+import { NewProductModal } from './modals'
+import { AppLayout } from '@shared'
 import { Product } from '@models'
+import { useBasicForm } from '@hooks'
+import { useAppStore, useModalStore } from '@stores'
+import ConfirmProductModal from './components/ConfirmProductModal'
 
 // Datos de ejemplo para los productos
 const allProducts: Product[] = [
@@ -35,45 +38,86 @@ const allProducts: Product[] = [
    { id: '14', name: 'Clase particular', price: '1200', category: 'servicios', stock: 5 },
 ]
 
+const categories = [
+   { id: 'todos', name: 'Todos' },
+   { id: 'bebidas', name: 'Bebidas' },
+   { id: 'comidas', name: 'Comidas' },
+   { id: 'accesorios', name: 'Accesorios' },
+   { id: 'servicios', name: 'Servicios' },
+]
+
+const initialFormData = {
+   searchTerm: '',
+}
+
 export default function ProductsPage() {
-   const [viewVersion, setViewVersion] = useState<number>(1)
+   const {
+      modalActions: { openModal },
+   } = useModalStore()
+   const {
+      selectedCategory,
+      appActions: { dispatchSelectedCategory },
+   } = useAppStore()
+   const { formData, handleChange } = useBasicForm(initialFormData)
 
    return (
-      <div className="px-4 py-6">
-         <div className="mb-6">
-            <Link
-               to="/"
-               className="flex items-center text-sm text-muted-foreground hover:text-foreground"
-            >
-               <ArrowLeft className="mr-2 h-4 w-4" />
-               Volver al inicio
-            </Link>
-         </div>
-         <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-               <h1 className="text-3xl font-bold tracking-tight">Productos</h1>
-               <p className="text-muted-foreground">
-                  Gestiona el inventario de productos y servicios
-               </p>
+      <AppLayout>
+         <div className="px-4 py-6">
+            <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+               <div>
+                  <h1 className="text-3xl font-bold tracking-tight">Productos</h1>
+                  <p className="text-muted-foreground">
+                     Gestioná el inventario de productos y servicios
+                  </p>
+               </div>
             </div>
-            <Tabs
-               value={viewVersion.toString()}
-               onValueChange={(v) => setViewVersion(Number.parseInt(v))}
-            >
-               <TabsList>
-                  <TabsTrigger value="1">
-                     <Table2 className="h-4 w-4 mr-2" />
-                     <span className="hidden sm:inline">Tabla</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="2">
-                     <LayoutGrid className="h-4 w-4 mr-2" />
-                     <span className="hidden sm:inline">Tarjetas</span>
-                  </TabsTrigger>
-               </TabsList>
-            </Tabs>
-         </div>
 
-         <ProductsTable products={allProducts} />
-      </div>
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+               <div className="relative w-full sm:w-auto sm:flex-1">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                     type="search"
+                     placeholder="Buscar productos..."
+                     className="pl-8"
+                     value={formData.searchTerm}
+                     onChange={(evt) => handleChange('searchTerm', evt.target.value)}
+                  />
+               </div>
+
+               <div className="flex gap-2 w-full sm:w-auto">
+                  <Tabs
+                     value={selectedCategory}
+                     onValueChange={(value) => dispatchSelectedCategory(value)}
+                     className="w-full sm:w-auto flex "
+                  >
+                     <TabsList className="w-full h-full sm:w-auto overflow-x-auto flex whitespace-nowrap">
+                        {categories.map((category) => (
+                           <TabsTrigger
+                              key={`category-${category.id}`}
+                              value={category.id}
+                              className="flex-1 sm:flex-none cursor-pointer"
+                           >
+                              {category.name}
+                           </TabsTrigger>
+                        ))}
+                     </TabsList>
+                  </Tabs>
+
+                  <Button
+                     size="lg"
+                     className="cursor-pointer"
+                     onClick={() => openModal({ name: 'new-product' })}
+                  >
+                     <Plus className="mr-2 h-4 w-4" />
+                     Nuevo
+                  </Button>
+               </div>
+            </div>
+
+            <ProductsTable products={allProducts} searchTerm={formData.searchTerm} />
+            <NewProductModal />
+            <ConfirmProductModal />
+         </div>
+      </AppLayout>
    )
 }

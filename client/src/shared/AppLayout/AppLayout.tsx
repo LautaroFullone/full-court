@@ -31,6 +31,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
    const navigate = useNavigate()
 
    const isHomePage = pathname === '/'
+
    return (
       <div className="flex min-h-screen flex-col">
          <header className="sticky top-0 z-10 border-b bg-background">
@@ -38,7 +39,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
                <div className="flex items-center gap-2">
                   {!isHomePage && (
                      <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-                        <ArrowLeft className="h-4 w-4" />
+                        <ArrowLeft className="h-4 w-4" aria-label="Volver al inicio" />
                      </Button>
                   )}
 
