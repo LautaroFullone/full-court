@@ -1,8 +1,8 @@
 import { Edit, Package, Trash2 } from 'lucide-react'
-import { useMobile, useStyles } from '@hooks'
 import { useAppStore, useModalStore } from '@stores'
+import { useMobile, useStyles } from '@hooks'
+import { useMemo, useState } from 'react'
 import { Product } from '@models'
-import { useCallback, useMemo, useState } from 'react'
 import {
    Badge,
    Button,
@@ -25,6 +25,7 @@ interface ProductsTableProps {
 const PRODUCTS_PER_PAGE = 10
 
 const ProductsTable: React.FC<ProductsTableProps> = ({ products, searchTerm = '' }) => {
+   console.log('ProductsTable')
    const isMobile = useMobile()
    const selectedCategory = useAppStore((state) => state.selectedCategory)
    const { getCategoryColorClass } = useStyles()
@@ -54,7 +55,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, searchTerm = ''
 
    return (
       <>
-         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5  gap-4">
             {currentProducts.map((product) => (
                <Card
                   key={product.id}
@@ -67,6 +68,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, searchTerm = ''
                            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
                               <Package className="h-5 w-5 text-primary" />
                            </div>
+
                            <div>
                               <h3 className="font-medium">{product.name}</h3>
                               <Badge
@@ -80,15 +82,17 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, searchTerm = ''
                         </div>
                      </div>
 
-                     <div className="flex justify-between items-center">
-                        <div className="text-2xl font-bold">
+                     <div className="grid grid-cols-1 text-center items-center lg:grid-cols-2 ">
+                        <div className="text-2xl font-bold w-auto">
                            ${Number(product.price).toLocaleString('es-AR')}
                         </div>
-                        <Badge variant="outline">Stock: {product.stock}</Badge>
+                        <div className="w-auto lg:justify-self-end">
+                           <Badge variant="outline">Stock: {product.stock}</Badge>
+                        </div>
                      </div>
                   </CardContent>
 
-                  <CardFooter className="w-full grid grid-cols-1  lg:grid-cols-2 gap-2">
+                  <CardFooter className="w-full grid grid-cols-1 gap-2">
                      <Button
                         variant="outline"
                         size="lg"

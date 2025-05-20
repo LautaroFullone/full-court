@@ -1,11 +1,11 @@
-import { Button, Input, Tabs, TabsList, TabsTrigger } from '@shadcn'
-import { ProductsTable } from './components'
+import { Button, Input } from '@shadcn'
+import { CategoriesFilterHandler, ProductsTable } from './components'
 import { Plus, Search } from 'lucide-react'
 import { NewProductModal } from './modals'
 import { AppLayout } from '@shared'
 import { Product } from '@models'
 import { useBasicForm } from '@hooks'
-import { useAppStore, useModalStore } from '@stores'
+import { useModalStore } from '@stores'
 import ConfirmProductModal from './components/ConfirmProductModal'
 
 // Datos de ejemplo para los productos
@@ -38,21 +38,13 @@ const allProducts: Product[] = [
    { id: '14', name: 'Clase particular', price: '1200', category: 'servicios', stock: 5 },
 ]
 
-const categories = [
-   { id: 'todos', name: 'Todos' },
-   { id: 'bebidas', name: 'Bebidas' },
-   { id: 'comidas', name: 'Comidas' },
-   { id: 'accesorios', name: 'Accesorios' },
-   { id: 'servicios', name: 'Servicios' },
-]
-
 const initialFormData = {
    searchTerm: '',
 }
 
 export default function ProductsPage() {
-   // const {  modalActions: { openModal }} = useModalStore()
    const openModal = useModalStore((state) => state.modalActions.openModal)
+
    const { formData, handleChange } = useBasicForm(initialFormData)
 
    return (
@@ -80,23 +72,7 @@ export default function ProductsPage() {
                </div>
 
                <div className="flex gap-2 w-full sm:w-auto">
-                  <Tabs
-                     value={selectedCategory}
-                     onValueChange={(value) => dispatchSelectedCategory(value)}
-                     className="w-full sm:w-auto flex "
-                  >
-                     <TabsList className="w-full h-full sm:w-auto overflow-x-auto flex whitespace-nowrap">
-                        {categories.map((category) => (
-                           <TabsTrigger
-                              key={`category-${category.id}`}
-                              value={category.id}
-                              className="flex-1 sm:flex-none cursor-pointer"
-                           >
-                              {category.name}
-                           </TabsTrigger>
-                        ))}
-                     </TabsList>
-                  </Tabs>
+                  <CategoriesFilterHandler />
 
                   <Button
                      size="lg"
@@ -110,6 +86,7 @@ export default function ProductsPage() {
             </div>
 
             <ProductsTable products={allProducts} searchTerm={formData.searchTerm} />
+
             <NewProductModal />
             <ConfirmProductModal />
          </div>
