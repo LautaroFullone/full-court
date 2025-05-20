@@ -14,6 +14,7 @@ import {
    Label,
    RadioGroup,
    RadioGroupItem,
+   ScrollArea,
    Tabs,
    TabsContent,
    TabsList,
@@ -80,7 +81,7 @@ const NewReservationModal: React.FC = () => {
          open={modalFlags['new-reservation']}
          onOpenChange={() => closeModal('new-reservation')}
       >
-         <DialogContent className="w-[500px] h-[70vh]">
+         <DialogContent className="w-[500px] ">
             <DialogHeader>
                <DialogTitle>Nueva Reserva</DialogTitle>
                <DialogDescription className="capitalize">
@@ -89,8 +90,7 @@ const NewReservationModal: React.FC = () => {
             </DialogHeader>
 
             {/* <NewReservationForm timeSlot={timeSlot} court={court} date={selectedDate} /> */}
-
-            <div className="space-y-4 py-4  overflow-y-auto">
+            <ScrollArea className="h-[400px] pr-4 -mr-4 space-y-4 py-4">
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
                   <div className="space-y-2 ">
                      <Label>Cancha</Label>
@@ -229,11 +229,11 @@ const NewReservationModal: React.FC = () => {
                   </RadioGroup>
                </div>
 
-               <div className="space-y-2">
+               <div className="space-y-2 mt-6">
                   <Label htmlFor="notes">Notas adicionales (opcional)</Label>
                   <Input id="notes" placeholder="Ej: Solicita préstamo de paletas" />
                </div>
-            </div>
+            </ScrollArea>
 
             <DialogFooter className={`${isMobile ? 'flex-col space-y-2' : ''}`}>
                {/* <Button

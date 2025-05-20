@@ -41,7 +41,7 @@ const DetailsReservationModal: React.FC = () => {
                   </DialogDescription>
                </DialogHeader>
 
-               <ScrollArea className="h-[350px] pr-4 -mr-4">
+               <ScrollArea className="h-[400px] pr-4 -mr-4">
                   <div className="grid gap-6 grid-cols-1 md:grid-cols-[40%_60%] py-4 pr-4 ">
                      <div className="space-y-4">
                         <div className="flex items-center gap-3">
