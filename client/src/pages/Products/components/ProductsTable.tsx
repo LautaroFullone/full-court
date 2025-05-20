@@ -90,7 +90,13 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, searchTerm = ''
                   </CardContent>
 
                   <CardFooter className="w-full grid grid-cols-1  lg:grid-cols-2 gap-2">
-                     <Button variant="outline" size="lg" onClick={() => {}}>
+                     <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={() => {
+                           openModal({ name: 'new-product', selectedProduct: product })
+                        }}
+                     >
                         <Edit className="" />
                         Editar
                      </Button>
@@ -115,7 +121,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, searchTerm = ''
                   <PaginationItem>
                      <PaginationPrevious
                         onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                        disabled={currentPage === 1}
+                        // disabled={currentPage === 1}
                      />
                   </PaginationItem>
 
@@ -144,7 +150,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, searchTerm = ''
                         onClick={() =>
                            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                         }
-                        disabled={currentPage === totalPages}
+                        // disabled={currentPage === totalPages}
                      />
                   </PaginationItem>
                </PaginationContent>

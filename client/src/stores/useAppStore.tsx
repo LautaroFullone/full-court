@@ -15,10 +15,10 @@ interface AppStoreProps {
       toggleTheme: () => void
       dispatchSelectedDate: (date: Date) => void
       dispatchSelectedCategory: (category: string) => void
-      dispatchSelectedCourt: (court: Court) => void
-      dispatchSelectedProduct: (product: Product) => void
-      dispatchSelectedShift: (shift: ShiftType) => void
-      dispatchSelectedReservation: (reservation: Reservation) => void
+      dispatchSelectedCourt: (court: Court | null) => void
+      dispatchSelectedProduct: (product: Product | null) => void
+      dispatchSelectedShift: (shift: ShiftType | null) => void
+      dispatchSelectedReservation: (reservation: Reservation | null) => void
    }
 }
 

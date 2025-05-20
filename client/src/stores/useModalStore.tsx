@@ -18,7 +18,7 @@ type ModalPayload =
      }
    | { name: 'details-reservation'; reservation: Reservation }
    | { name: 'confirm-reservation' }
-   | { name: 'new-product' }
+   | { name: 'new-product'; selectedProduct?: Product }
    | { name: 'confirm-product'; product: Product }
 
 interface ModalStoreProps {
@@ -70,6 +70,9 @@ export const useModalStore = create<ModalStoreProps>()(
                      }))
                      break
                   case 'new-product':
+                     if (payload.selectedProduct) {
+                        appActions.dispatchSelectedProduct(payload.selectedProduct)
+                     }
                      set((state) => ({
                         modalFlags: { ...state.modalFlags, 'new-product': true },
                      }))

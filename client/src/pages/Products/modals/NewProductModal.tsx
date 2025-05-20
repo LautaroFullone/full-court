@@ -1,5 +1,6 @@
-import { useModalStore } from '@stores'
-import { useMobile } from '@hooks'
+import { useAppStore, useModalStore } from '@stores'
+import { useBasicForm, useMobile } from '@hooks'
+import { ProductFormData } from '@models'
 import {
    Button,
    Dialog,
@@ -12,43 +13,102 @@ import {
    Input,
    Label,
 } from '@shadcn'
+import { useEffect } from 'react'
 
-const NewProductModal = () => {
+const initialFormData: ProductFormData = {
+   name: '',
+   price: '',
+   stock: 0,
+   category: '',
+}
+
+const NewProductModal: React.FC = () => {
    const isMobile = useMobile()
    const {
       modalFlags,
       modalActions: { closeModal },
    } = useModalStore()
 
+   const {
+      selectedProduct,
+      appActions: { dispatchSelectedProduct },
+   } = useAppStore()
+
+   const { formData, handleChange, setFormData, resetForm } =
+      useBasicForm(initialFormData)
+
+   useEffect(() => {
+      if (!modalFlags['new-product']) return
+
+      if (selectedProduct) {
+         setFormData({
+            name: selectedProduct.name || '',
+            price: selectedProduct.price || '',
+            stock: selectedProduct.stock || 0,
+            category: selectedProduct.category || '',
+         })
+      } else {
+         resetForm()
+      }
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [modalFlags['new-product']])
+
    return (
       <Dialog
          open={modalFlags['new-product']}
-         onOpenChange={() => closeModal('new-product')}
+         onOpenChange={() => {
+            if (selectedProduct) {
+               dispatchSelectedProduct(null)
+            }
+            closeModal('new-product')
+         }}
       >
          <DialogContent className="w-[95%] max-w-[95%] sm:w-auto sm:max-w-md">
             <DialogHeader>
-               <DialogTitle>Agregar Nuevo Producto</DialogTitle>
+               <DialogTitle>
+                  {!selectedProduct ? 'Agregar nuevo' : 'Editar '} Producto
+               </DialogTitle>
 
                <DialogDescription>
-                  Completa la información del producto para agregarlo al inventario
+                  Completa la información del producto para{' '}
+                  {!selectedProduct ? 'agregarlo al ' : 'actualizarlo en el '}
+                  inventario.
                </DialogDescription>
             </DialogHeader>
 
             <div className="grid gap-4 py-4">
                <div className="space-y-2">
                   <Label htmlFor="name">Nombre del Producto</Label>
-                  <Input id="name" placeholder="Ej: Café" />
+                  <Input
+                     id="name"
+                     placeholder="Ej: Café"
+                     value={formData.name}
+                     onChange={(evt) => handleChange('name', evt.target.value)}
+                  />
                </div>
 
                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                      <Label htmlFor="price">Precio ($)</Label>
-                     <Input id="price" type="number" placeholder="Ej: 150" />
+                     <Input
+                        id="price"
+                        type="number"
+                        placeholder="Ej: 150"
+                        value={formData.price}
+                        onChange={(evt) => handleChange('price', evt.target.value)}
+                     />
                   </div>
 
                   <div className="space-y-2">
                      <Label htmlFor="stock">Stock</Label>
-                     <Input id="stock" type="number" placeholder="Ej: 20" />
+                     <Input
+                        id="stock"
+                        type="number"
+                        placeholder="Ej: 20"
+                        value={formData.stock}
+                        onChange={(evt) => handleChange('stock', evt.target.value)}
+                     />
                   </div>
                </div>
 
@@ -57,6 +117,8 @@ const NewProductModal = () => {
                   <select
                      id="category"
                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                     value={formData.category}
+                     onChange={(evt) => handleChange('category', evt.target.value)}
                   >
                      <option value="">Selecciona una categoría</option>
                      <option value="bebidas">Bebidas</option>

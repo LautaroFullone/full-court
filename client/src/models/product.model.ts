@@ -5,3 +5,5 @@ export interface Product {
    stock: number
    category: string
 }
+
+export type ProductFormData = Omit<Product, 'id'>
