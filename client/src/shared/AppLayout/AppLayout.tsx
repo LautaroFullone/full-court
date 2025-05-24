@@ -38,7 +38,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
             <div className="container flex h-16 items-center justify-between px-4 mx-auto">
                <div className="flex items-center gap-2 select-none">
                   {!isHomePage && (
-                     <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+                     <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
                         <ArrowLeft className="h-4 w-4" aria-label="Volver al inicio" />
                      </Button>
                   )}
