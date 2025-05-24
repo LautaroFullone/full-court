@@ -107,8 +107,8 @@ const NewReservationModal: React.FC = () => {
                </div>
 
                <Tabs
-                  defaultValue="existing-client"
                   className="mt-6"
+                  defaultValue="new-client"
                   onValueChange={(value) => handleChange('clientType', value)}
                >
                   <TabsList className="grid w-full grid-cols-2">
