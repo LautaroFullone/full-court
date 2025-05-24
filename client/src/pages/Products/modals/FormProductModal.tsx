@@ -49,7 +49,7 @@ const FormProductModal: React.FC = () => {
       } else {
          resetForm()
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line
    }, [isEditMode, selectedProduct])
 
    console.log('# product modal -> isEditMode', isEditMode)

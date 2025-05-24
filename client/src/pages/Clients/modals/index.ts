@@ -1,4 +1,4 @@
 import ConfirmDeleteClientModal from './ConfirmDeleteClientModal'
-import UpsertClientModal from './UpsertClientModal'
+import FormClientModal from './FormClientModal'
 
-export { UpsertClientModal, ConfirmDeleteClientModal }
+export { FormClientModal, ConfirmDeleteClientModal }

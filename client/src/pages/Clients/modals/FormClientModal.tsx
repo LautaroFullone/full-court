@@ -21,7 +21,7 @@ const initialFormData = {
    email: '',
 }
 
-const UpsertClientModal = () => {
+const FormClientModal = () => {
    const selectedClient = useAppStore((state) => state.selectedClient)
    const modalFlags = useModalStore((state) => state.modalFlags)
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
@@ -34,9 +34,7 @@ const UpsertClientModal = () => {
    console.log('# client modal -> isEditMode', isEditMode)
 
    useEffect(() => {
-      if (!isEditMode) return
-
-      if (selectedClient) {
+      if (isEditMode && selectedClient) {
          setFormData({
             name: selectedClient.name,
             dni: selectedClient.dni,
@@ -47,7 +45,7 @@ const UpsertClientModal = () => {
          resetForm()
       }
       // eslint-disable-next-line
-   }, [modalFlags['edit-client']])
+   }, [isEditMode])
 
    return (
       <Dialog
@@ -61,9 +59,10 @@ const UpsertClientModal = () => {
                <DialogTitle>
                   {!isEditMode ? 'Agregar nuevo' : 'Editar '} Cliente
                </DialogTitle>
+
                <DialogDescription>
                   {!isEditMode
-                     ? 'Ingresa la información del nuevo cliente'
+                     ? 'Ingresa la información del cliente'
                      : 'Actualiza la información del cliente'}
                </DialogDescription>
             </DialogHeader>
@@ -129,4 +128,4 @@ const UpsertClientModal = () => {
       </Dialog>
    )
 }
-export default UpsertClientModal
+export default FormClientModal

@@ -1,4 +1,4 @@
-import { ConfirmDeleteClientModal, UpsertClientModal } from './modals'
+import { ConfirmDeleteClientModal, FormClientModal } from './modals'
 import { ClientCard, ClientDetails } from './components'
 import { useAppStore, useModalStore } from '@stores'
 import { Filter, Plus, Search } from 'lucide-react'
@@ -249,7 +249,7 @@ const Clients = () => {
                </div>
             </div>
 
-            <UpsertClientModal />
+            <FormClientModal />
             <ConfirmDeleteClientModal />
          </div>
       </AppLayout>
