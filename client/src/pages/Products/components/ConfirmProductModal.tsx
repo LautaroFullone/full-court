@@ -23,8 +23,8 @@ const ConfirmProductModal = () => {
 
    return (
       <Dialog
-         open={modalFlags['confirm-product']}
-         onOpenChange={() => closeModal('confirm-product')}
+         open={modalFlags['confirm-delete-product']}
+         onOpenChange={() => closeModal('confirm-delete-product')}
       >
          <DialogContent className="w-[95%] max-w-[95%] sm:w-auto sm:max-w-md">
             <DialogHeader>
@@ -47,7 +47,7 @@ const ConfirmProductModal = () => {
                <Button
                   variant="outline"
                   size="lg"
-                  onClick={() => closeModal('confirm-product')}
+                  onClick={() => closeModal('confirm-delete-product')}
                   className="m-0"
                >
                   No, mantener producto

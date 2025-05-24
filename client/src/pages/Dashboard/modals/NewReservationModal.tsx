@@ -48,10 +48,10 @@ const NewReservationModal: React.FC = () => {
    const selectedDate = useAppStore((state) => state.selectedDate)
    const selectedCourt = useAppStore((state) => state.selectedCourt)
    const selectedShift = useAppStore((state) => state.selectedShift)
-
-   const isMobile = useMobile()
    const modalFlags = useModalStore((state) => state.modalFlags)
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
+
+   const isMobile = useMobile()
    const { formData, handleChange, resetForm } = useBasicForm(initialFormData)
 
    const [selectedClient, setSelectedClient] = useState<Client | undefined>()

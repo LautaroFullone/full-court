@@ -18,7 +18,8 @@ interface ShiftProps {
 
 const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
    const selectedDate = useAppStore((state) => state.selectedDate)
-   const modalActions = useModalStore((state) => state.modalActions)
+   const openModal = useModalStore((state) => state.modalActions.openModal)
+
    const { getReservationTypeClass } = useStyles()
 
    function isPastDate(date: Date) {
@@ -32,12 +33,7 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
          <div className="h-full">
             <div
                className="flex flex-col items-center justify-center cursor-pointer h-full w-full rounded-md transition-colors"
-               onClick={() => {
-                  modalActions.openModal({
-                     name: 'details-reservation',
-                     reservation,
-                  })
-               }}
+               onClick={() => openModal('details-reservation', { reservation })}
             >
                <span className="font-medium text-sm text-center">
                   {reservation.owner.name}
@@ -85,7 +81,7 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
          size="sm"
          className="w-full h-full flex items-center justify-center"
          onClick={() => {
-            modalActions.openModal('new-reservation', {
+            openModal('new-reservation', {
                selectedCourt: court,
                selectedShift: shiftSlot,
             })

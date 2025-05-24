@@ -107,7 +107,7 @@ const Clients = () => {
    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
 
    const selectedClient = useAppStore((state) => state.selectedClient)
-   const modalActions = useModalStore((state) => state.modalActions)
+   const openModal = useModalStore((state) => state.modalActions.openModal)
 
    // Filtrar clientes por término de búsqueda
    const filteredClients = allClients.filter(
@@ -221,7 +221,7 @@ const Clients = () => {
                      </DropdownMenuContent>
                   </DropdownMenu>
 
-                  <Button onClick={() => modalActions.openModal('new-client')}>
+                  <Button onClick={() => openModal('new-client')}>
                      <Plus className="mr-2 h-4 w-4" />
                      Nuevo Cliente
                   </Button>

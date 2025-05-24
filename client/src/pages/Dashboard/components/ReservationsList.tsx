@@ -10,6 +10,7 @@ interface ReservationsListProps {
 
 const ReservationsList: React.FC<ReservationsListProps> = ({ reservations }) => {
    const openModal = useModalStore((state) => state.modalActions.openModal)
+
    const { getReservationTypeClass } = useStyles()
 
    return (

@@ -1,7 +1,7 @@
-import { useStyles } from '@hooks'
-import { Product } from '@models'
 import { Badge, Button, Card, CardContent, CardFooter } from '@shadcn'
 import { Edit, Package, Trash2 } from 'lucide-react'
+import { useStyles } from '@hooks'
+import { Product } from '@models'
 
 interface ProductCardProps {
    product: Product

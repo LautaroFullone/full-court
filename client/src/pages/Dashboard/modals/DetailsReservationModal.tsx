@@ -19,13 +19,13 @@ import {
 } from '@shadcn'
 
 const DetailsReservationModal: React.FC = () => {
-   const isMobile = useMobile()
    const selectedReservation = useAppStore((state) => state.selectedReservation)
-   const { getReservationTypeClass } = useStyles()
-
    const modalFlags = useModalStore((state) => state.modalFlags)
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
    const openModal = useModalStore((state) => state.modalActions.openModal)
+
+   const isMobile = useMobile()
+   const { getReservationTypeClass } = useStyles()
 
    if (selectedReservation) {
       return (

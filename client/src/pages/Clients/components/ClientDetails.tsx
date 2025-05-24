@@ -8,7 +8,7 @@ interface ClientDetailsProps {
 }
 
 const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
-   const modalActions = useModalStore((state) => state.modalActions)
+   const openModal = useModalStore((state) => state.modalActions.openModal)
 
    const getInitials = (name: string) => {
       return name
@@ -31,7 +31,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
                   Selecciona un cliente del directorio para ver sus detalles completos
                </p>
 
-               <Button onClick={() => modalActions.openModal('new-client')}>
+               <Button onClick={() => openModal('new-client')}>
                   <Plus className="mr-2 h-4 w-4" />
                   Nuevo Cliente
                </Button>
@@ -63,7 +63,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
                   variant="outline"
                   size="sm"
                   onClick={() =>
-                     modalActions.openModal('edit-client', {
+                     openModal('edit-client', {
                         selectedClient: client,
                      })
                   }
@@ -76,7 +76,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
                   variant="outline"
                   size="sm"
                   className="text-destructive"
-                  onClick={() => modalActions.openModal('confirm-delete-client')}
+                  onClick={() => openModal('confirm-delete-client')}
                >
                   <Trash2 className="h-4 w-4 mr-2" />
                   Eliminar

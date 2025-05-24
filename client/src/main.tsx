@@ -4,8 +4,4 @@ import Routes from './Routes.tsx'
 
 import './global.css'
 
-createRoot(document.getElementById('root')!).render(
-   <StrictMode>
-      <Routes />
-   </StrictMode>
-)
+createRoot(document.getElementById('root')!).render(<Routes />)

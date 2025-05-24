@@ -1,5 +1,6 @@
 import { useBasicForm, useMobile } from '@hooks'
 import { useAppStore, useModalStore } from '@stores'
+import { useEffect } from 'react'
 import {
    Button,
    Dialog,
@@ -12,7 +13,6 @@ import {
    Input,
    Label,
 } from '@shadcn'
-import { useEffect } from 'react'
 
 const initialFormData = {
    name: '',
@@ -22,28 +22,26 @@ const initialFormData = {
 }
 
 const UpsertClientModal = () => {
+   const selectedClient = useAppStore((state) => state.selectedClient)
+   const modalFlags = useModalStore((state) => state.modalFlags)
+   const closeModal = useModalStore((state) => state.modalActions.closeModal)
+
    const isMobile = useMobile()
    const { formData, handleChange, setFormData, resetForm } =
       useBasicForm(initialFormData)
-   const selectedClient = useAppStore((state) => state.selectedClient)
-   const dispatchSelectedClient = useAppStore(
-      (state) => state.appActions.dispatchSelectedClient
-   )
-   const modalFlags = useModalStore((state) => state.modalFlags)
-   const modalActions = useModalStore((state) => state.modalActions)
 
    const isEditMode = modalFlags['edit-client']
-   console.log('isEditMode', isEditMode)
+   console.log('# client modal -> isEditMode', isEditMode)
 
    useEffect(() => {
       if (!isEditMode) return
 
       if (selectedClient) {
          setFormData({
-            name: selectedClient.name || '',
-            dni: selectedClient.dni || '',
-            phone: selectedClient.phone || '',
-            email: selectedClient.email || '',
+            name: selectedClient.name,
+            dni: selectedClient.dni,
+            phone: selectedClient.phone,
+            email: selectedClient.email,
          })
       } else {
          resetForm()
@@ -55,9 +53,7 @@ const UpsertClientModal = () => {
       <Dialog
          open={modalFlags['new-client'] || modalFlags['edit-client']}
          onOpenChange={() =>
-            isEditMode
-               ? modalActions.closeModal('edit-client')
-               : modalActions.closeModal('new-client')
+            isEditMode ? closeModal('edit-client') : closeModal('new-client')
          }
       >
          <DialogContent className="w-[95%] max-w-[95%] sm:w-auto sm:max-w-md">

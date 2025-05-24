@@ -1,3 +1,3 @@
-import NewProductModal from './NewProductModal'
+import FormProductModal from './FormProductModal'
 
-export { NewProductModal }
+export { FormProductModal }

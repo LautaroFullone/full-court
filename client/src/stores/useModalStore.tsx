@@ -7,8 +7,9 @@ type ModalPayload = {
    'new-reservation': { selectedCourt: Court; selectedShift: ShiftType }
    'details-reservation': { reservation: Reservation }
    'confirm-reservation': void
-   'new-product': { selectedProduct?: Product }
-   'confirm-product': { product: Product }
+   'new-product': void
+   'edit-product': { selectedProduct: Product }
+   'confirm-delete-product': { product: Product }
    'new-client': void
    'edit-client': { selectedClient: Client }
    'confirm-delete-client': void
@@ -34,7 +35,8 @@ const INITIAL_STATE: Omit<ModalStoreProps, 'modalActions'> = {
       'details-reservation': false,
       'confirm-reservation': false,
       'new-product': false,
-      'confirm-product': false,
+      'edit-product': false,
+      'confirm-delete-product': false,
       'new-client': false,
       'edit-client': false,
       'confirm-delete-client': false,
@@ -67,14 +69,13 @@ export const useModalStore = create<ModalStoreProps>()(
                      appActions.dispatchSelectedReservation(reservation)
                      break
                   }
-                  case 'new-product': {
-                     const { selectedProduct } = payload as ModalPayload['new-product']
-                     if (selectedProduct)
-                        appActions.dispatchSelectedProduct(selectedProduct)
+                  case 'edit-product': {
+                     const { selectedProduct } = payload as ModalPayload['edit-product']
+                     appActions.dispatchSelectedProduct(selectedProduct)
                      break
                   }
-                  case 'confirm-product': {
-                     const { product } = payload as ModalPayload['confirm-product']
+                  case 'confirm-delete-product': {
+                     const { product } = payload as ModalPayload['confirm-delete-product']
                      appActions.dispatchSelectedProduct(product)
                      break
                   }

@@ -54,10 +54,8 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, searchTerm = ''
                <ProductCard
                   key={product.id}
                   product={product}
-                  onEdit={() => {
-                     openModal({ name: 'new-product', selectedProduct: product })
-                  }}
-                  onDelete={() => openModal({ name: 'confirm-product', product })}
+                  onEdit={() => openModal('edit-product', { selectedProduct: product })}
+                  onDelete={() => openModal('confirm-delete-product', { product })}
                />
             ))}
          </div>
@@ -103,43 +101,6 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, searchTerm = ''
                </PaginationContent>
             </Pagination>
          </div>
-
-         {/* {productToEdit !== null && (
-            <ProductEditV2
-               product={products.find((p) => p.id === productToEdit) || {}}
-               isOpen={productToEdit !== null}
-               onClose={() => setProductToEdit(null)}
-               onSave={handleSaveProduct}
-            />
-         )} */}
-
-         {/* <AlertDialog
-            open={productToDelete !== null}
-            onOpenChange={() => setProductToDelete(null)}
-         >
-            <AlertDialogContent className="w-[95%] max-w-[95%] sm:w-auto sm:max-w-md">
-               <AlertDialogHeader>
-                  <AlertDialogTitle>
-                     ¿Estás seguro de que quieres eliminar este producto?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                     Esta acción no se puede deshacer. Esto eliminará permanentemente el
-                     producto del inventario.
-                  </AlertDialogDescription>
-               </AlertDialogHeader>
-               <AlertDialogFooter className={isMobile ? 'flex-col space-y-2' : ''}>
-                  <AlertDialogCancel className={isMobile ? 'w-full' : ''}>
-                     Cancelar
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                     onClick={confirmDeleteProduct}
-                     className={isMobile ? 'w-full' : ''}
-                  >
-                     Eliminar
-                  </AlertDialogAction>
-               </AlertDialogFooter>
-            </AlertDialogContent>
-         </AlertDialog> */}
       </>
    )
 }

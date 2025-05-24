@@ -1,9 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import {
-   ConfirmReservationModal,
-   DetailsReservationModal,
-   NewReservationModal,
-} from './modals'
 import { useMobile, useMock } from '@hooks'
 import { Tabs, TabsContent } from '@shadcn'
 import { formatDateToString } from '@lib'
@@ -17,11 +11,16 @@ import {
    ReservationsTable,
    ReservationsViewHandler,
 } from './components'
+import {
+   ConfirmReservationModal,
+   DetailsReservationModal,
+   NewReservationModal,
+} from './modals'
 
 const Dashboard = () => {
+   const { generateMockReservations } = useMock()
    const isMobile = useMobile()
    const selectedDate = useAppStore((state) => state.selectedDate)
-   const { generateMockReservations } = useMock()
 
    const [reservations] = useState(generateMockReservations())
 

@@ -1,7 +1,7 @@
 import { Button, Input } from '@shadcn'
 import { CategoriesFilterHandler, ProductsTable } from './components'
 import { Plus, Search } from 'lucide-react'
-import { NewProductModal } from './modals'
+import { FormProductModal } from './modals'
 import { AppLayout } from '@shared'
 import { Product } from '@models'
 import { useBasicForm } from '@hooks'
@@ -77,7 +77,7 @@ const Products = () => {
                   <Button
                      size="lg"
                      className="cursor-pointer"
-                     onClick={() => openModal({ name: 'new-product' })}
+                     onClick={() => openModal('new-product')}
                   >
                      <Plus className="mr-2 h-4 w-4" />
                      Nuevo
@@ -87,7 +87,7 @@ const Products = () => {
 
             <ProductsTable products={allProducts} searchTerm={formData.searchTerm} />
 
-            <NewProductModal />
+            <FormProductModal />
             <ConfirmProductModal />
          </div>
       </AppLayout>

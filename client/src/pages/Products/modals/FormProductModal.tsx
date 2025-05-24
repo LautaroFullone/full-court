@@ -1,6 +1,7 @@
 import { useAppStore, useModalStore } from '@stores'
 import { useBasicForm, useMobile } from '@hooks'
 import { ProductFormData } from '@models'
+import { useEffect } from 'react'
 import {
    Button,
    Dialog,
@@ -13,7 +14,6 @@ import {
    Input,
    Label,
 } from '@shadcn'
-import { useEffect } from 'react'
 
 const initialFormData: ProductFormData = {
    name: '',
@@ -22,42 +22,47 @@ const initialFormData: ProductFormData = {
    category: '',
 }
 
-const NewProductModal: React.FC = () => {
+const FormProductModal: React.FC = () => {
+   const selectedProduct = useAppStore((state) => state.selectedProduct)
    const modalFlags = useModalStore((state) => state.modalFlags)
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
-   const selectedProduct = useAppStore((state) => state.selectedProduct)
+
    const dispatchSelectedProduct = useAppStore(
       (state) => state.appActions.dispatchSelectedProduct
    )
+
    const isMobile = useMobile()
 
+   const isEditMode = modalFlags['edit-product']
+
    const { formData, handleChange, setFormData, resetForm } =
-      useBasicForm(initialFormData)
+      useBasicForm<ProductFormData>(initialFormData)
 
    useEffect(() => {
-      if (!modalFlags['new-product']) return
-
-      if (selectedProduct) {
+      if (isEditMode && selectedProduct) {
          setFormData({
-            name: selectedProduct.name || '',
-            price: selectedProduct.price || '',
-            stock: selectedProduct.stock || 0,
-            category: selectedProduct.category || '',
+            name: selectedProduct.name,
+            price: selectedProduct.price,
+            stock: selectedProduct.stock,
+            category: selectedProduct.category,
          })
       } else {
          resetForm()
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [isEditMode, selectedProduct])
 
-      // eslint-disable-next-line
-   }, [modalFlags['new-product']])
+   console.log('# product modal -> isEditMode', isEditMode)
 
    return (
       <Dialog
-         open={modalFlags['new-product']}
+         open={modalFlags['new-product'] || modalFlags['edit-product']}
          onOpenChange={() => {
-            if (selectedProduct) {
-               dispatchSelectedProduct(null)
+            if (isEditMode) {
+               closeModal('edit-product')
+               return dispatchSelectedProduct(null)
             }
+
             closeModal('new-product')
          }}
       >
@@ -80,7 +85,7 @@ const NewProductModal: React.FC = () => {
                   <Input
                      id="name"
                      placeholder="Ej: Café"
-                     value={formData.name}
+                     value={formData?.name}
                      onChange={(evt) => handleChange('name', evt.target.value)}
                   />
                </div>
@@ -92,7 +97,7 @@ const NewProductModal: React.FC = () => {
                         id="price"
                         type="number"
                         placeholder="Ej: 150"
-                        value={formData.price}
+                        value={formData?.price}
                         onChange={(evt) => handleChange('price', evt.target.value)}
                      />
                   </div>
@@ -103,7 +108,7 @@ const NewProductModal: React.FC = () => {
                         id="stock"
                         type="number"
                         placeholder="Ej: 20"
-                        value={formData.stock}
+                        value={formData?.stock}
                         onChange={(evt) => handleChange('stock', evt.target.value)}
                      />
                   </div>
@@ -114,7 +119,7 @@ const NewProductModal: React.FC = () => {
                   <select
                      id="category"
                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                     value={formData.category}
+                     value={formData?.category}
                      onChange={(evt) => handleChange('category', evt.target.value)}
                   >
                      <option value="">Selecciona una categoría</option>
@@ -149,4 +154,4 @@ const NewProductModal: React.FC = () => {
       </Dialog>
    )
 }
-export default NewProductModal
+export default FormProductModal
