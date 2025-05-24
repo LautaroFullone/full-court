@@ -16,7 +16,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit, onDelete }) 
       <Card
          key={product.id}
          content="center"
-         className=" overflow-hidden rounded-2xl shadow-md border justify-center"
+         className="overflow-hidden rounded-2xl shadow-md border justify-center"
       >
          <CardContent className="px-6">
             <div className="flex justify-between items-start mb-4">

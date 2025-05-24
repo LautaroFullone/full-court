@@ -42,7 +42,7 @@ const initialFormData = {
    searchTerm: '',
 }
 
-export default function ProductsPage() {
+const Products = () => {
    const openModal = useModalStore((state) => state.modalActions.openModal)
 
    const { formData, handleChange } = useBasicForm(initialFormData)
@@ -93,3 +93,5 @@ export default function ProductsPage() {
       </AppLayout>
    )
 }
+
+export default Products

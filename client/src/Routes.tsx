@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { Dashboard, Products } from '@pages'
+import { Dashboard, Products, Clients } from '@pages'
 import { useAppTheme } from '@hooks'
 
 function AppRoutes() {
@@ -10,6 +10,7 @@ function AppRoutes() {
          <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/productos" element={<Products />} />
+            <Route path="/clientes" element={<Clients />} />
          </Routes>
       </Router>
    )

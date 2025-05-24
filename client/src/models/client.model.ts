@@ -1,8 +1,10 @@
 export interface Client {
    id: string
    name: string
+   dni: string
    phone: string
    email: string
+   lastVisit: string
 }
 
 export type ClientType = 'new-client' | 'existing-client'

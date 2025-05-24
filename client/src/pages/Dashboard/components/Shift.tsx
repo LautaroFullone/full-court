@@ -85,8 +85,7 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
          size="sm"
          className="w-full h-full flex items-center justify-center"
          onClick={() => {
-            modalActions.openModal({
-               name: 'new-reservation',
+            modalActions.openModal('new-reservation', {
                selectedCourt: court,
                selectedShift: shiftSlot,
             })

@@ -133,7 +133,7 @@ const DetailsReservationModal: React.FC = () => {
                                           $
                                           {selectedReservation.items
                                              .reduce((acc, item) => acc + item.price, 0)
-                                             .toLocaleString('es-AR')}
+                                             .toLocaleString()}
                                        </TableCell>
                                     </TableRow>
                                  </TableBody>
@@ -188,12 +188,13 @@ const DetailsReservationModal: React.FC = () => {
                         variant="destructive"
                         size="lg"
                         className="gap-1"
-                        onClick={() => openModal({ name: 'confirm-reservation' })}
+                        onClick={() => openModal('confirm-reservation')}
                      >
                         <Trash2 className="h-4 w-4" />
                         Cancelar
                      </Button>
                   </div>
+
                   <div className="flex gap-2">
                      {/* <DialogClose asChild>
                         <Button variant="outline" size="lg">

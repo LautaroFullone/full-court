@@ -48,7 +48,7 @@ const NewProductModal: React.FC = () => {
          resetForm()
       }
 
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line
    }, [modalFlags['new-product']])
 
    return (

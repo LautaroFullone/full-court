@@ -8,7 +8,7 @@
          "@hooks": ["./src/hooks/index.ts"],
          "@lib": ["./src/lib/index.ts"],
          "@models": ["./src/models/index.ts"],
-         "@pages/*": ["./src/pages/*"],
+         "@pages": ["./src/pages/index.ts*"],
          "@stores": ["./src/stores/index.ts"],
          "@shared": ["./src/shared/index.ts"],
          "@shadcn": ["./src/shared/ui"]

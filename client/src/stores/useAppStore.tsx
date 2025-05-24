@@ -1,35 +1,38 @@
+import { Client, Court, Product, Reservation, ShiftType } from '@models'
 import { devtools } from 'zustand/middleware'
 import { create } from 'zustand'
-import { Court, Product, Reservation, ShiftType } from '@models'
 
 interface AppStoreProps {
    theme: 'light' | 'dark'
-   selectedDate: Date
    selectedCategory: string
+   selectedClient: Client | null
    selectedCourt: Court | null
+   selectedDate: Date
    selectedProduct: Product | null
-   selectedShift: ShiftType | null
    selectedReservation: Reservation | null
+   selectedShift: ShiftType | null
 
    appActions: {
       toggleTheme: () => void
-      dispatchSelectedDate: (date: Date) => void
       dispatchSelectedCategory: (category: string) => void
+      dispatchSelectedClient: (client: Client | null) => void
       dispatchSelectedCourt: (court: Court | null) => void
+      dispatchSelectedDate: (date: Date) => void
       dispatchSelectedProduct: (product: Product | null) => void
-      dispatchSelectedShift: (shift: ShiftType | null) => void
       dispatchSelectedReservation: (reservation: Reservation | null) => void
+      dispatchSelectedShift: (shift: ShiftType | null) => void
    }
 }
 
 const INITIAL_STATE: Omit<AppStoreProps, 'appActions'> = {
-   theme: window.matchMedia?.('(prefers-color-scheme:dark)')?.matches ? 'light' : 'dark',
-   selectedDate: new Date(),
+   theme: window.matchMedia?.('(prefers-color-scheme:dark)')?.matches ? 'dark' : 'light',
    selectedCategory: 'todos',
+   selectedClient: null,
    selectedCourt: null,
+   selectedDate: new Date(),
    selectedProduct: null,
-   selectedShift: null,
    selectedReservation: null,
+   selectedShift: null,
 }
 
 const useAppStore = create<AppStoreProps>()(
@@ -46,23 +49,26 @@ const useAppStore = create<AppStoreProps>()(
                set({ theme: 'dark' })
             }
          },
-         dispatchSelectedDate: (date: Date) => {
-            set({ selectedDate: date })
-         },
          dispatchSelectedCategory: (category: string) => {
             set({ selectedCategory: category })
+         },
+         dispatchSelectedClient: (client: Client) => {
+            set({ selectedClient: client })
          },
          dispatchSelectedCourt: (court: Court) => {
             set({ selectedCourt: court })
          },
+         dispatchSelectedDate: (date: Date) => {
+            set({ selectedDate: date })
+         },
          dispatchSelectedProduct: (product: Product) => {
             set({ selectedProduct: product })
          },
-         dispatchSelectedShift: (shift: ShiftType) => {
-            set({ selectedShift: shift })
-         },
          dispatchSelectedReservation: (reservation: Reservation) => {
             set({ selectedReservation: reservation })
+         },
+         dispatchSelectedShift: (shift: ShiftType) => {
+            set({ selectedShift: shift })
          },
       },
    }))
