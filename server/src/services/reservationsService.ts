@@ -1,14 +1,27 @@
-import { ReservationInput } from "../lib/reservation";
-import { PrismaClient } from "@prisma/client";
+import prisma from '../lib/prismaClient'
+import { ReservationData } from '../models'
 
-const prisma = new PrismaClient();
+export async function getAllReservations() {
+   try {
+      const reservations = await prisma.reservation.findMany({
+         orderBy: { date: 'desc' },
+         include: { client: true },
+      })
 
-export async function getReservations() {
-  return prisma.reservation.findMany();
+      return reservations
+   } catch (error) {
+      throw new Error('Error fetching reservations')
+   }
 }
 
-export async function createReservation(data: ReservationInput) {
-  return prisma.reservation.create({
-    data,
-  });
+export async function createReservation(data: ReservationData) {
+   try {
+      const reservation = await prisma.reservation.create({
+         data,
+      })
+
+      return reservation
+   } catch (error) {
+      throw new Error('Error creating reservation')
+   }
 }

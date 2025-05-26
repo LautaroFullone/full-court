@@ -1,10 +1,19 @@
-import dotenv from "dotenv";
-dotenv.config();
+import { clientsRouter, reservationsRouter } from './routes'
+import express from 'express'
+import dotenv from 'dotenv'
+import cors from 'cors'
 
-import app from "./app";
+dotenv.config()
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3030
+const app = express()
+
+app.use(cors())
+app.use(express.json())
+
+app.use('/api/reservations', reservationsRouter)
+app.use('/api/clients', clientsRouter)
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server listening on http://localhost:${PORT}`);
-});
+   console.log(`🚀 Server listening on http://localhost:${PORT}`)
+})
