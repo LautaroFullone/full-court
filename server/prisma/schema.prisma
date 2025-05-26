@@ -14,31 +14,32 @@ datasource db {
 }
 
 model Client {
-  id        String        @id @default(uuid())
-  name      String
-  dni     String?
-  phone     String
-  email     String?
-  reservations Reservation[]
-  lastVisit DateTime?      
-  createdAt DateTime      @default(now())
+  id            String  @id @default(uuid())
+  name          String
+  dni           String  @unique
+  phone         String
+  email         String?
+  reservations  Reservation[]
+  lastVisit     DateTime?      
+  createdAt     DateTime  @default(now())
 }
 
 model Reservation {
-  id         String   @id @default(uuid())
+  id         String  @id @default(uuid())
   date       DateTime
   shift      String
-  client     Client   @relation(fields: [clientId], references: [id])
+  courtId    String
+  client     Client  @relation(fields: [clientId], references: [id])
   clientId   String
   price      Int
   items      Json?     // [{ productName, amount, price }]
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
 }
 
 model Product {
-  id     String @id @default(uuid())
-  name   String
-  price  Int
-  stock  Int @default(0)
-  createdAt DateTime @default(now())
+  id         String  @id @default(uuid())
+  name       String
+  price      Int
+  stock      Int  @default(0)
+  createdAt  DateTime  @default(now())
 }
