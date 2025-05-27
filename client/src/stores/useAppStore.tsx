@@ -25,7 +25,7 @@ interface AppStoreProps {
 }
 
 const INITIAL_STATE: Omit<AppStoreProps, 'appActions'> = {
-   theme: window.matchMedia?.('(prefers-color-scheme:dark)')?.matches ? 'dark' : 'light',
+   theme: 'light',
    selectedCategory: 'todos',
    selectedClient: null,
    selectedCourt: null,

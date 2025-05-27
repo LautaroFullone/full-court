@@ -1,13 +1,25 @@
+import { Reservation } from './reservation.model'
+import { z } from 'zod'
+
 export interface Client {
    id: string
    name: string
    dni: string
    phone: string
-   email: string
-   lastVisit: string
+   email?: string
+   reservations: Reservation[]
+   lastVisit?: string
 }
 
 export type ClientType = 'new-client' | 'existing-client'
+
+export const clientValidationSchema = z.object({
+   name: z.string().min(1, 'El nombre es obligatorio'),
+   dni: z.string().min(6, 'El DNI debe tener al menos 6 caracteres'),
+   phone: z.string().min(6, 'El teléfono es obligatorio'),
+   email: z.string().email('Debe ser un email válido').optional(),
+})
+export type ClientFormData = z.infer<typeof clientValidationSchema>
 
 export const CLIENTS = [
    {

@@ -29,6 +29,7 @@
          "@lib": ["./src/lib/index.ts"],
          "@models": ["./src/models/index.ts"],
          "@pages": ["./src/pages/index.ts"],
+         "@services": ["./src/services/index.ts"],
          "@stores": ["./src/stores/index.ts"],
          "@shared": ["./src/shared/index.ts"],
          "@shadcn": ["./src/shared/ui"]

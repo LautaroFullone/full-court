@@ -1,6 +1,6 @@
-import { useBasicForm, useMobile } from '@hooks'
 import { useAppStore, useModalStore } from '@stores'
-import { useEffect } from 'react'
+import { useBasicForm, useMobile } from '@hooks'
+import { InputHTMLAttributes, useEffect } from 'react'
 import {
    Button,
    Dialog,
@@ -13,12 +13,55 @@ import {
    Input,
    Label,
 } from '@shadcn'
+import { ClientFormData, clientValidationSchema } from '@models'
+import { createClient } from '@services'
+import { OctagonAlert } from 'lucide-react'
 
-const initialFormData = {
+const initialFormData: ClientFormData = {
    name: '',
    dni: '',
    phone: '',
    email: '',
+}
+interface InputFormClient extends InputHTMLAttributes<HTMLInputElement> {
+   name: keyof ClientFormData
+   label: string
+   errors?: Record<string, string>
+}
+
+const InputClientForm: React.FC<InputFormClient> = ({
+   name,
+   value,
+   label,
+   onChange,
+   placeholder,
+   className = '',
+   errors = {},
+}) => {
+   const hasError = !!errors[name]
+
+   return (
+      <>
+         <Label htmlFor={name}>{label}</Label>
+         <Input
+            id={`input-client-${name}`}
+            name={name}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            className={`mb-0 ${
+               hasError && 'border-red-500 focus:border-0 focus-visible:ring-red-500'
+            } ${className}`}
+         />
+
+         {hasError && (
+            <p className="mt-1 text-xs text-red-500 flex items-center gap-1">
+               <OctagonAlert size={13} />
+               {errors[name]}
+            </p>
+         )}
+      </>
+   )
 }
 
 const FormClientModal = () => {
@@ -27,11 +70,10 @@ const FormClientModal = () => {
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
    const isMobile = useMobile()
-   const { formData, handleChange, setFormData, resetForm } =
-      useBasicForm(initialFormData)
+   const { formData, handleChange, setFormData, resetForm, errors, isValid } =
+      useBasicForm(initialFormData, clientValidationSchema)
 
    const isEditMode = modalFlags['edit-client']
-   console.log('# client modal -> isEditMode', isEditMode)
 
    useEffect(() => {
       if (isEditMode && selectedClient) {
@@ -39,13 +81,18 @@ const FormClientModal = () => {
             name: selectedClient.name,
             dni: selectedClient.dni,
             phone: selectedClient.phone,
-            email: selectedClient.email,
+            email: selectedClient?.email,
          })
       } else {
          resetForm()
       }
       // eslint-disable-next-line
    }, [isEditMode])
+
+   async function handleSubmit() {
+      console.log('# client modal -> handleSubmit', formData)
+      await createClient(formData)
+   }
 
    return (
       <Dialog
@@ -54,7 +101,7 @@ const FormClientModal = () => {
             isEditMode ? closeModal('edit-client') : closeModal('new-client')
          }
       >
-         <DialogContent className="w-[95%] max-w-[95%] sm:w-auto sm:max-w-md">
+         <DialogContent className="w-[400px]   ">
             <DialogHeader>
                <DialogTitle>
                   {!isEditMode ? 'Agregar nuevo' : 'Editar '} Cliente
@@ -69,46 +116,46 @@ const FormClientModal = () => {
 
             <div className="grid gap-4 py-4">
                <div className="space-y-2">
-                  <Label htmlFor="name">Nombre Completo</Label>
-                  <Input
+                  <InputClientForm
+                     label="Nombre Completo"
                      name="name"
                      value={formData.name}
                      onChange={(evt) => handleChange('name', evt.target.value)}
                      placeholder="Ej: Valentina Roldan"
+                     errors={errors}
                   />
                </div>
 
                <div className="space-y-2">
-                  <Label htmlFor="dni">DNI / Documento</Label>
-                  <Input
-                     id="dni"
+                  <InputClientForm
+                     label="DNI / Documento"
                      name="dni"
                      value={formData.dni}
                      onChange={(evt) => handleChange('dni', evt.target.value)}
                      placeholder="Ej: 4433229"
+                     errors={errors}
                   />
                </div>
 
                <div className="space-y-2">
-                  <Label htmlFor="phone">Teléfono</Label>
-                  <Input
-                     id="phone"
+                  <InputClientForm
+                     label="Teléfono"
                      name="phone"
                      value={formData.phone}
                      onChange={(evt) => handleChange('phone', evt.target.value)}
-                     placeholder="Ej: 223-8571833"
+                     placeholder="Ej: 555-1234"
+                     errors={errors}
                   />
                </div>
 
                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                     id="email"
+                  <InputClientForm
+                     label="Email"
                      name="email"
-                     type="email"
                      value={formData.email}
                      onChange={(evt) => handleChange('email', evt.target.value)}
                      placeholder="Ej: valentinaroldan@ejemplo.com"
+                     errors={errors}
                   />
                </div>
             </div>
@@ -120,7 +167,11 @@ const FormClientModal = () => {
                   </Button>
                </DialogClose>
 
-               <Button type="submit" className={isMobile ? 'w-full' : ''}>
+               <Button
+                  onClick={handleSubmit}
+                  disabled={!isValid}
+                  className={isMobile ? 'w-full' : ''}
+               >
                   Guardar Cliente
                </Button>
             </DialogFooter>
