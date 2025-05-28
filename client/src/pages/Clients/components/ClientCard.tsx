@@ -1,7 +1,7 @@
-import { getClientInitials } from '@lib'
-import { Client } from '@models'
 import { Avatar, AvatarFallback } from '@shadcn'
+import { getClientInitials } from '@lib'
 import { useAppStore } from '@stores'
+import { Client } from '@models'
 
 interface ClientCardProps {
    client: Client

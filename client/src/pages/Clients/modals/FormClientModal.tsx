@@ -1,9 +1,8 @@
+import { useBasicForm, useClientMutation, useMobile } from '@hooks'
 import { ClientFormData, clientValidationSchema } from '@models'
 import { InputHTMLAttributes, useEffect } from 'react'
 import { useAppStore, useModalStore } from '@stores'
-import { useBasicForm, useMobile } from '@hooks'
 import { OctagonAlert } from 'lucide-react'
-import { createClient } from '@services'
 import {
    Button,
    Dialog,
@@ -73,6 +72,8 @@ const FormClientModal = () => {
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
    const isMobile = useMobile()
+   const { createClientMutation, isLoading } = useClientMutation()
+
    const { formData, handleChange, setFormData, resetForm, errors, isValid } =
       useBasicForm(initialFormData, clientValidationSchema)
 
@@ -93,7 +94,7 @@ const FormClientModal = () => {
    }, [isEditMode])
 
    async function handleSubmit() {
-      await createClient(formData)
+      await createClientMutation(formData)
       closeModal(isEditMode ? 'edit-client' : 'new-client')
       resetForm()
    }
@@ -105,7 +106,11 @@ const FormClientModal = () => {
             isEditMode ? closeModal('edit-client') : closeModal('new-client')
          }
       >
-         <DialogContent className="w-[400px]   ">
+         <DialogContent className="w-[400px]">
+            {/* <div className="absolute inset-0 z-50 bg-black/20 backdrop-blur-sm flex items-center justify-center rounded-md">
+               <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div> */}
+
             <DialogHeader>
                <DialogTitle>
                   {!isEditMode ? 'Agregar nuevo' : 'Editar '} Cliente
