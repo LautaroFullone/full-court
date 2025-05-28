@@ -5,6 +5,7 @@ import useMock from './useMock'
 import useStyles from './useStyles'
 import useBasicForm from './useBasicForm'
 import useClientsQuery from './queries/useClientsQuery'
+import useClientMutation from './queries/useClientMutation'
 
 export {
    useAppTheme,
@@ -14,4 +15,5 @@ export {
    useStyles,
    useBasicForm,
    useClientsQuery,
+   useClientMutation,
 }

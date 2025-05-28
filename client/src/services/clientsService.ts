@@ -8,7 +8,7 @@ interface ResponseApi {
 }
 
 export async function getClients() {
-   type Response = Pick<ResponseApi, 'clients'>
+   type Response = Pick<ResponseApi, 'message' | 'clients'>
 
    try {
       const { data } = await api.get<Response>(`/clients`, {})

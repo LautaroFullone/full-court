@@ -4,7 +4,7 @@ export const reservationSchema = z.object({
    date: z.coerce.date(),
    shift: z.string().nonempty(),
    courtId: z.string().nonempty(),
-   clientId: z.uuid(),
+   ownerId: z.uuid(),
    price: z.number().nonnegative(),
    items: z
       .array(

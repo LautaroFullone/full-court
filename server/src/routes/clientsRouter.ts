@@ -1,22 +1,33 @@
 import { clientSchema, clientUpdateSchema } from '../models/client'
 import { Router, Request, Response } from 'express'
 import prisma from '../lib/prismaClient'
+import { Client } from '@prisma/client'
+
+interface ResponseEntity {
+   message: string
+   client?: Client
+   clients?: Client[]
+   error?: unknown
+}
 
 const clientsRouter = Router()
 
-clientsRouter.get('/', async (_req: Request, res: Response) => {
+clientsRouter.get('/', async (_req: Request, res: Response<ResponseEntity>) => {
    try {
       const clients = await prisma.client.findMany({
          orderBy: { createdAt: 'desc' },
       })
 
-      res.status(200).send({ clients })
+      res.status(200).send({
+         message: 'Clientes obtenidos',
+         clients,
+      })
    } catch (error) {
       res.status(500).send({ message: 'Error obteniendo los clientes', error })
    }
 })
 
-clientsRouter.post('/', async (req: Request, res: Response) => {
+clientsRouter.post('/', async (req: Request, res: Response<ResponseEntity>) => {
    try {
       const data = clientSchema.parse(req.body)
 
@@ -34,7 +45,7 @@ clientsRouter.post('/', async (req: Request, res: Response) => {
 
       const client = await prisma.client.create({ data })
 
-      res.status(201).send(client)
+      res.status(201).send({ message: 'Cliente creado', client })
    } catch (error) {
       res.status(500).send({
          message: 'Error creando el cliente',
@@ -43,7 +54,7 @@ clientsRouter.post('/', async (req: Request, res: Response) => {
    }
 })
 
-clientsRouter.put('/:id', async (req: Request, res: Response) => {
+clientsRouter.put('/:id', async (req: Request, res: Response<ResponseEntity>) => {
    try {
       const { id } = req.params
       const clientdata = clientUpdateSchema.parse(req.body)
@@ -53,7 +64,10 @@ clientsRouter.put('/:id', async (req: Request, res: Response) => {
          data: clientdata,
       })
 
-      res.status(200).send(clientUpdated)
+      res.status(200).send({
+         message: 'Cliente actualizado',
+         client: clientUpdated,
+      })
    } catch (error) {
       res.status(500).send({
          message: 'Error actualizando el cliente',
@@ -62,7 +76,7 @@ clientsRouter.put('/:id', async (req: Request, res: Response) => {
    }
 })
 
-clientsRouter.delete('/:id', async (req: Request, res: Response) => {
+clientsRouter.delete('/:id', async (req: Request, res: Response<ResponseEntity>) => {
    try {
       const { id } = req.params
 
@@ -77,7 +91,7 @@ clientsRouter.delete('/:id', async (req: Request, res: Response) => {
 
       await prisma.client.delete({ where: { id } })
 
-      res.status(204).send()
+      res.status(204).send({ message: 'Cliente eliminado' })
    } catch (error: any) {
       res.status(500).send({
          message: 'Error eliminando el cliente',

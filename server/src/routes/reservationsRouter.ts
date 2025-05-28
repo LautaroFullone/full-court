@@ -1,23 +1,31 @@
 import { reservationSchema } from '../models/reservation'
 import { Router, Request, Response } from 'express'
+import { Reservation } from '@prisma/client'
 import prisma from '../lib/prismaClient'
+
+interface ResponseEntity {
+   message: string
+   reservation?: Reservation
+   reservations?: Reservation[]
+   error?: unknown
+}
 
 const reservationsRouter = Router()
 
-reservationsRouter.get('/', async (_req: Request, res: Response) => {
+reservationsRouter.get('/', async (req: Request, res: Response<ResponseEntity>) => {
    try {
       const reservations = await prisma.reservation.findMany({
          orderBy: { date: 'desc' },
-         include: { client: true },
+         include: { owner: true },
       })
 
-      res.status(200).send(reservations)
+      res.status(200).send({ message: 'Reservas obtenidas', reservations })
    } catch (error) {
-      res.status(500).send({ message: 'GET RESERVATION ERROR', error })
+      res.status(500).send({ message: 'Error obteniendo las reservas', error })
    }
 })
 
-reservationsRouter.post('/', async (req: Request, res: Response) => {
+reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>) => {
    try {
       const data = reservationSchema.parse(req.body)
 
@@ -27,7 +35,7 @@ reservationsRouter.post('/', async (req: Request, res: Response) => {
 
       if (existingReservation) {
          res.status(400).send({
-            message: 'Reservation already exists for this shift',
+            message: 'Ya existe una reserva para el turno seleccionado',
             reservation: existingReservation,
          })
          return
@@ -37,10 +45,10 @@ reservationsRouter.post('/', async (req: Request, res: Response) => {
          data,
       })
 
-      res.status(201).send(reservation)
+      res.status(201).send({ message: 'Reserva creada', reservation })
    } catch (error) {
       res.status(500).send({
-         message: 'POST RESERVATION ERROR',
+         message: 'Error creando la reserva',
          error,
       })
    }
