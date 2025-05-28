@@ -1,6 +1,9 @@
+import { ClientFormData, clientValidationSchema } from '@models'
+import { InputHTMLAttributes, useEffect } from 'react'
 import { useAppStore, useModalStore } from '@stores'
 import { useBasicForm, useMobile } from '@hooks'
-import { InputHTMLAttributes, useEffect } from 'react'
+import { OctagonAlert } from 'lucide-react'
+import { createClient } from '@services'
 import {
    Button,
    Dialog,
@@ -13,9 +16,6 @@ import {
    Input,
    Label,
 } from '@shadcn'
-import { ClientFormData, clientValidationSchema } from '@models'
-import { createClient } from '@services'
-import { OctagonAlert } from 'lucide-react'
 
 const initialFormData: ClientFormData = {
    name: '',
@@ -23,6 +23,7 @@ const initialFormData: ClientFormData = {
    phone: '',
    email: '',
 }
+
 interface InputFormClient extends InputHTMLAttributes<HTMLInputElement> {
    name: keyof ClientFormData
    label: string
@@ -37,6 +38,7 @@ const InputClientForm: React.FC<InputFormClient> = ({
    placeholder,
    className = '',
    errors = {},
+   ...props
 }) => {
    const hasError = !!errors[name]
 
@@ -52,6 +54,7 @@ const InputClientForm: React.FC<InputFormClient> = ({
             className={`mb-0 ${
                hasError && 'border-red-500 focus:border-0 focus-visible:ring-red-500'
             } ${className}`}
+            {...props}
          />
 
          {hasError && (
@@ -90,8 +93,9 @@ const FormClientModal = () => {
    }, [isEditMode])
 
    async function handleSubmit() {
-      console.log('# client modal -> handleSubmit', formData)
       await createClient(formData)
+      closeModal(isEditMode ? 'edit-client' : 'new-client')
+      resetForm()
    }
 
    return (
@@ -130,6 +134,7 @@ const FormClientModal = () => {
                   <InputClientForm
                      label="DNI / Documento"
                      name="dni"
+                     type="number"
                      value={formData.dni}
                      onChange={(evt) => handleChange('dni', evt.target.value)}
                      placeholder="Ej: 4433229"
@@ -141,6 +146,7 @@ const FormClientModal = () => {
                   <InputClientForm
                      label="Teléfono"
                      name="phone"
+                     type="number"
                      value={formData.phone}
                      onChange={(evt) => handleChange('phone', evt.target.value)}
                      placeholder="Ej: 555-1234"
@@ -152,6 +158,7 @@ const FormClientModal = () => {
                   <InputClientForm
                      label="Email"
                      name="email"
+                     type="email"
                      value={formData.email}
                      onChange={(evt) => handleChange('email', evt.target.value)}
                      placeholder="Ej: valentinaroldan@ejemplo.com"

@@ -10,9 +10,9 @@ clientsRouter.get('/', async (_req: Request, res: Response) => {
          orderBy: { createdAt: 'desc' },
       })
 
-      res.status(200).send(clients)
+      res.status(200).send({ clients })
    } catch (error) {
-      res.status(500).send({ message: 'GET CLIENTS ERROR', error })
+      res.status(500).send({ message: 'Error obteniendo los clientes', error })
    }
 })
 
@@ -26,7 +26,7 @@ clientsRouter.post('/', async (req: Request, res: Response) => {
 
       if (existingClient) {
          res.status(400).send({
-            message: 'Client with this DNI already exists',
+            message: 'Ya existe un cliente con este DNI',
             client: existingClient,
          })
          return
@@ -36,9 +36,8 @@ clientsRouter.post('/', async (req: Request, res: Response) => {
 
       res.status(201).send(client)
    } catch (error) {
-      console.log('Error creating client:', error)
       res.status(500).send({
-         message: 'CREATE CLIENT ERROR',
+         message: 'Error creando el cliente',
          error,
       })
    }
@@ -57,7 +56,7 @@ clientsRouter.put('/:id', async (req: Request, res: Response) => {
       res.status(200).send(clientUpdated)
    } catch (error) {
       res.status(500).send({
-         message: 'UPDATE CLIENT ERROR',
+         message: 'Error actualizando el cliente',
          error,
       })
    }
@@ -81,7 +80,7 @@ clientsRouter.delete('/:id', async (req: Request, res: Response) => {
       res.status(204).send()
    } catch (error: any) {
       res.status(500).send({
-         message: 'DELETE CLIENT ERROR',
+         message: 'Error eliminando el cliente',
          error,
       })
    }

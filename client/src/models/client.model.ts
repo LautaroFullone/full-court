@@ -15,10 +15,14 @@ export type ClientType = 'new-client' | 'existing-client'
 
 export const clientValidationSchema = z.object({
    name: z.string().min(1, 'El nombre es obligatorio'),
-   dni: z.string().min(6, 'El DNI debe tener al menos 6 caracteres'),
+   dni: z
+      .string()
+      .regex(/^\d+$/, 'El DNI solo debe contener números')
+      .min(6, 'El DNI debe tener al menos 6 caracteres'),
    phone: z.string().min(6, 'El teléfono es obligatorio'),
    email: z.string().email('Debe ser un email válido').optional(),
 })
+
 export type ClientFormData = z.infer<typeof clientValidationSchema>
 
 export const CLIENTS = [

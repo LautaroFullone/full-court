@@ -1,9 +1,10 @@
+import { Filter, Loader2, Plus, Search, UserRoundSearch } from 'lucide-react'
 import { ConfirmDeleteClientModal, FormClientModal } from './modals'
 import { ClientCard, ClientDetails } from './components'
 import { useAppStore, useModalStore } from '@stores'
-import { Filter, Plus, Search } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useClientsQuery } from '@hooks'
 import { AppLayout } from '@shared'
-import { useState } from 'react'
 import {
    Badge,
    Button,
@@ -15,135 +16,46 @@ import {
    ScrollArea,
 } from '@shadcn'
 
-const allClients2 = [
-   {
-      id: '1',
-      name: 'Juan Pérez',
-      dni: '12345678A',
-      phone: '555-1234',
-      email: 'juan@example.com',
-      lastVisit: '2023-05-15',
-   },
-   {
-      id: '2',
-      name: 'María López',
-      dni: '87654321B',
-      phone: '555-5678',
-      email: 'maria@example.com',
-      lastVisit: '2023-05-20',
-   },
-   {
-      id: '3',
-      name: 'Carlos Rodríguez',
-      dni: '11223344C',
-      phone: '555-9012',
-      email: 'carlos@example.com',
-      lastVisit: '2023-05-18',
-   },
-   {
-      id: '4',
-      name: 'Ana Martínez',
-      dni: '44332211D',
-      phone: '555-3456',
-      email: 'ana@example.com',
-      lastVisit: '2023-05-22',
-   },
-   {
-      id: '5',
-      name: 'Luis González',
-      dni: '55667788E',
-      phone: '555-7890',
-      email: 'luis@example.com',
-      lastVisit: '2023-05-17',
-   },
-   {
-      id: '6',
-      name: 'Sofía Ramírez',
-      dni: '88776655F',
-      phone: '555-2345',
-      email: 'sofia@example.com',
-      lastVisit: '2023-05-19',
-   },
-   {
-      id: '7',
-      name: 'Diego Fernández',
-      dni: '99887766G',
-      phone: '555-6789',
-      email: 'diego@example.com',
-      lastVisit: '2023-05-21',
-   },
-   {
-      id: '8',
-      name: 'Laura Torres',
-      dni: '66778899H',
-      phone: '555-0123',
-      email: 'laura@example.com',
-      lastVisit: '2023-05-16',
-   },
-   {
-      id: '9',
-      name: 'Pablo Sánchez',
-      dni: '12312312I',
-      phone: '555-4567',
-      email: 'pablo@example.com',
-      lastVisit: '2023-05-23',
-   },
-   {
-      id: '10',
-      name: 'Valentina Díaz',
-      dni: '45645645J',
-      phone: '555-8901',
-      email: 'valentina@example.com',
-      lastVisit: '2023-05-24',
-   },
-]
-
 const Clients = () => {
-   // Función para obtener las iniciales del nombre
-   const [allClients] = useState(allClients2)
-   const [searchTerm, setSearchTerm] = useState('')
+   const selectedClient = useAppStore((state) => state.selectedClient)
+   const dispatchSelectedClient = useAppStore(
+      (state) => state.appActions.dispatchSelectedClient
+   )
+   const openModal = useModalStore((state) => state.modalActions.openModal)
 
+   const { clients, isPending } = useClientsQuery()
+
+   const [searchTerm, setSearchTerm] = useState('')
    const [sortBy, setSortBy] = useState<string>('name')
    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
 
-   const selectedClient = useAppStore((state) => state.selectedClient)
-   const openModal = useModalStore((state) => state.modalActions.openModal)
-
-   // Filtrar clientes por término de búsqueda
-   const filteredClients = allClients.filter(
+   const filteredClients = clients.filter(
       (client) =>
          client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
          client.dni.toLowerCase().includes(searchTerm.toLowerCase()) ||
          client.phone.includes(searchTerm) ||
-         client.email.toLowerCase().includes(searchTerm.toLowerCase())
+         client.email?.toLowerCase().includes(searchTerm.toLowerCase())
    )
 
-   // Ordenar clientes
-   const sortedClients = [...filteredClients].sort((a, b) => {
+   const sortedClients = filteredClients?.sort((a, b) => {
       if (sortBy === 'name') {
          return sortOrder === 'asc'
             ? a.name.localeCompare(b.name)
             : b.name.localeCompare(a.name)
       } else if (sortBy === 'lastVisit') {
          return sortOrder === 'asc'
-            ? new Date(a.lastVisit).getTime() - new Date(b.lastVisit).getTime()
-            : new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime()
+            ? new Date(a.lastVisit || '').getTime() -
+                 new Date(b.lastVisit || '').getTime()
+            : new Date(b.lastVisit || '').getTime() -
+                 new Date(a.lastVisit || '').getTime()
       }
       return 0
    })
 
-   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchTerm(event.target.value)
-   }
-
-   // const toggleSort = (field: string) => {
-   //    if (sortBy === field) {
-   //       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
-   //    } else {
-   //       setSortBy(field)
-   //       setSortOrder('asc')
-   //    }
-   // }
+   useEffect(() => {
+      return dispatchSelectedClient(null)
+      // eslint-disable-next-line
+   }, [])
 
    return (
       <AppLayout>
@@ -163,15 +75,16 @@ const Clients = () => {
                   <Input
                      type="search"
                      placeholder="Buscar clientes..."
-                     className="pl-8"
+                     className="pl-8 "
                      value={searchTerm}
-                     onChange={handleSearch}
+                     disabled={sortedClients?.length === 0}
+                     onChange={(evt) => setSearchTerm(evt.target.value)}
                   />
                </div>
 
                <div className="flex gap-2 w-full sm:w-auto">
                   <DropdownMenu>
-                     <DropdownMenuTrigger asChild>
+                     <DropdownMenuTrigger asChild disabled={sortedClients?.length === 0}>
                         <Button variant="outline">
                            <Filter className="mr-2 h-4 w-4" />
                            Ordenar
@@ -232,16 +145,51 @@ const Clients = () => {
                <div className="md:col-span-1 border rounded-lg overflow-hidden">
                   <div className="p-3 bg-muted/50 font-medium border-b flex justify-between items-center">
                      <span>Directorio de Clientes</span>
-                     <Badge>{sortedClients.length} clientes</Badge>
+                     <Badge>{sortedClients?.length} clientes</Badge>
                   </div>
 
-                  <ScrollArea className="h-[60vh]">
-                     <div className="divide-y">
-                        {sortedClients.map((client) => (
-                           <ClientCard key={`client-card-${client.id}`} client={client} />
-                        ))}
+                  {isPending ? (
+                     <div className="h-[60vh]  flex items-center justify-center p-8">
+                        <div className="flex flex-col items-center justify-center h-screen">
+                           <Loader2 className="h-8 w-8 animate-spin" />
+
+                           <p className="text-sm text-muted-foreground mt-2">
+                              Cargando clientes...
+                           </p>
+                        </div>
                      </div>
-                  </ScrollArea>
+                  ) : sortedClients?.length ? (
+                     <ScrollArea className="h-[60vh]">
+                        <div className="divide-y">
+                           {sortedClients.map((client) => (
+                              <ClientCard
+                                 key={`client-card-${client.id}`}
+                                 client={client}
+                              />
+                           ))}
+                        </div>
+                     </ScrollArea>
+                  ) : (
+                     <div className="h-[60vh] flex items-center justify-center p-8 text-center">
+                        <div className="max-w-sm">
+                           <UserRoundSearch className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-20" />
+                           <h3 className="text-lg font-medium mb-2">
+                              {searchTerm
+                                 ? 'No se encontraron clientes'
+                                 : 'No hay clientes registrados'}
+                           </h3>
+                           <p className="text-muted-foreground mb-4">
+                              {searchTerm
+                                 ? `No hay clientes que coincidan con "${searchTerm}". Intenta con otros términos de búsqueda.`
+                                 : 'Comienza agregando tu primer cliente para gestionar sus reservas y datos de contacto.'}
+                           </p>
+                           <Button onClick={() => openModal('new-client')}>
+                              <Plus className="mr-2 h-4 w-4" />
+                              Nuevo Cliente
+                           </Button>
+                        </div>
+                     </div>
+                  )}
                </div>
 
                <div className="md:col-span-2 border rounded-lg overflow-hidden shadow-md">

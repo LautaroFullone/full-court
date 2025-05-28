@@ -1,4 +1,4 @@
-import { Calendar, Edit, Mail, Phone, Plus, Trash2, User } from 'lucide-react'
+import { Calendar, Edit, Mail, Phone, Trash2, UserRoundPen } from 'lucide-react'
 import { Avatar, AvatarFallback, Badge, Button } from '@shadcn'
 import { useModalStore } from '@stores'
 import { Client } from '@models'
@@ -23,18 +23,13 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
       return (
          <div className="h-full flex items-center justify-center p-8 text-center">
             <div className="max-w-md">
-               <User className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-20" />
+               <UserRoundPen className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-20" />
 
                <h3 className="text-lg font-medium mb-2">Selecciona un cliente</h3>
 
                <p className="text-muted-foreground mb-4">
                   Selecciona un cliente del directorio para ver sus detalles completos
                </p>
-
-               <Button onClick={() => openModal('new-client')}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Nuevo Cliente
-               </Button>
             </div>
          </div>
       )
@@ -43,8 +38,8 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
    return (
       <div className="p-6 bg-card h-full ">
          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
-            <div className="flex items-center gap-4">
-               <Avatar className="h-16 w-16">
+            <div className="flex items-center gap-4 ">
+               <Avatar className="h-16 w-16 ">
                   <AvatarFallback className="text-lg">
                      {getInitials(client.name)}
                   </AvatarFallback>
@@ -90,6 +85,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
                <div className="space-y-3">
                   <div className="flex items-center gap-3 p-3 border rounded-md">
                      <Phone className="h-5 w-5 text-muted-foreground" />
+
                      <div>
                         <div className="text-sm text-muted-foreground">Teléfono</div>
                         <div>{client.phone}</div>
@@ -98,6 +94,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
 
                   <div className="flex items-center gap-3 p-3 border rounded-md">
                      <Mail className="h-5 w-5 text-muted-foreground" />
+
                      <div>
                         <div className="text-sm text-muted-foreground">Email</div>
                         <div>{client.email}</div>
@@ -106,6 +103,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
 
                   <div className="flex items-center gap-3 p-3 border rounded-md">
                      <Calendar className="h-5 w-5 text-muted-foreground" />
+
                      <div>
                         <div className="text-sm text-muted-foreground">Última visita</div>
                         <div>{client.lastVisit}</div>
@@ -119,7 +117,9 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
                <div className="border rounded-md p-4 h-[200px] flex items-center justify-center">
                   <div className="text-center text-muted-foreground">
                      <Calendar className="h-10 w-10 mx-auto mb-2 opacity-20" />
+
                      <p>No hay reservas recientes</p>
+
                      <Button variant="link" size="sm">
                         Ver todas las reservas
                      </Button>

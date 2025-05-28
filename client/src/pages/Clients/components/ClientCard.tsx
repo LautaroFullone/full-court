@@ -14,7 +14,7 @@ const ClientCard: React.FC<ClientCardProps> = ({ client }) => {
    return (
       <div
          key={client.id}
-         className={`p-3 flex items-center gap-3 cursor-pointer hover:bg-muted/30 select-none ${
+         className={`p-3 flex items-center gap-3 cursor-pointer hover:bg-muted/30 ${
             selectedClient?.id === client.id ? 'bg-muted' : ''
          }`}
          onClick={() => appActions.dispatchSelectedClient(client)}

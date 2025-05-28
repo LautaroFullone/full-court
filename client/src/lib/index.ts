@@ -1,8 +1,10 @@
 export * from './utils'
 
 import { api } from './axios'
+import { handleApiError } from './handleApiError'
+
 import { formatDateToString } from './formatDateToString'
 import { formatStringToDate } from './formatStringToDate'
 import { getClientInitials } from './getClientInitials'
 
-export { api, formatDateToString, formatStringToDate, getClientInitials }
+export { api, formatDateToString, formatStringToDate, getClientInitials, handleApiError }

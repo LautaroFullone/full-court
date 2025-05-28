@@ -1,5 +1,5 @@
 import { Client, ClientFormData } from '@models'
-import { api } from '@lib'
+import { api, handleApiError } from '@lib'
 
 interface ResponseApi {
    client: Client
@@ -13,8 +13,8 @@ export async function getClients() {
    try {
       const { data } = await api.get<Response>(`/clients`, {})
       return data
-   } catch {
-      throw new Error('getClients failed')
+   } catch (error) {
+      throw handleApiError(error)
    }
 }
 
@@ -23,9 +23,8 @@ export async function createClient(clientData: ClientFormData) {
 
    try {
       const { data } = await api.post<Response>(`/clients`, clientData, {})
-
       return data
-   } catch {
-      throw new Error('createClient failed')
+   } catch (error) {
+      throw handleApiError(error)
    }
 }
