@@ -1,14 +1,6 @@
 import { z } from 'zod'
 
-export interface Product {
-   id: string
-   name: string
-   price: string
-   stock: number
-   category: string
-}
-
-export const productValidationSchema = z.object({
+export const productSchema = z.object({
    name: z
       .string()
       .min(1, 'El nombre es obligatorio')
@@ -24,4 +16,7 @@ export const productValidationSchema = z.object({
       .int({ message: 'El stock debe ser un número entero' }),
 })
 
-export type ProductFormData = z.infer<typeof productValidationSchema>
+export const productUpdateSchema = productSchema.partial()
+
+export type ProductInput = z.infer<typeof productSchema>
+export type ProductUpdateInput = z.infer<typeof productUpdateSchema>

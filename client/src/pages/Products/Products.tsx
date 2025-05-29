@@ -1,12 +1,12 @@
-import { Button, Input } from '@shadcn'
+import ConfirmProductModal from './components/ConfirmProductModal'
 import { CategoriesFilterHandler, ProductsTable } from './components'
-import { Plus, Search } from 'lucide-react'
 import { FormProductModal } from './modals'
+import { Plus, Search } from 'lucide-react'
+import { useModalStore } from '@stores'
+import { Button, Input } from '@shadcn'
 import { AppLayout } from '@shared'
 import { Product } from '@models'
-import { useBasicForm } from '@hooks'
-import { useModalStore } from '@stores'
-import ConfirmProductModal from './components/ConfirmProductModal'
+import { useState } from 'react'
 
 // Datos de ejemplo para los productos
 const allProducts: Product[] = [
@@ -38,14 +38,10 @@ const allProducts: Product[] = [
    { id: '14', name: 'Clase particular', price: '1200', category: 'servicios', stock: 5 },
 ]
 
-const initialFormData = {
-   searchTerm: '',
-}
-
 const Products = () => {
    const openModal = useModalStore((state) => state.modalActions.openModal)
 
-   const { formData, handleChange } = useBasicForm(initialFormData)
+   const [searchTerm, setSearchTerm] = useState<string>('')
 
    return (
       <AppLayout>
@@ -66,8 +62,8 @@ const Products = () => {
                      type="search"
                      placeholder="Buscar productos..."
                      className="pl-8"
-                     value={formData.searchTerm}
-                     onChange={(evt) => handleChange('searchTerm', evt.target.value)}
+                     value={searchTerm}
+                     onChange={(evt) => setSearchTerm(evt.target.value)}
                   />
                </div>
 
@@ -85,7 +81,7 @@ const Products = () => {
                </div>
             </div>
 
-            <ProductsTable products={allProducts} searchTerm={formData.searchTerm} />
+            <ProductsTable products={allProducts} searchTerm={searchTerm} />
 
             <FormProductModal />
             <ConfirmProductModal />
