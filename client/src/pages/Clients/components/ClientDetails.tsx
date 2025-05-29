@@ -1,5 +1,6 @@
 import { Calendar, Edit, Mail, Phone, Trash2, UserRoundPen } from 'lucide-react'
 import { Avatar, AvatarFallback, Badge, Button } from '@shadcn'
+import { getClientInitials } from '@lib'
 import { useModalStore } from '@stores'
 import { Client } from '@models'
 
@@ -9,15 +10,6 @@ interface ClientDetailsProps {
 
 const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
    const openModal = useModalStore((state) => state.modalActions.openModal)
-
-   const getInitials = (name: string) => {
-      return name
-         .split(' ')
-         .map((part) => part[0])
-         .join('')
-         .toUpperCase()
-         .substring(0, 2)
-   }
 
    if (!client) {
       return (
@@ -40,8 +32,8 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
             <div className="flex items-center gap-4 ">
                <Avatar className="h-16 w-16 ">
-                  <AvatarFallback className="text-lg">
-                     {getInitials(client.name)}
+                  <AvatarFallback className="text-2xl ">
+                     {getClientInitials(client.name)}
                   </AvatarFallback>
                </Avatar>
 
@@ -56,7 +48,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
             <div className="flex gap-2">
                <Button
                   variant="outline"
-                  size="sm"
+                  size="lg"
                   onClick={() =>
                      openModal('edit-client', {
                         selectedClient: client,
@@ -69,8 +61,8 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
 
                <Button
                   variant="outline"
-                  size="sm"
-                  className="text-destructive"
+                  size="lg"
+                  className="text-destructive hover:text-destructive"
                   onClick={() => openModal('confirm-delete-client')}
                >
                   <Trash2 className="h-4 w-4 mr-2" />

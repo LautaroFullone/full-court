@@ -4,8 +4,10 @@ import useMobile from './useMobile'
 import useMock from './useMock'
 import useStyles from './useStyles'
 import useBasicForm from './useBasicForm'
-import useClientsQuery from './queries/useClientsQuery'
-import useClientMutation from './queries/useClientMutation'
+import useFetchClients from './clients/useFetchClients'
+import useCreateClient from './clients/useCreateClient'
+import useDeleteClient from './clients/useDeleteClient'
+import useUpdateClient from './clients/useUpdateClient'
 
 export {
    useAppTheme,
@@ -14,6 +16,8 @@ export {
    useMock,
    useStyles,
    useBasicForm,
-   useClientsQuery,
-   useClientMutation,
+   useFetchClients,
+   useCreateClient,
+   useDeleteClient,
+   useUpdateClient,
 }

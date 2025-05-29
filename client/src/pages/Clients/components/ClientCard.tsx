@@ -19,7 +19,7 @@ const ClientCard: React.FC<ClientCardProps> = ({ client }) => {
          }`}
          onClick={() => appActions.dispatchSelectedClient(client)}
       >
-         <Avatar className="h-10 w-10 ">
+         <Avatar className="h-10 w-10 font-medium">
             <AvatarFallback>{getClientInitials(client.name)}</AvatarFallback>
          </Avatar>
 

@@ -3,7 +3,7 @@ import { ConfirmDeleteClientModal, FormClientModal } from './modals'
 import { ClientCard, ClientDetails } from './components'
 import { useAppStore, useModalStore } from '@stores'
 import { useEffect, useState } from 'react'
-import { useClientsQuery } from '@hooks'
+import { useFetchClients } from '@hooks'
 import { AppLayout } from '@shared'
 import {
    Badge,
@@ -23,7 +23,7 @@ const Clients = () => {
    )
    const openModal = useModalStore((state) => state.modalActions.openModal)
 
-   const { clients, isPending } = useClientsQuery()
+   const { clients, isPending } = useFetchClients()
 
    const [searchTerm, setSearchTerm] = useState('')
    const [sortBy, setSortBy] = useState<string>('name')
@@ -134,7 +134,7 @@ const Clients = () => {
                      </DropdownMenuContent>
                   </DropdownMenu>
 
-                  <Button onClick={() => openModal('new-client')}>
+                  <Button onClick={() => openModal('create-client')}>
                      <Plus className="mr-2 h-4 w-4" />
                      Nuevo Cliente
                   </Button>
@@ -183,7 +183,7 @@ const Clients = () => {
                                  ? `No hay clientes que coincidan con "${searchTerm}". Intenta con otros términos de búsqueda.`
                                  : 'Comienza agregando tu primer cliente para gestionar sus reservas y datos de contacto.'}
                            </p>
-                           <Button onClick={() => openModal('new-client')}>
+                           <Button onClick={() => openModal('create-client')}>
                               <Plus className="mr-2 h-4 w-4" />
                               Nuevo Cliente
                            </Button>

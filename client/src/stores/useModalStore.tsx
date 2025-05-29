@@ -10,7 +10,7 @@ type ModalPayload = {
    'new-product': void
    'edit-product': { selectedProduct: Product }
    'confirm-delete-product': { product: Product }
-   'new-client': void
+   'create-client': void
    'edit-client': { selectedClient: Client }
    'confirm-delete-client': void
 }
@@ -37,7 +37,7 @@ const INITIAL_STATE: Omit<ModalStoreProps, 'modalActions'> = {
       'new-product': false,
       'edit-product': false,
       'confirm-delete-product': false,
-      'new-client': false,
+      'create-client': false,
       'edit-client': false,
       'confirm-delete-client': false,
    },

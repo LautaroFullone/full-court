@@ -1,4 +1,4 @@
-import { useBasicForm, useClientMutation, useMobile } from '@hooks'
+import { useBasicForm, useCreateClient, useMobile, useUpdateClient } from '@hooks'
 import { ClientFormData, clientValidationSchema } from '@models'
 import { InputHTMLAttributes, useEffect } from 'react'
 import { useAppStore, useModalStore } from '@stores'
@@ -72,12 +72,14 @@ const FormClientModal = () => {
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
    const isMobile = useMobile()
-   const { createClientMutation, isLoading } = useClientMutation()
+   const { createClientMutate, isLoading: isCreateLoading } = useCreateClient()
+   const { updateClientMutate, isLoading: isUpdateLoading } = useUpdateClient()
 
    const { formData, handleChange, setFormData, resetForm, errors, isValid } =
       useBasicForm(initialFormData, clientValidationSchema)
 
    const isEditMode = modalFlags['edit-client']
+   const isLoading = isCreateLoading || isUpdateLoading
 
    useEffect(() => {
       if (isEditMode && selectedClient) {
@@ -94,16 +96,22 @@ const FormClientModal = () => {
    }, [isEditMode])
 
    async function handleSubmit() {
-      await createClientMutation(formData)
-      closeModal(isEditMode ? 'edit-client' : 'new-client')
+      if (isEditMode && selectedClient) {
+         await updateClientMutate({ clientID: selectedClient.id, clientData: formData })
+         closeModal('edit-client')
+      } else {
+         await createClientMutate(formData)
+         closeModal('create-client')
+      }
+
       resetForm()
    }
 
    return (
       <Dialog
-         open={modalFlags['new-client'] || modalFlags['edit-client']}
+         open={modalFlags['create-client'] || modalFlags['edit-client']}
          onOpenChange={() =>
-            isEditMode ? closeModal('edit-client') : closeModal('new-client')
+            isEditMode ? closeModal('edit-client') : closeModal('create-client')
          }
       >
          <DialogContent className="w-[400px]">
