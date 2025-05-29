@@ -47,7 +47,7 @@ const DetailsReservationModal: React.FC = () => {
                         <div className="flex items-center gap-3">
                            <CalendarDays className="h-5 w-5 text-muted-foreground" />
                            <div>
-                              <p className="text-md font-medium select-none">Fecha</p>
+                              <p className="text-md font-medium">Fecha</p>
                               <p className="text-sm text-muted-foreground">
                                  15 de Marzo, 2025
                               </p>
@@ -98,7 +98,7 @@ const DetailsReservationModal: React.FC = () => {
 
                      <div className="w-full">
                         <h3 className="text-md font-medium mb-2">Consumos</h3>
-                        <div className="overflow-x-auto select-none">
+                        <div className="overflow-x-auto">
                            <Table>
                               <TableHeader>
                                  <TableRow>

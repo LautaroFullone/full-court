@@ -1,10 +1,10 @@
 import { z } from 'zod'
 
 export const clientSchema = z.object({
-   dni: z.string().min(7),
+   dni: z.string().min(6),
    name: z.string().min(1),
    phone: z.string().nonempty(),
-   email: z.string().email().optional(),
+   email: z.string().email().or(z.literal('')).optional(),
    lastVisit: z.coerce.date().optional(),
 })
 

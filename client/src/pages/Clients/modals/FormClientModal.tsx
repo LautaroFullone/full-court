@@ -2,7 +2,7 @@ import { useBasicForm, useClientMutation, useMobile } from '@hooks'
 import { ClientFormData, clientValidationSchema } from '@models'
 import { InputHTMLAttributes, useEffect } from 'react'
 import { useAppStore, useModalStore } from '@stores'
-import { OctagonAlert } from 'lucide-react'
+import { Loader2, OctagonAlert } from 'lucide-react'
 import {
    Button,
    Dialog,
@@ -107,10 +107,6 @@ const FormClientModal = () => {
          }
       >
          <DialogContent className="w-[400px]">
-            {/* <div className="absolute inset-0 z-50 bg-black/20 backdrop-blur-sm flex items-center justify-center rounded-md">
-               <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            </div> */}
-
             <DialogHeader>
                <DialogTitle>
                   {!isEditMode ? 'Agregar nuevo' : 'Editar '} Cliente
@@ -131,6 +127,7 @@ const FormClientModal = () => {
                      value={formData.name}
                      onChange={(evt) => handleChange('name', evt.target.value)}
                      placeholder="Ej: Valentina Roldan"
+                     disabled={isLoading}
                      errors={errors}
                   />
                </div>
@@ -143,30 +140,33 @@ const FormClientModal = () => {
                      value={formData.dni}
                      onChange={(evt) => handleChange('dni', evt.target.value)}
                      placeholder="Ej: 4433229"
+                     disabled={isLoading}
                      errors={errors}
                   />
                </div>
 
                <div className="space-y-2">
                   <InputClientForm
-                     label="Teléfono"
+                     label="Celular"
                      name="phone"
                      type="number"
                      value={formData.phone}
                      onChange={(evt) => handleChange('phone', evt.target.value)}
                      placeholder="Ej: 555-1234"
+                     disabled={isLoading}
                      errors={errors}
                   />
                </div>
 
                <div className="space-y-2">
                   <InputClientForm
-                     label="Email"
+                     label="Email (opcional)"
                      name="email"
                      type="email"
                      value={formData.email}
                      onChange={(evt) => handleChange('email', evt.target.value)}
                      placeholder="Ej: valentinaroldan@ejemplo.com"
+                     disabled={isLoading}
                      errors={errors}
                   />
                </div>
@@ -174,7 +174,11 @@ const FormClientModal = () => {
 
             <DialogFooter className={isMobile ? 'flex-col space-y-2' : ''}>
                <DialogClose asChild>
-                  <Button variant="outline" className={isMobile ? 'w-full' : ''}>
+                  <Button
+                     variant="outline"
+                     size="lg"
+                     className={isMobile ? 'w-full' : ''}
+                  >
                      Cancelar
                   </Button>
                </DialogClose>
@@ -182,9 +186,17 @@ const FormClientModal = () => {
                <Button
                   onClick={handleSubmit}
                   disabled={!isValid}
+                  size="lg"
                   className={isMobile ? 'w-full' : ''}
                >
-                  Guardar Cliente
+                  {isLoading ? (
+                     <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Guardando...
+                     </>
+                  ) : (
+                     'Guardar Cliente'
+                  )}
                </Button>
             </DialogFooter>
          </DialogContent>
@@ -192,3 +204,21 @@ const FormClientModal = () => {
    )
 }
 export default FormClientModal
+
+//OTRA VARIANTE PARA LOADING
+{
+   /* 
+   
+      <div className="absolute inset-0 bg-background/50 backdrop-blur-md z-10 flex items-center justify-center rounded-lg">
+         <div className="flex flex-col items-center gap-3">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <div className="text-center">
+               <p className="text-sm font-medium">Guardando cliente...</p>
+               <p className="text-xs text-muted-foreground">
+                  Por favor espera un momento
+               </p>
+            </div>
+         </div>
+      </div> 
+   */
+}
