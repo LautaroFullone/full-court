@@ -11,19 +11,27 @@ export interface Client {
    lastVisit?: string
 }
 
-export type ClientType = 'new-client' | 'existing-client'
-
 export const clientValidationSchema = z.object({
-   name: z.string().min(1, 'El nombre es obligatorio'),
+   name: z
+      .string()
+      .min(1, 'El nombre es obligatorio')
+      .max(50, 'El nombre no puede superar los 50 caracteres'),
    dni: z
       .string()
-      .regex(/^\d+$/, 'El DNI solo debe contener números')
-      .min(6, 'El DNI debe tener al menos 6 caracteres'),
-   phone: z.string().min(6, 'El celular es obligatorio'),
+      .min(6, { message: 'El DNI debe tener al menos 6 dígitos' })
+      .max(10, { message: 'El DNI no puede tener más de 10 dígitos' })
+      .regex(/^\d+$/, { message: 'El DNI debe contener solo números' }),
+   phone: z
+      .string()
+      .min(6, 'El celular es obligatorio')
+      .max(20, 'El celular es demasiado largo')
+      .regex(/^\d+$/, { message: 'El celular debe contener solo números' }),
    email: z.string().email('Debe ser un email válido').or(z.literal('')).optional(),
 })
 
 export type ClientFormData = z.infer<typeof clientValidationSchema>
+
+export type ClientType = 'new-client' | 'existing-client'
 
 export const CLIENTS = [
    {

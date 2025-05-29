@@ -20,11 +20,10 @@ interface ProductsTableProps {
 const PRODUCTS_PER_PAGE = 10
 
 const ProductsTable: React.FC<ProductsTableProps> = ({ products, searchTerm = '' }) => {
-   console.log('ProductsTable')
-   const isMobile = useMobile()
    const selectedCategory = useAppStore((state) => state.selectedCategory)
-
    const openModal = useModalStore((state) => state.modalActions.openModal)
+
+   const isMobile = useMobile()
 
    const [currentPage, setCurrentPage] = useState(1)
 
