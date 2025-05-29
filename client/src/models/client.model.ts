@@ -19,8 +19,8 @@ export const clientValidationSchema = z.object({
       .string()
       .regex(/^\d+$/, 'El DNI solo debe contener números')
       .min(6, 'El DNI debe tener al menos 6 caracteres'),
-   phone: z.string().min(6, 'El teléfono es obligatorio'),
-   email: z.string().email('Debe ser un email válido').optional(),
+   phone: z.string().min(6, 'El celular es obligatorio'),
+   email: z.string().email('Debe ser un email válido').or(z.literal('')).optional(),
 })
 
 export type ClientFormData = z.infer<typeof clientValidationSchema>

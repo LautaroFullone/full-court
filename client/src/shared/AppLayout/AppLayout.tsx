@@ -41,7 +41,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
          <div className="flex min-h-screen flex-col">
             <header className="sticky top-0 z-10 border-b bg-background">
                <div className="container flex h-16 items-center justify-between px-4 mx-auto">
-                  <div className="flex items-center gap-2 select-none">
+                  <div className="flex items-center gap-2">
                      {!isHomePage && (
                         <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
                            <ArrowLeft className="h-4 w-4" aria-label="Volver al inicio" />
@@ -66,7 +66,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
                         <Link
                            key={item.url}
                            to={item.url}
-                           className={`flex items-center gap-2 font-medium select-none ${
+                           className={`flex items-center gap-2 font-medium ${
                               pathname === item.url ||
                               (item.url !== '/' && pathname.startsWith(item.url))
                                  ? 'text-primary'
@@ -79,7 +79,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
                      ))}
                   </nav>
 
-                  <div className="flex items-center gap-2 select-none">
+                  <div className="flex items-center gap-2">
                      <ActivityLog />
                      <ThemeHandler />
 

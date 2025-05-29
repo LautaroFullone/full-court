@@ -1,5 +1,6 @@
 import { Client, ClientFormData } from '@models'
 import { api, handleApiError } from '@lib'
+import { da } from 'date-fns/locale'
 
 interface ResponseApi {
    client: Client
@@ -19,10 +20,22 @@ export async function getClients() {
 }
 
 export async function createClient(clientData: ClientFormData) {
-   type Response = Pick<ResponseApi, 'client' | 'message'>
+   type Response = Pick<ResponseApi, 'message' | 'client'>
 
    try {
       const { data } = await api.post<Response>(`/clients`, clientData, {})
+      return data
+   } catch (error) {
+      throw handleApiError(error)
+   }
+}
+
+export async function deleteClient(clientID: Client['id']) {
+   type Response = Pick<ResponseApi, 'message' | 'client'>
+
+   try {
+      const { data } = await api.delete<Response>(`/clients/${clientID}`)
+      console.log('data: ', data)
       return data
    } catch (error) {
       throw handleApiError(error)

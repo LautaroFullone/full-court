@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { createClient } from '@services'
+import { createClient, deleteClient } from '@services'
 import { toast } from 'react-toastify'
 import { useState } from 'react'
 import { Client } from '@models'
@@ -13,14 +13,32 @@ const useClientMutation = () => {
       onMutate: () => setIsLoading(true),
       onSettled: () => setIsLoading(false),
       onSuccess: (data) => {
-         console.log('toast', data)
          toast.success(data.message)
          queryClient.setQueryData(['clients'], (old: []) => [...old, data.client])
       },
-      onError: (error) => toast.error(error.message),
+      onError: (error) => {
+         console.log('## createClientMutation: ', error)
+         toast.error(error.message)
+      },
    })
 
-   return { createClientMutation, isLoading }
+   const { mutateAsync: deleteClientMutation } = useMutation({
+      mutationFn: deleteClient,
+      onMutate: () => setIsLoading(true),
+      onSettled: () => setIsLoading(false),
+      onSuccess: (data) => {
+         toast.success(data.message)
+         queryClient.setQueryData(['clients'], (old: Client[]) =>
+            old.filter((client) => client?.id !== data?.client.id)
+         )
+      },
+      onError: (error) => {
+         console.log('## deleteClientMutation: ', error)
+         toast.error(error.message)
+      },
+   })
+
+   return { createClientMutation, deleteClientMutation, isLoading }
 }
 
 export default useClientMutation

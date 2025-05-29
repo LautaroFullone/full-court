@@ -42,11 +42,11 @@ clientsRouter.post('/', async (req: Request, res: Response<ResponseEntity>) => {
          })
          return
       }
-
       const client = await prisma.client.create({ data })
 
       res.status(201).send({ message: 'Cliente creado', client })
    } catch (error) {
+      console.log(error)
       res.status(500).send({
          message: 'Error creando el cliente',
          error,
@@ -85,14 +85,15 @@ clientsRouter.delete('/:id', async (req: Request, res: Response<ResponseEntity>)
       })
 
       if (!clientToDelete) {
-         res.status(404).send({ message: 'Client not found' })
+         res.status(404).send({ message: 'Cliente no encontrado' })
          return
       }
 
       await prisma.client.delete({ where: { id } })
 
-      res.status(204).send({ message: 'Cliente eliminado' })
+      res.status(200).send({ message: 'Cliente eliminado', client: clientToDelete })
    } catch (error: any) {
+      console.log(error)
       res.status(500).send({
          message: 'Error eliminando el cliente',
          error,

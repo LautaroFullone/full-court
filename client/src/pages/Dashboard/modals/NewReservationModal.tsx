@@ -124,10 +124,7 @@ const NewReservationModal: React.FC = () => {
                   <TabsContent value="existing-client" className="space-y-4 mt-4">
                      <div className="space-y-2">
                         <Label htmlFor="search-client">Buscar Cliente</Label>
-                        <Input
-                           id="search-client"
-                           placeholder="Nombre, teléfono o email"
-                        />
+                        <Input id="search-client" placeholder="Nombre, celular o email" />
                      </div>
 
                      <div className="border rounded-md p-4 max-h-[200px] overflow-y-auto">
@@ -176,7 +173,7 @@ const NewReservationModal: React.FC = () => {
                      </div>
 
                      <div className="space-y-2">
-                        <Label htmlFor="phone">Teléfono</Label>
+                        <Label htmlFor="phone">Celular</Label>
                         <Input
                            id="phone"
                            placeholder="Ej: 555-1234"

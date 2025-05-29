@@ -87,7 +87,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
                      <Phone className="h-5 w-5 text-muted-foreground" />
 
                      <div>
-                        <div className="text-sm text-muted-foreground">Teléfono</div>
+                        <div className="text-sm text-muted-foreground">Celular</div>
                         <div>{client.phone}</div>
                      </div>
                   </div>
