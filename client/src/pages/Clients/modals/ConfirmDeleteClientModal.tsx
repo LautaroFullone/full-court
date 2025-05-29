@@ -1,5 +1,6 @@
 import { useAppStore, useModalStore } from '@stores'
-import { useClientMutation, useMobile } from '@hooks'
+import { useDeleteClient, useMobile } from '@hooks'
+import { Loader2 } from 'lucide-react'
 import {
    Button,
    Dialog,
@@ -9,7 +10,6 @@ import {
    DialogHeader,
    DialogTitle,
 } from '@shadcn'
-import { Loader2 } from 'lucide-react'
 
 const ConfirmDeleteClientModal = () => {
    const selectedClient = useAppStore((state) => state.selectedClient)
@@ -20,7 +20,13 @@ const ConfirmDeleteClientModal = () => {
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
    const isMobile = useMobile()
-   const { deleteClientMutation, isLoading } = useClientMutation()
+   const { deleteClientMutate, isLoading } = useDeleteClient()
+
+   async function handleDelete() {
+      await deleteClientMutate(selectedClient!.id)
+      closeModal('confirm-delete-client')
+      dispatchSelectedClient(null)
+   }
 
    if (selectedClient) {
       return (
@@ -59,11 +65,7 @@ const ConfirmDeleteClientModal = () => {
                      variant="destructive"
                      size="lg"
                      disabled={isLoading}
-                     onClick={() => {
-                        deleteClientMutation(selectedClient.id)
-                        closeModal('confirm-delete-client')
-                        dispatchSelectedClient(null)
-                     }}
+                     onClick={() => handleDelete}
                   >
                      {isLoading ? (
                         <>
