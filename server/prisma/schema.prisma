@@ -30,7 +30,7 @@ model Reservation {
   shift      String
   courtId    String
   owner      Client  @relation(fields: [ownerId], references: [id])
-  ownerId   String
+  ownerId    String
   price      Int
   items      Json?     // [{ productName, amount, price }]
   createdAt  DateTime  @default(now())

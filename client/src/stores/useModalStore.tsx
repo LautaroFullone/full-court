@@ -7,7 +7,7 @@ type ModalPayload = {
    'new-reservation': { selectedCourt: Court; selectedShift: ShiftType }
    'details-reservation': { reservation: Reservation }
    'confirm-reservation': void
-   'new-product': void
+   'create-product': void
    'edit-product': { selectedProduct: Product }
    'confirm-delete-product': { product: Product }
    'create-client': void
@@ -34,7 +34,7 @@ const INITIAL_STATE: Omit<ModalStoreProps, 'modalActions'> = {
       'new-reservation': false,
       'details-reservation': false,
       'confirm-reservation': false,
-      'new-product': false,
+      'create-product': false,
       'edit-product': false,
       'confirm-delete-product': false,
       'create-client': false,

@@ -32,7 +32,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
             <div className="flex items-center gap-4 ">
                <Avatar className="h-16 w-16 ">
-                  <AvatarFallback className="text-2xl ">
+                  <AvatarFallback className="text-2xl">
                      {getClientInitials(client.name)}
                   </AvatarFallback>
                </Avatar>
@@ -45,7 +45,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
                </div>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex flex-col lg:flex-row gap-2">
                <Button
                   variant="outline"
                   size="lg"

@@ -23,6 +23,7 @@ productsRouter.get('/', async (_req: Request, res: Response<ResponseEntity>) => 
          products,
       })
    } catch (error) {
+      console.log(error)
       res.status(500).send({ message: 'Error obteniendo los productos', error })
    }
 })

@@ -1,4 +1,4 @@
-import { clientsRouter, reservationsRouter } from './routes'
+import { clientsRouter, productsRouter, reservationsRouter } from './routes'
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
@@ -13,6 +13,7 @@ app.use(express.json())
 
 app.use('/api/reservations', reservationsRouter)
 app.use('/api/clients', clientsRouter)
+app.use('/api/products', productsRouter)
 
 app.listen(PORT, () => {
    console.log(`🚀 Server listening on http://localhost:${PORT}`)

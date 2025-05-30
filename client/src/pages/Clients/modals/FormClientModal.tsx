@@ -1,8 +1,9 @@
 import { useBasicForm, useCreateClient, useMobile, useUpdateClient } from '@hooks'
-import { ClientFormData, clientValidationSchema } from '@models'
-import { InputHTMLAttributes, useEffect } from 'react'
 import { useAppStore, useModalStore } from '@stores'
-import { Loader2, OctagonAlert } from 'lucide-react'
+import { ClientFormData } from '@models'
+import { Loader2 } from 'lucide-react'
+import { InputForm } from '@shared'
+import { useEffect } from 'react'
 import {
    Button,
    Dialog,
@@ -12,8 +13,6 @@ import {
    DialogFooter,
    DialogHeader,
    DialogTitle,
-   Input,
-   Label,
 } from '@shadcn'
 
 const initialFormData: ClientFormData = {
@@ -21,49 +20,6 @@ const initialFormData: ClientFormData = {
    dni: '',
    phone: '',
    email: '',
-}
-
-interface InputFormClient extends InputHTMLAttributes<HTMLInputElement> {
-   name: keyof ClientFormData
-   label: string
-   errors?: Record<string, string>
-}
-
-const InputClientForm: React.FC<InputFormClient> = ({
-   name,
-   value,
-   label,
-   onChange,
-   placeholder,
-   className = '',
-   errors = {},
-   ...props
-}) => {
-   const hasError = !!errors[name]
-
-   return (
-      <>
-         <Label htmlFor={name}>{label}</Label>
-         <Input
-            id={`input-client-${name}`}
-            name={name}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            className={`mb-0 ${
-               hasError && 'border-red-500 focus:border-0 focus-visible:ring-red-500'
-            } ${className}`}
-            {...props}
-         />
-
-         {hasError && (
-            <p className="mt-1 text-xs text-red-500 flex items-center gap-1">
-               <OctagonAlert size={13} />
-               {errors[name]}
-            </p>
-         )}
-      </>
-   )
 }
 
 const FormClientModal = () => {
@@ -76,7 +32,7 @@ const FormClientModal = () => {
    const { updateClientMutate, isLoading: isUpdateLoading } = useUpdateClient()
 
    const { formData, handleChange, setFormData, resetForm, errors, isValid } =
-      useBasicForm(initialFormData, clientValidationSchema)
+      useBasicForm(initialFormData, 'client')
 
    const isEditMode = modalFlags['edit-client']
    const isLoading = isCreateLoading || isUpdateLoading
@@ -129,7 +85,7 @@ const FormClientModal = () => {
 
             <div className="grid gap-4 py-4">
                <div className="space-y-2">
-                  <InputClientForm
+                  <InputForm
                      label="Nombre Completo"
                      name="name"
                      value={formData.name}
@@ -141,7 +97,7 @@ const FormClientModal = () => {
                </div>
 
                <div className="space-y-2">
-                  <InputClientForm
+                  <InputForm
                      label="DNI / Documento"
                      name="dni"
                      type="number"
@@ -154,7 +110,7 @@ const FormClientModal = () => {
                </div>
 
                <div className="space-y-2">
-                  <InputClientForm
+                  <InputForm
                      label="Celular"
                      name="phone"
                      type="number"
@@ -167,7 +123,7 @@ const FormClientModal = () => {
                </div>
 
                <div className="space-y-2">
-                  <InputClientForm
+                  <InputForm
                      label="Email (opcional)"
                      name="email"
                      type="email"
@@ -192,9 +148,9 @@ const FormClientModal = () => {
                </DialogClose>
 
                <Button
-                  onClick={handleSubmit}
-                  disabled={!isValid}
                   size="lg"
+                  disabled={!isValid}
+                  onClick={handleSubmit}
                   className={isMobile ? 'w-full' : ''}
                >
                   {isLoading ? (
