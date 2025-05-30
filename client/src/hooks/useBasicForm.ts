@@ -1,17 +1,25 @@
-import { ZodError, ZodSchema } from 'zod'
+import { clientValidationSchema, productValidationSchema } from '@models'
 import { useState } from 'react'
+import { ZodError } from 'zod'
 
-const useBasicForm = <T>(initialState: T, validationSchema?: ZodSchema<T>) => {
+const schemaMap = {
+   client: clientValidationSchema,
+   product: productValidationSchema,
+}
+
+const useBasicForm = <T>(initialState: T, modelSchema?: keyof typeof schemaMap) => {
    const [formData, setFormData] = useState<T>(initialState)
    const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({})
+
+   const schema = modelSchema ? schemaMap[modelSchema] : undefined
 
    function handleChange<K extends keyof T>(field: K, value: T[K]) {
       const formDataUpdated = { ...formData, [field]: value }
       setFormData(formDataUpdated)
 
-      if (validationSchema) {
+      if (schema) {
          try {
-            validationSchema.parse(formDataUpdated)
+            schema.parse(formDataUpdated)
             setErrors((prev) => ({ ...prev, [field]: '' }))
          } catch (err) {
             const zodErr = err as ZodError<T>
@@ -29,7 +37,7 @@ const useBasicForm = <T>(initialState: T, validationSchema?: ZodSchema<T>) => {
       setErrors({})
    }
 
-   const isValid = validationSchema?.safeParse(formData).success ?? true
+   const isValid = schema?.safeParse(formData).success ?? true
 
    return { formData, handleChange, resetForm, setFormData, isValid, errors }
 }

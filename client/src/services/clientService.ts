@@ -34,7 +34,6 @@ export async function deleteClient(clientID: Client['id']) {
 
    try {
       const { data } = await api.delete<Response>(`/clients/${clientID}`)
-      console.log('data: ', data)
       return data
    } catch (error) {
       throw handleApiError(error)
@@ -52,7 +51,6 @@ export async function updateClient({
 
    try {
       const { data } = await api.put<Response>(`/clients/${clientID}`, clientData)
-      console.log('data: ', data)
       return data
    } catch (error) {
       throw handleApiError(error)
