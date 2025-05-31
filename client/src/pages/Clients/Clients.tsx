@@ -174,9 +174,7 @@ const Clients = () => {
                         <div className="max-w-sm">
                            <UserRoundSearch className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-20" />
                            <h3 className="text-lg font-medium mb-2">
-                              {searchTerm
-                                 ? 'No se encontraron clientes'
-                                 : 'No hay clientes registrados'}
+                              No hay clientes registrados
                            </h3>
                            <p className="text-muted-foreground mb-4">
                               {searchTerm
