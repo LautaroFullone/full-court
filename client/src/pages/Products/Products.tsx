@@ -118,8 +118,10 @@ const Products = () => {
                      </h3>
 
                      <p className="text-muted-foreground mb-4">
-                        {searchTerm || selectedCategory !== 'todos'
+                        {searchTerm
                            ? `No hay productos que coincidan con "${searchTerm}". Intenta con otros términos de búsqueda.`
+                           : selectedCategory !== 'todos'
+                           ? 'No hay productos que coincidan con la categoría. Intenta con otros términos de búsqueda.'
                            : 'Comienza agregando tu primer producto para gestionar su stock y ventas.'}
                      </p>
 
