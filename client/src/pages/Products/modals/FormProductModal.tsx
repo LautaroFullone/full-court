@@ -17,8 +17,8 @@ import {
 
 const initialFormData: ProductFormData = {
    name: '',
-   price: '',
-   stock: '',
+   price: 0, //TODO: corregir esto
+   stock: 0,
    category: '',
 }
 
@@ -44,8 +44,8 @@ const FormProductModal: React.FC = () => {
       if (isEditMode && selectedProduct) {
          setFormData({
             name: selectedProduct.name,
-            price: selectedProduct.price.toString(),
-            stock: selectedProduct.stock.toString(),
+            price: selectedProduct.price,
+            stock: selectedProduct.stock,
             category: selectedProduct.category,
          })
       } else {
@@ -112,8 +112,11 @@ const FormProductModal: React.FC = () => {
                      <InputForm
                         label="Precio"
                         name="price"
+                        type="number"
                         value={formData.price}
-                        onChange={(evt) => handleChange('price', evt.target.value)}
+                        onChange={(evt) =>
+                           handleChange('price', Number(evt.target.value))
+                        }
                         placeholder="Ej: $2500"
                         disabled={isLoading}
                         errors={errors}
@@ -124,8 +127,11 @@ const FormProductModal: React.FC = () => {
                      <InputForm
                         label="Stock"
                         name="stock"
+                        type="number"
                         value={formData.stock}
-                        onChange={(evt) => handleChange('stock', evt.target.value)}
+                        onChange={(evt) =>
+                           handleChange('stock', Number(evt.target.value))
+                        }
                         placeholder="Ej: 25"
                         disabled={isLoading}
                         errors={errors}

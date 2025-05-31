@@ -41,5 +41,6 @@ model Product {
   name       String
   price      Int
   stock      Int  @default(0)
+  category   String
   createdAt  DateTime  @default(now())
 }

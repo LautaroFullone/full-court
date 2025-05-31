@@ -14,6 +14,8 @@ export const productSchema = z.object({
       .number({ invalid_type_error: 'El stock debe ser un número' })
       .min(0, { message: 'El stock no puede ser negativo' })
       .int({ message: 'El stock debe ser un número entero' }),
+
+   category: z.string().min(1, 'La categoria es obligatoria'),
 })
 
 export const productUpdateSchema = productSchema.partial()

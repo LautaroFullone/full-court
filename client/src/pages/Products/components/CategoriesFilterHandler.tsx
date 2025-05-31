@@ -6,7 +6,6 @@ const categories = [
    { id: 'bebidas', name: 'Bebidas' },
    { id: 'comidas', name: 'Comidas' },
    { id: 'accesorios', name: 'Accesorios' },
-   { id: 'servicios', name: 'Servicios' },
 ]
 
 const CategoriesFilterHandler: React.FC = () => {
