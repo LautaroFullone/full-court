@@ -67,12 +67,13 @@ const Products = () => {
                      placeholder="Buscar productos..."
                      className="pl-8"
                      value={searchTerm}
+                     disabled={isPending}
                      onChange={(evt) => setSearchTerm(evt.target.value)}
                   />
                </div>
 
                <div className="flex gap-2 w-full sm:w-auto">
-                  <CategoriesFilterHandler />
+                  <CategoriesFilterHandler disabled={isPending} />
 
                   <Button
                      size="lg"

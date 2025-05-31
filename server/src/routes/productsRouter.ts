@@ -2,6 +2,7 @@ import { productSchema, productUpdateSchema } from '../models/product'
 import { Router, Request, Response } from 'express'
 import prisma from '../lib/prismaClient'
 import { Product } from '@prisma/client'
+import { sleep } from '../lib/sleep'
 
 interface ResponseEntity {
    message: string
@@ -17,6 +18,8 @@ productsRouter.get('/', async (_req: Request, res: Response<ResponseEntity>) => 
       const products = await prisma.product.findMany({
          orderBy: { createdAt: 'desc' },
       })
+
+      await sleep(2000)
 
       res.status(200).send({
          message: 'Productos obtenidos',
