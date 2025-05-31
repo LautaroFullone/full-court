@@ -37,8 +37,10 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
                   </AvatarFallback>
                </Avatar>
 
-               <div>
-                  <h2 className="text-2xl font-bold">{client.name}</h2>
+               <div className="min-w-0">
+                  <h2 className="text-2xl font-bold break-words hyphens-auto ">
+                     {client.name}
+                  </h2>
                   <Badge variant="outline" className="mt-1">
                      DNI: {client.dni}
                   </Badge>

@@ -2,6 +2,7 @@ import { clientSchema, clientUpdateSchema } from '../models/client'
 import { Router, Request, Response } from 'express'
 import prisma from '../lib/prismaClient'
 import { Client } from '@prisma/client'
+import { sleep } from '../lib/sleep'
 
 interface ResponseEntity {
    message: string
@@ -17,6 +18,8 @@ clientsRouter.get('/', async (_req: Request, res: Response<ResponseEntity>) => {
       const clients = await prisma.client.findMany({
          orderBy: { createdAt: 'desc' },
       })
+
+      await sleep(2000)
 
       res.status(200).send({
          message: 'Clientes obtenidos',
@@ -34,6 +37,8 @@ clientsRouter.post('/', async (req: Request, res: Response<ResponseEntity>) => {
       const existingClient = await prisma.client.findFirst({
          where: { dni: data.dni },
       })
+
+      await sleep(2000)
 
       if (existingClient) {
          res.status(400).send({
@@ -64,6 +69,8 @@ clientsRouter.put('/:id', async (req: Request, res: Response<ResponseEntity>) =>
          data: clientdata,
       })
 
+      await sleep(2000)
+
       res.status(200).send({
          message: 'Cliente actualizado',
          client: clientUpdated,
@@ -90,6 +97,8 @@ clientsRouter.delete('/:id', async (req: Request, res: Response<ResponseEntity>)
       }
 
       await prisma.client.delete({ where: { id } })
+
+      await sleep(2000)
 
       res.status(200).send({ message: 'Cliente eliminado', client: clientToDelete })
    } catch (error: any) {

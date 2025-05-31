@@ -25,7 +25,7 @@ export type ProductFormData = z.infer<typeof productValidationSchema>
 
 export const CATEGORY_TYPES_VALUES = [
    'kiosco',
-   'cafetería',
+   'cafeteria',
    'accesorios',
    'otro',
 ] as const
