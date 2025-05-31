@@ -11,7 +11,7 @@ export async function getProducts() {
    type Response = Pick<ResponseApi, 'message' | 'products'>
 
    try {
-      const { data } = await api.get<Response>(`/products`, {})
+      const { data } = await api.get<Response>(`/products`)
       return data
    } catch (error) {
       throw handleApiError(error)
@@ -22,7 +22,7 @@ export async function createProduct(productData: ProductFormData) {
    type Response = Pick<ResponseApi, 'message' | 'product'>
 
    try {
-      const { data } = await api.post<Response>(`/products`, productData, {})
+      const { data } = await api.post<Response>(`/products`, productData)
       return data
    } catch (error) {
       throw handleApiError(error)

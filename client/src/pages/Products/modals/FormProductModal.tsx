@@ -1,7 +1,7 @@
 import { useBasicForm, useCreateProduct, useMobile, useUpdateProduct } from '@hooks'
 import { useAppStore, useModalStore } from '@stores'
 import { InputForm, SelectForm } from '@shared'
-import { ProductFormData } from '@models'
+import { CATEGORY_TYPES_VALUES, ProductFormData } from '@models'
 import { Loader2 } from 'lucide-react'
 import { useEffect } from 'react'
 import {
@@ -17,8 +17,8 @@ import {
 
 const initialFormData: ProductFormData = {
    name: '',
-   price: 0, //TODO: corregir esto
-   stock: 0,
+   price: '',
+   stock: '',
    category: '',
 }
 
@@ -75,10 +75,12 @@ const FormProductModal: React.FC = () => {
          onOpenChange={() => {
             if (isEditMode) {
                closeModal('edit-product')
+               resetForm()
                return dispatchSelectedProduct(null)
             }
 
             closeModal('create-product')
+            resetForm()
          }}
       >
          <DialogContent className="w-[95%] max-w-[95%] sm:w-auto sm:max-w-md">
@@ -110,13 +112,12 @@ const FormProductModal: React.FC = () => {
                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                      <InputForm
+                        isCurrency
                         label="Precio"
                         name="price"
                         type="number"
                         value={formData.price}
-                        onChange={(evt) =>
-                           handleChange('price', Number(evt.target.value))
-                        }
+                        onChange={(evt) => handleChange('price', evt.target.value)}
                         placeholder="Ej: $2500"
                         disabled={isLoading}
                         errors={errors}
@@ -129,9 +130,7 @@ const FormProductModal: React.FC = () => {
                         name="stock"
                         type="number"
                         value={formData.stock}
-                        onChange={(evt) =>
-                           handleChange('stock', Number(evt.target.value))
-                        }
+                        onChange={(evt) => handleChange('stock', evt.target.value)}
                         placeholder="Ej: 25"
                         disabled={isLoading}
                         errors={errors}
@@ -146,12 +145,10 @@ const FormProductModal: React.FC = () => {
                      value={formData.category}
                      onChange={(value) => handleChange('category', value)}
                      errors={errors}
-                     options={[
-                        { label: 'Bebidas', value: 'bebidas' },
-                        { label: 'Comidas', value: 'comidas' },
-                        { label: 'Accesorios', value: 'accesorios' },
-                        { label: 'Servicios', value: 'servicios' },
-                     ]}
+                     options={CATEGORY_TYPES_VALUES.map((cat) => ({
+                        label: String(cat).charAt(0).toUpperCase() + String(cat).slice(1),
+                        value: cat,
+                     }))}
                   />
                </div>
             </div>

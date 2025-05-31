@@ -1,12 +1,6 @@
 import { Tabs, TabsList, TabsTrigger } from '@shadcn'
+import { CATEGORY_TYPES_VALUES } from '@models'
 import { useAppStore } from '@stores'
-
-const categories = [
-   { id: 'todos', name: 'Todos' },
-   { id: 'bebidas', name: 'Bebidas' },
-   { id: 'comidas', name: 'Comidas' },
-   { id: 'accesorios', name: 'Accesorios' },
-]
 
 const CategoriesFilterHandler: React.FC = () => {
    const selectedCategory = useAppStore((state) => state.selectedCategory)
@@ -21,13 +15,13 @@ const CategoriesFilterHandler: React.FC = () => {
          className="w-full sm:w-auto flex "
       >
          <TabsList className="w-full h-full sm:w-auto overflow-x-auto flex whitespace-nowrap">
-            {categories.map((category) => (
+            {CATEGORY_TYPES_VALUES.map((category) => (
                <TabsTrigger
-                  key={`category-${category.id}`}
-                  value={category.id}
-                  className="flex-1 sm:flex-none cursor-pointer"
+                  key={`category-${category}`}
+                  value={category}
+                  className="flex-1 sm:flex-none cursor-pointer capitalize"
                >
-                  {category.name}
+                  {category}
                </TabsTrigger>
             ))}
          </TabsList>

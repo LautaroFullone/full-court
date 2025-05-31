@@ -10,6 +10,7 @@ import {
 import { Edit, Package, Trash2 } from 'lucide-react'
 import { useStyles } from '@hooks'
 import { Product } from '@models'
+import { formatPriceDisplay } from '@lib'
 
 interface ProductCardProps {
    product: Product
@@ -50,11 +51,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit, onDelete }) 
 
          <CardContent className="space-y-3">
             <CardDescription className="text-sm">
-               {'la mejor descripcion'}
+               {'Una descripción de ejemplo'}
             </CardDescription>
 
             <div className="flex justify-between items-center">
-               <div className="text-2xl font-bold">${product.price}</div>
+               <div className="text-2xl font-bold">
+                  {formatPriceDisplay(product.price)}
+               </div>
                <Badge
                   className={getCategoryColorClass(product.category)}
                   variant="secondary"
