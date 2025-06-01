@@ -1,8 +1,7 @@
 import { useBasicForm, useCreateProduct, useMobile, useUpdateProduct } from '@hooks'
-import { useAppStore, useModalStore } from '@stores'
-import { InputForm, SelectForm } from '@shared'
 import { CATEGORY_TYPES_VALUES, ProductFormData } from '@models'
-import { Loader2 } from 'lucide-react'
+import { SaveButton, InputForm, SelectForm } from '@shared'
+import { useAppStore, useModalStore } from '@stores'
 import { useEffect } from 'react'
 import {
    Button,
@@ -155,26 +154,21 @@ const FormProductModal: React.FC = () => {
 
             <DialogFooter className={isMobile ? 'flex-col space-y-2' : ''}>
                <DialogClose asChild>
-                  <Button variant="outline" className={isMobile ? 'w-full' : ''}>
+                  <Button
+                     variant="outline"
+                     size="lg"
+                     className={isMobile ? 'w-full' : ''}
+                  >
                      Cancelar
                   </Button>
                </DialogClose>
 
-               <Button
-                  size="lg"
-                  disabled={!isValid}
+               <SaveButton
+                  model="product"
+                  isLoading={isLoading}
                   onClick={handleSubmit}
-                  className={isMobile ? 'w-full' : ''}
-               >
-                  {isLoading ? (
-                     <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Guardando...
-                     </>
-                  ) : (
-                     'Guardar Producto'
-                  )}
-               </Button>
+                  disabled={!isValid}
+               />
             </DialogFooter>
          </DialogContent>
       </Dialog>

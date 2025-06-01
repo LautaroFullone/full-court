@@ -1,8 +1,7 @@
 import { useBasicForm, useCreateClient, useMobile, useUpdateClient } from '@hooks'
 import { useAppStore, useModalStore } from '@stores'
+import { InputForm, SaveButton } from '@shared'
 import { ClientFormData } from '@models'
-import { Loader2 } from 'lucide-react'
-import { InputForm } from '@shared'
 import { useEffect } from 'react'
 import {
    Button,
@@ -139,29 +138,20 @@ const FormClientModal = () => {
             <DialogFooter className={isMobile ? 'flex-col space-y-2' : ''}>
                <DialogClose asChild>
                   <Button
-                     variant="outline"
                      size="lg"
+                     variant="outline"
                      className={isMobile ? 'w-full' : ''}
                   >
                      Cancelar
                   </Button>
                </DialogClose>
 
-               <Button
-                  size="lg"
+               <SaveButton
+                  model="client"
                   disabled={!isValid}
+                  isLoading={isLoading}
                   onClick={handleSubmit}
-                  className={isMobile ? 'w-full' : ''}
-               >
-                  {isLoading ? (
-                     <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Guardando...
-                     </>
-                  ) : (
-                     'Guardar Cliente'
-                  )}
-               </Button>
+               />
             </DialogFooter>
          </DialogContent>
       </Dialog>
