@@ -1,5 +1,5 @@
-import { useDeleteProduct, useMobile } from '@hooks'
 import { useAppStore, useModalStore } from '@stores'
+import { useDeleteClient, useMobile } from '@hooks'
 import { SaveButton } from '@shared'
 import {
    Button,
@@ -11,40 +11,40 @@ import {
    DialogTitle,
 } from '@shadcn'
 
-const ConfirmProductModal = () => {
-   const selectedProduct = useAppStore((state) => state.selectedProduct)
-   const dispatchSelectedProduct = useAppStore(
-      (state) => state.appActions.dispatchSelectedProduct
+const ConfirmClientModal = () => {
+   const selectedClient = useAppStore((state) => state.selectedClient)
+   const dispatchSelectedClient = useAppStore(
+      (state) => state.appActions.dispatchSelectedClient
    )
    const modalFlags = useModalStore((state) => state.modalFlags)
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
    const isMobile = useMobile()
-   const { deleteProductMutate, isLoading } = useDeleteProduct()
+   const { deleteClientMutate, isLoading } = useDeleteClient()
 
-   async function handleDeleteProduct() {
-      if (selectedProduct) {
-         await deleteProductMutate(selectedProduct?.id)
-         closeModal('confirm-delete-product')
-         dispatchSelectedProduct(null)
+   async function handleDeleteClient() {
+      if (selectedClient) {
+         await deleteClientMutate(selectedClient.id)
+         closeModal('confirm-delete-client')
+         dispatchSelectedClient(null)
       }
    }
 
    return (
       <Dialog
-         open={modalFlags['confirm-delete-product']}
-         onOpenChange={() => closeModal('confirm-delete-product')}
+         open={modalFlags['confirm-delete-client']}
+         onOpenChange={() => closeModal('confirm-delete-client')}
       >
          <DialogContent className="w-[95%] max-w-[95%] sm:w-auto sm:max-w-md">
             <DialogHeader>
                <DialogTitle>
-                  ¿Estás seguro de que querés eliminar el producto {''}
-                  <span>"{selectedProduct?.name}"</span>?
+                  ¿Estás seguro de que querés eliminar a {''}
+                  <span>{selectedClient?.name}</span> como cliente?
                </DialogTitle>
 
                <DialogDescription>
-                  Esta acción no se puede deshacer, se eliminará permanentemente el
-                  producto.
+                  Esta acción no se puede deshacer. Esto eliminará permanentemente la
+                  información del cliente.
                </DialogDescription>
             </DialogHeader>
 
@@ -56,17 +56,17 @@ const ConfirmProductModal = () => {
                <Button
                   variant="outline"
                   size="lg"
-                  onClick={() => closeModal('confirm-delete-product')}
+                  onClick={() => closeModal('confirm-delete-client')}
                   className="m-0"
                >
-                  No, mantener producto
+                  No, mantener cliente
                </Button>
 
                <SaveButton
                   isLoading={isLoading}
-                  model="product"
+                  model="client"
                   action="delete"
-                  onClick={() => handleDeleteProduct()}
+                  onClick={() => handleDeleteClient()}
                   variant="destructive"
                />
             </DialogFooter>
@@ -74,4 +74,4 @@ const ConfirmProductModal = () => {
       </Dialog>
    )
 }
-export default ConfirmProductModal
+export default ConfirmClientModal

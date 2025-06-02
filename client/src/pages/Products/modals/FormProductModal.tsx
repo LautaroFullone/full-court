@@ -166,9 +166,9 @@ const FormProductModal: React.FC = () => {
                <SaveButton
                   model="product"
                   action={isEditMode ? 'update' : 'create'}
+                  disabled={!isValid}
                   isLoading={isLoading}
                   onClick={handleSubmit}
-                  disabled={!isValid}
                />
             </DialogFooter>
          </DialogContent>

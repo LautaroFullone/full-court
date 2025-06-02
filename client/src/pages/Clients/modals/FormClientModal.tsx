@@ -148,6 +148,7 @@ const FormClientModal = () => {
 
                <SaveButton
                   model="client"
+                  action={isEditMode ? 'update' : 'create'}
                   disabled={!isValid}
                   isLoading={isLoading}
                   onClick={handleSubmit}

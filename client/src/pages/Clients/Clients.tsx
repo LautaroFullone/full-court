@@ -1,5 +1,5 @@
 import { Filter, Loader2, Plus, Search, UserRoundSearch } from 'lucide-react'
-import { ConfirmDeleteClientModal, FormClientModal } from './modals'
+import { ConfirmClientModal, FormClientModal } from './modals'
 import { ClientCard, ClientDetails } from './components'
 import { useAppStore, useModalStore } from '@stores'
 import { useEffect, useState } from 'react'
@@ -196,7 +196,7 @@ const Clients = () => {
             </div>
 
             <FormClientModal />
-            <ConfirmDeleteClientModal />
+            <ConfirmClientModal />
          </div>
       </AppLayout>
    )
