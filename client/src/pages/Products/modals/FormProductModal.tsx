@@ -43,8 +43,8 @@ const FormProductModal: React.FC = () => {
       if (isEditMode && selectedProduct) {
          setFormData({
             name: selectedProduct.name,
-            price: selectedProduct.price,
-            stock: selectedProduct.stock,
+            price: String(selectedProduct.price),
+            stock: String(selectedProduct.stock),
             category: selectedProduct.category,
          })
       } else {
@@ -165,6 +165,7 @@ const FormProductModal: React.FC = () => {
 
                <SaveButton
                   model="product"
+                  action={isEditMode ? 'update' : 'create'}
                   isLoading={isLoading}
                   onClick={handleSubmit}
                   disabled={!isValid}
