@@ -3,15 +3,22 @@ import { useMobile } from '@hooks'
 import { Button } from '@shadcn'
 
 const modelLabels = {
-   client: 'Cliente',
-   reservation: 'Reserva',
-   product: 'Producto',
+   client: 'cliente',
+   reservation: 'reserva',
+   product: 'producto',
+}
+
+const actionLabels = {
+   create: 'Guardando...',
+   update: 'Actualizando...',
+   delete: 'Eliminando...',
 }
 
 interface SaveButtonProps {
    disabled?: boolean
    isLoading: boolean
    variant?: 'default' | 'destructive' | 'outline'
+   action: 'create' | 'delete' | 'update'
    model: keyof typeof modelLabels
    onClick: () => void
    className?: string
@@ -21,6 +28,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
    disabled,
    isLoading,
    variant = 'default',
+   action,
    model,
    className = '',
    onClick,
@@ -28,7 +36,15 @@ const SaveButton: React.FC<SaveButtonProps> = ({
 }) => {
    const isMobile = useMobile()
 
-   const label = `Guardar ${modelLabels[model]}`
+   const label = `${
+      action === 'create'
+         ? 'Guardar'
+         : action === 'update'
+         ? 'Actualizar'
+         : 'Si, eliminar'
+   } ${modelLabels[model]}`
+
+   const loadingLabel = actionLabels[action]
 
    return (
       <Button
@@ -42,7 +58,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
          {isLoading ? (
             <>
                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-               Guardando...
+               {loadingLabel}
             </>
          ) : (
             label

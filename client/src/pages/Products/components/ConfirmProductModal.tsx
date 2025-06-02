@@ -1,5 +1,6 @@
+import { useDeleteProduct, useMobile } from '@hooks'
 import { useAppStore, useModalStore } from '@stores'
-import { useMobile } from '@hooks'
+import { SaveButton } from '@shared'
 import {
    Button,
    Dialog,
@@ -12,13 +13,22 @@ import {
 
 const ConfirmProductModal = () => {
    const selectedProduct = useAppStore((state) => state.selectedProduct)
+   const dispatchSelectedProduct = useAppStore(
+      (state) => state.appActions.dispatchSelectedProduct
+   )
    const modalFlags = useModalStore((state) => state.modalFlags)
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
    const isMobile = useMobile()
 
-   function handleDeleteProduct() {
-      console.log('Deleting product...')
+   const { deleteProductMutate, isLoading } = useDeleteProduct()
+
+   async function handleDeleteProduct() {
+      if (selectedProduct) {
+         await deleteProductMutate(selectedProduct?.id)
+         closeModal('confirm-delete-product')
+         dispatchSelectedProduct(null)
+      }
    }
 
    return (
@@ -53,13 +63,13 @@ const ConfirmProductModal = () => {
                   No, mantener producto
                </Button>
 
-               <Button
+               <SaveButton
+                  isLoading={isLoading}
+                  model="product"
+                  action="delete"
+                  onClick={() => handleDeleteProduct()}
                   variant="destructive"
-                  size="lg"
-                  onClick={() => handleDeleteProduct}
-               >
-                  Sí, eliminar producto
-               </Button>
+               />
             </DialogFooter>
          </DialogContent>
       </Dialog>

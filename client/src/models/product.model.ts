@@ -3,8 +3,8 @@ import { z } from 'zod'
 export interface Product {
    id: string
    name: string
-   price: string
-   stock: string
+   price: number
+   stock: number
    category: string
 }
 
