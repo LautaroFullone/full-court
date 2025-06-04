@@ -155,8 +155,9 @@ const FormProductModal: React.FC = () => {
             <DialogFooter className={isMobile ? 'flex-col space-y-2' : ''}>
                <DialogClose asChild>
                   <Button
-                     variant="outline"
                      size="lg"
+                     variant="outline"
+                     disabled={isLoading}
                      className={isMobile ? 'w-full' : ''}
                   >
                      Cancelar
@@ -166,7 +167,7 @@ const FormProductModal: React.FC = () => {
                <SaveButton
                   model="product"
                   action={isEditMode ? 'update' : 'create'}
-                  disabled={!isValid}
+                  disabled={!isValid || isLoading}
                   isLoading={isLoading}
                   onClick={handleSubmit}
                />

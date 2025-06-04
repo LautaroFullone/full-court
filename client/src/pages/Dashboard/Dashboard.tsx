@@ -14,7 +14,7 @@ import {
 import {
    ConfirmReservationModal,
    DetailsReservationModal,
-   NewReservationModal,
+   FormReservationModal,
 } from './modals'
 
 const Dashboard = () => {
@@ -55,7 +55,7 @@ const Dashboard = () => {
             </Tabs>
          </div>
 
-         <NewReservationModal />
+         <FormReservationModal />
          <DetailsReservationModal />
          <ConfirmReservationModal />
       </AppLayout>

@@ -36,42 +36,45 @@ const INITIAL_STATE: Omit<AppStoreProps, 'appActions'> = {
 }
 
 const useAppStore = create<AppStoreProps>()(
-   devtools((set, get) => ({
-      ...INITIAL_STATE,
+   devtools(
+      (set, get) => ({
+         ...INITIAL_STATE,
 
-      appActions: {
-         toggleTheme: () => {
-            const { theme: previousTheme } = get()
+         appActions: {
+            toggleTheme: () => {
+               const { theme: previousTheme } = get()
 
-            if (previousTheme === 'dark') {
-               set({ theme: 'light' })
-            } else {
-               set({ theme: 'dark' })
-            }
+               if (previousTheme === 'dark') {
+                  set({ theme: 'light' })
+               } else {
+                  set({ theme: 'dark' })
+               }
+            },
+            dispatchSelectedCategory: (category: string) => {
+               set({ selectedCategory: category })
+            },
+            dispatchSelectedClient: (client: Client) => {
+               set({ selectedClient: client })
+            },
+            dispatchSelectedCourt: (court: Court) => {
+               set({ selectedCourt: court })
+            },
+            dispatchSelectedDate: (date: Date) => {
+               set({ selectedDate: date })
+            },
+            dispatchSelectedProduct: (product: Product) => {
+               set({ selectedProduct: product })
+            },
+            dispatchSelectedReservation: (reservation: Reservation) => {
+               set({ selectedReservation: reservation })
+            },
+            dispatchSelectedShift: (shift: ShiftType) => {
+               set({ selectedShift: shift })
+            },
          },
-         dispatchSelectedCategory: (category: string) => {
-            set({ selectedCategory: category })
-         },
-         dispatchSelectedClient: (client: Client) => {
-            set({ selectedClient: client })
-         },
-         dispatchSelectedCourt: (court: Court) => {
-            set({ selectedCourt: court })
-         },
-         dispatchSelectedDate: (date: Date) => {
-            set({ selectedDate: date })
-         },
-         dispatchSelectedProduct: (product: Product) => {
-            set({ selectedProduct: product })
-         },
-         dispatchSelectedReservation: (reservation: Reservation) => {
-            set({ selectedReservation: reservation })
-         },
-         dispatchSelectedShift: (shift: ShiftType) => {
-            set({ selectedShift: shift })
-         },
-      },
-   }))
+      }),
+      { name: 'AppStore' }
+   )
 )
 
 export default useAppStore

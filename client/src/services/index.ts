@@ -5,6 +5,12 @@ import {
    getProducts,
    updateProduct,
 } from './productService'
+import {
+   createReservation,
+   deleteReservation,
+   getReservationsByDate,
+   updateReservation,
+} from './reservationService'
 
 export {
    createClient,
@@ -15,4 +21,8 @@ export {
    getProducts,
    updateClient,
    updateProduct,
+   createReservation,
+   deleteReservation,
+   getReservationsByDate,
+   updateReservation,
 }
