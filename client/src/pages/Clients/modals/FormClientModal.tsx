@@ -140,6 +140,7 @@ const FormClientModal = () => {
                   <Button
                      size="lg"
                      variant="outline"
+                     disabled={!isValid || isLoading}
                      className={isMobile ? 'w-full' : ''}
                   >
                      Cancelar
@@ -148,10 +149,10 @@ const FormClientModal = () => {
 
                <SaveButton
                   model="client"
-                  action={isEditMode ? 'update' : 'create'}
-                  disabled={!isValid}
                   isLoading={isLoading}
                   onClick={handleSubmit}
+                  disabled={!isValid || isLoading}
+                  action={isEditMode ? 'update' : 'create'}
                />
             </DialogFooter>
          </DialogContent>

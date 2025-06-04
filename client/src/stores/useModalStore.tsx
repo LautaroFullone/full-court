@@ -4,7 +4,8 @@ import useAppStore from './useAppStore'
 import { create } from 'zustand'
 
 type ModalPayload = {
-   'new-reservation': { selectedCourt: Court; selectedShift: ShiftType }
+   'create-reservation': { selectedCourt: Court; selectedShift: ShiftType }
+   'edit-reservation': { selectedReservation: Reservation }
    'details-reservation': { reservation: Reservation }
    'confirm-reservation': void
    'create-product': void
@@ -31,7 +32,8 @@ interface ModalStoreProps {
 
 const INITIAL_STATE: Omit<ModalStoreProps, 'modalActions'> = {
    modalFlags: {
-      'new-reservation': false,
+      'create-reservation': false,
+      'edit-reservation': false,
       'details-reservation': false,
       'confirm-reservation': false,
       'create-product': false,
@@ -44,60 +46,74 @@ const INITIAL_STATE: Omit<ModalStoreProps, 'modalActions'> = {
 }
 
 export const useModalStore = create<ModalStoreProps>()(
-   devtools((set) => {
-      const appActions = useAppStore.getState().appActions
+   devtools(
+      (set) => {
+         const appActions = useAppStore.getState().appActions
 
-      return {
-         modalFlags: { ...INITIAL_STATE.modalFlags },
+         return {
+            modalFlags: { ...INITIAL_STATE.modalFlags },
 
-         modalActions: {
-            openModal: (name, payload) => {
-               switch (name) {
-                  case 'new-reservation': {
-                     const { selectedCourt, selectedShift } =
-                        payload as ModalPayload['new-reservation']
+            modalActions: {
+               openModal: (name, payload) => {
+                  switch (name) {
+                     case 'create-reservation': {
+                        const { selectedCourt, selectedShift } =
+                           payload as ModalPayload['create-reservation']
 
-                     appActions.dispatchSelectedCourt(selectedCourt)
-                     appActions.dispatchSelectedShift(selectedShift)
+                        appActions.dispatchSelectedCourt(selectedCourt)
+                        appActions.dispatchSelectedShift(selectedShift)
+                        break
+                     }
+                     case 'details-reservation': {
+                        const { reservation } =
+                           payload as ModalPayload['details-reservation']
 
-                     break
+                        appActions.dispatchSelectedReservation(reservation)
+                        break
+                     }
+                     case 'edit-reservation': {
+                        const { selectedReservation } =
+                           payload as ModalPayload['edit-reservation']
+
+                        appActions.dispatchSelectedReservation(selectedReservation)
+                        break
+                     }
+                     case 'edit-product': {
+                        const { selectedProduct } =
+                           payload as ModalPayload['edit-product']
+
+                        appActions.dispatchSelectedProduct(selectedProduct)
+                        break
+                     }
+                     case 'confirm-delete-product': {
+                        const { product } =
+                           payload as ModalPayload['confirm-delete-product']
+
+                        appActions.dispatchSelectedProduct(product)
+                        break
+                     }
+                     case 'edit-client': {
+                        const { selectedClient } = payload as ModalPayload['edit-client']
+
+                        appActions.dispatchSelectedClient(selectedClient)
+                        break
+                     }
                   }
-                  case 'details-reservation': {
-                     const { reservation } =
-                        payload as ModalPayload['details-reservation']
 
-                     appActions.dispatchSelectedReservation(reservation)
-                     break
-                  }
-                  case 'edit-product': {
-                     const { selectedProduct } = payload as ModalPayload['edit-product']
-                     appActions.dispatchSelectedProduct(selectedProduct)
-                     break
-                  }
-                  case 'confirm-delete-product': {
-                     const { product } = payload as ModalPayload['confirm-delete-product']
-                     appActions.dispatchSelectedProduct(product)
-                     break
-                  }
-                  case 'edit-client': {
-                     const { selectedClient } = payload as ModalPayload['edit-client']
-                     appActions.dispatchSelectedClient(selectedClient)
-                     break
-                  }
-               }
-
-               set((state) => ({
-                  modalFlags: { ...state.modalFlags, [name]: true },
-               }))
+                  set((state) => ({
+                     modalFlags: { ...state.modalFlags, [name]: true },
+                  }))
+               },
+               closeModal: (modal) => {
+                  set((state) => ({
+                     modalFlags: { ...state.modalFlags, [modal]: false },
+                  }))
+               },
             },
-            closeModal: (modal) => {
-               set((state) => ({
-                  modalFlags: { ...state.modalFlags, [modal]: false },
-               }))
-            },
-         },
-      }
-   })
+         }
+      },
+      { name: 'ModalStore' }
+   )
 )
 
 export default useModalStore

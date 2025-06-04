@@ -11,7 +11,7 @@ export interface Client {
    lastVisit?: string
 }
 
-export const clientValidationSchema = z.object({
+export const clientFormValidation = z.object({
    name: z
       .string()
       .min(1, 'El nombre es obligatorio')
@@ -29,9 +29,10 @@ export const clientValidationSchema = z.object({
    email: z.string().email('Debe ser un email válido').or(z.literal('')).optional(),
 })
 
-export type ClientFormData = z.infer<typeof clientValidationSchema>
+export type ClientFormData = z.infer<typeof clientFormValidation>
 
-export type ClientType = 'new-client' | 'existing-client'
+export const CLIENT_TYPES_VALUES = ['new-client', 'existing-client'] as const
+export type ClientType = (typeof CLIENT_TYPES_VALUES)[number]
 
 export const CLIENTS = [
    {

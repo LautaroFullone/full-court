@@ -1,5 +1,5 @@
 import ConfirmReservationModal from './ConfirmReservationModal'
-import NewReservationModal from './NewReservationModal'
+import FormReservationModal from './FormReservationModal'
 import DetailsReservationModal from './DetailsReservationModal'
 
-export { ConfirmReservationModal, NewReservationModal, DetailsReservationModal }
+export { ConfirmReservationModal, FormReservationModal, DetailsReservationModal }

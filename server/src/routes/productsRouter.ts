@@ -39,6 +39,7 @@ productsRouter.post('/', async (req: Request, res: Response<ResponseEntity>) => 
          where: { name: data.name },
       })
 
+      await sleep(3000)
       if (existingProduct) {
          res.status(400).send({
             message: 'Ya existe un producto con este nombre',

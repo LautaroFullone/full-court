@@ -8,7 +8,7 @@ export interface Product {
    category: string
 }
 
-export const productValidationSchema = z.object({
+export const productFormValidation = z.object({
    name: z
       .string()
       .min(1, 'El nombre es obligatorio')
@@ -21,7 +21,7 @@ export const productValidationSchema = z.object({
    category: z.string().min(1, 'La categoria es obligatoria'),
 })
 
-export type ProductFormData = z.infer<typeof productValidationSchema>
+export type ProductFormData = z.infer<typeof productFormValidation>
 
 export const CATEGORY_TYPES_VALUES = [
    'kiosco',

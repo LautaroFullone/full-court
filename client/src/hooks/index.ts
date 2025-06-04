@@ -13,6 +13,10 @@ import useFetchProducts from './products/useFetchProducts'
 import useCreateProduct from './products/useCreateProduct'
 import useDeleteProduct from './products/useDeleteProduct'
 import useUpdateProduct from './products/useUpdateProduct'
+import useFetchReservations from './reservations/useFetchReservation'
+import useCreateReservation from './reservations/useCreateReservation'
+import useDeleteReservation from './reservations/useDeleteReservation'
+import useUpdateReservation from './reservations/useUpdateReservation'
 
 export {
    useAppTheme,
@@ -29,4 +33,8 @@ export {
    useCreateProduct,
    useDeleteProduct,
    useUpdateProduct,
+   useCreateReservation,
+   useDeleteReservation,
+   useFetchReservations,
+   useUpdateReservation,
 }

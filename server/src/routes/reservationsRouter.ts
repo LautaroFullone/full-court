@@ -27,6 +27,7 @@ reservationsRouter.get('/', async (req: Request, res: Response<ResponseEntity>) 
 
 reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>) => {
    try {
+      console.log('## reservation: ', req.body)
       const data = reservationSchema.parse(req.body)
 
       const existingReservation = await prisma.reservation.findFirst({
@@ -47,6 +48,7 @@ reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>)
 
       res.status(201).send({ message: 'Reserva creada', reservation })
    } catch (error) {
+      console.log(error)
       res.status(500).send({
          message: 'Error creando la reserva',
          error,
