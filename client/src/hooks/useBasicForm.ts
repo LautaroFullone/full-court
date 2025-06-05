@@ -1,15 +1,10 @@
 import { useState } from 'react'
 import { ZodError } from 'zod'
-import {
-   clientFormValidation,
-   productFormValidation,
-   reservationFormValidation,
-} from '@models'
+import { clientFormValidation, productFormValidation } from '@models'
 
 const schemaMap = {
    client: clientFormValidation,
    product: productFormValidation,
-   reservation: reservationFormValidation,
 }
 
 const useBasicForm = <T>(initialState: T, modelSchema?: keyof typeof schemaMap) => {

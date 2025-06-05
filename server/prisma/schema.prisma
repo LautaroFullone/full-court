@@ -28,6 +28,7 @@ model Reservation {
   id         String  @id @default(uuid())
   date       DateTime
   shift      String
+  type       String  @default("otro")
   courtId    String
   owner      Client  @relation(fields: [ownerId], references: [id])
   ownerId    String
