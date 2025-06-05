@@ -1,21 +1,9 @@
+import { RESERVATION_TYPES_VALUES, ReservationFormData } from '@models'
+import { formatDateToString, reservationResolver } from '@lib'
 import { useAppStore, useModalStore } from '@stores'
-import { formatDateToString } from '@lib'
-import { useMemo, useState } from 'react'
-import { InputForm } from '@shared'
-import {
-   Client,
-   ClientType,
-   RESERVATION_TYPES_VALUES,
-   ReservationFormData,
-   ReservationType,
-} from '@models'
-import {
-   useBasicForm,
-   useCreateReservation,
-   useFetchClients,
-   useMobile,
-   useUpdateReservation,
-} from '@hooks'
+import { InputForm, SaveButton } from '@shared'
+import { useForm } from 'react-hook-form'
+import { useMemo } from 'react'
 import {
    Button,
    Dialog,
@@ -35,13 +23,22 @@ import {
    TabsList,
    TabsTrigger,
 } from '@shadcn'
+import {
+   useCreateReservation,
+   useFetchClients,
+   useMobile,
+   useUpdateReservation,
+} from '@hooks'
 
 const initialFormData: ReservationFormData = {
    type: 'clase',
    clientType: 'new-client',
-   name: '',
-   dni: '',
-   phone: '',
+   client: {
+      id: '',
+      dni: '',
+      name: '',
+      phone: '',
+   },
 }
 
 const FormReservationModal: React.FC = () => {
@@ -57,24 +54,28 @@ const FormReservationModal: React.FC = () => {
    const { createReservationMutate, isLoading: isCreateLoading } = useCreateReservation()
    const { updateReservationMutate, isLoading: isUpdateLoading } = useUpdateReservation()
 
-   const { formData, handleChange, resetForm, errors, isValid } = useBasicForm(
-      initialFormData,
-      'reservation'
-   )
+   const {
+      watch,
+      setValue,
+      register,
+      reset: resetForm,
+      handleSubmit: handleFormSubmit,
+      formState: { errors, isValid },
+   } = useForm<ReservationFormData>({
+      mode: 'onChange',
+      resolver: reservationResolver,
+      defaultValues: initialFormData,
+   })
 
    const isEditMode = modalFlags['edit-reservation']
    const isLoading = isCreateLoading || isUpdateLoading
-
-   const [selectedClient, setSelectedClient] = useState<Client | undefined>()
 
    const formatedDate = useMemo(
       () => formatDateToString(selectedDate, true),
       [selectedDate]
    )
 
-   console.log('errors: ', errors)
-
-   async function handleSubmit() {
+   async function onSubmit(formData: ReservationFormData) {
       if (isEditMode && selectedReservation) {
          await updateReservationMutate({
             reservationID: selectedReservation.id,
@@ -83,10 +84,11 @@ const FormReservationModal: React.FC = () => {
 
          closeModal('edit-product')
       } else if (selectedCourt && selectedShift) {
+         const { client } = formData
          const clientData =
             formData.clientType === 'new-client'
-               ? { name: formData.name, dni: formData.dni, phone: formData.phone }
-               : { id: formData.clientID }
+               ? { name: client.name, dni: client.dni, phone: client.phone }
+               : { id: watch('client.id') }
 
          await createReservationMutate({
             courtID: selectedCourt.id,
@@ -101,16 +103,6 @@ const FormReservationModal: React.FC = () => {
       }
 
       resetForm()
-   }
-
-   function handleSelectClient(client: Client) {
-      if (selectedClient?.id === client.id) {
-         setSelectedClient(undefined)
-         handleChange('clientID', '')
-      } else {
-         setSelectedClient(client)
-         handleChange('clientID', client.id)
-      }
    }
 
    return (
@@ -153,9 +145,9 @@ const FormReservationModal: React.FC = () => {
                   <Label>Tipo de Reserva</Label>
                   <RadioGroup
                      defaultValue="partido"
-                     value={formData.type}
+                     value={watch('type')}
                      onValueChange={(value) =>
-                        handleChange('type', value as ReservationType)
+                        setValue('type', value as ReservationFormData['type'])
                      }
                      className="grid grid-cols-2 sm:grid-cols-4 gap-4"
                   >
@@ -183,10 +175,13 @@ const FormReservationModal: React.FC = () => {
 
                <Tabs
                   className="mt-6"
-                  defaultValue="new-client"
-                  onValueChange={(value) =>
-                     handleChange('clientType', value as ClientType)
-                  }
+                  value={watch('clientType')}
+                  onValueChange={(value) => {
+                     resetForm()
+                     setValue('clientType', value as ReservationFormData['clientType'], {
+                        shouldValidate: true,
+                     })
+                  }}
                >
                   <TabsList className="grid w-full grid-cols-2">
                      <TabsTrigger value="new-client" className="cursor-pointer">
@@ -202,11 +197,11 @@ const FormReservationModal: React.FC = () => {
                      <div className="space-y-2">
                         <InputForm
                            label="Nombre Completo"
-                           name="name"
-                           value={formData.name}
-                           onChange={(evt) => handleChange('name', evt.target.value)}
-                           placeholder="Ej: Valentina Roldan"
+                           name="client.name"
+                           type="text"
+                           placeholder="Ej: Valentina Roldán"
                            disabled={isLoading}
+                           register={register('client.name')}
                            errors={errors}
                         />
                      </div>
@@ -214,12 +209,11 @@ const FormReservationModal: React.FC = () => {
                      <div className="space-y-2">
                         <InputForm
                            label="DNI / Documento"
-                           name="dni"
+                           name="client.dni"
                            type="number"
-                           value={formData.dni}
-                           onChange={(evt) => handleChange('dni', evt.target.value)}
                            placeholder="Ej: 4433229"
                            disabled={isLoading}
+                           register={register('client.dni')}
                            errors={errors}
                         />
                      </div>
@@ -227,12 +221,11 @@ const FormReservationModal: React.FC = () => {
                      <div className="space-y-2">
                         <InputForm
                            label="Celular"
-                           name="phone"
+                           name="client.phone"
                            type="number"
-                           value={formData.phone}
-                           onChange={(evt) => handleChange('phone', evt.target.value)}
-                           placeholder="Ej: 555-1234"
+                           placeholder="Ej: 2236839493"
                            disabled={isLoading}
+                           register={register('client.phone')}
                            errors={errors}
                         />
                      </div>
@@ -246,6 +239,8 @@ const FormReservationModal: React.FC = () => {
 
                      <div className="border rounded-md p-4 max-h-[200px] overflow-y-auto">
                         <div className="space-y-2">
+                           <input type="hidden" {...register('client.id')} />
+
                            {clients.map((client) => (
                               <div
                                  key={client.id}
@@ -262,13 +257,23 @@ const FormReservationModal: React.FC = () => {
                                     size="default"
                                     className="w-full sm:w-auto"
                                     variant={
-                                       selectedClient?.id === client.id
+                                       watch('client.id') === client.id
                                           ? 'default'
                                           : 'outline'
                                     }
-                                    onClick={() => handleSelectClient(client)}
+                                    onClick={() =>
+                                       setValue(
+                                          'client.id',
+                                          watch('client.id') === client.id
+                                             ? ''
+                                             : client.id,
+                                          {
+                                             shouldValidate: true,
+                                          }
+                                       )
+                                    }
                                  >
-                                    {selectedClient?.id === client.id
+                                    {watch('client.id') === client.id
                                        ? 'Seleccionado'
                                        : 'Seleccionar'}
                                  </Button>
@@ -297,14 +302,13 @@ const FormReservationModal: React.FC = () => {
                   </Button>
                </DialogClose>
 
-               <Button
-                  size="lg"
-                  onClick={handleSubmit}
+               <SaveButton
+                  model="reservation"
+                  isLoading={isLoading}
+                  onClick={handleFormSubmit(onSubmit)}
                   disabled={!isValid || isLoading}
-                  className={isMobile ? 'w-full' : ''}
-               >
-                  Crear Reserva
-               </Button>
+                  action={isEditMode ? 'update' : 'create'}
+               />
             </DialogFooter>
          </DialogContent>
       </Dialog>

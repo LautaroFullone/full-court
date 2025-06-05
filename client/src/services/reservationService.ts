@@ -1,4 +1,5 @@
-import { Reservation, ReservationFormData } from '@models'
+import { Court, Reservation, ReservationFormData, ShiftType } from '@models'
+
 import { api, handleApiError } from '@lib'
 
 interface ResponseApi {
@@ -18,14 +19,18 @@ export async function getReservationsByDate(date: string) {
    }
 }
 
-export async function createReservation(params) {
-   console.log('## createReservation: ', params)
+interface ReservationData extends ReservationFormData {
+   courtID: Court['id']
+   date: string
+   shift: ShiftType
+}
+
+export async function createReservation(reservationData: ReservationData) {
+   console.log('## createReservation: ', reservationData)
    type Response = Pick<ResponseApi, 'message' | 'reservation'>
 
-   // const reservationBody = { ...reservationData, date, courtID, shift }
-
    try {
-      const { data } = await api.post<Response>(`/reservations`, params, {})
+      const { data } = await api.post<Response>(`/reservations`, reservationData, {})
       return data
    } catch (error) {
       throw handleApiError(error)
