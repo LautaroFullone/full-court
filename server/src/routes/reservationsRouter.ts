@@ -2,7 +2,6 @@ import { reservationSchema } from '../models/reservation'
 import { Router, Request, Response } from 'express'
 import { Reservation } from '@prisma/client'
 import prisma from '../lib/prismaClient'
-import { parseDate } from '../lib/parseDate'
 
 interface ResponseEntity {
    message: string
@@ -15,13 +14,10 @@ const reservationsRouter = Router()
 
 reservationsRouter.get('/', async (req: Request, res: Response<ResponseEntity>) => {
    const { date } = req.query
-   console.log('# date: ', date)
 
    try {
-      const parsedDate = date ? new Date(date as string) : undefined
-
       const reservations = await prisma.reservation.findMany({
-         where: { date: parsedDate },
+         where: { date: date as string },
          orderBy: { date: 'desc' },
          include: { owner: true },
       })
@@ -34,7 +30,6 @@ reservationsRouter.get('/', async (req: Request, res: Response<ResponseEntity>) 
 
 reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>) => {
    try {
-      console.log('## reservation: ', req.body)
       const data = reservationSchema.parse(req.body)
 
       const { type, clientType, client, courtID, date, shift } = data
@@ -47,19 +42,14 @@ reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>)
          }
 
          const existingClient = await prisma.client.findUnique({ where: { id: client.id } })
+
          if (!existingClient) {
             return res.status(404).send({ message: 'Cliente no encontrado' })
          }
 
          clientId = existingClient.id
-      }
-
-      if (clientType === 'new-client') {
+      } else if (clientType === 'new-client') {
          const { name, dni, phone } = client
-
-         // if (!name || !dni || !phone) {
-         //    return res.status(400).send({ message: 'Los campos del cliente son obligatorios' })
-         // }
 
          const existingClient = await prisma.client.findUnique({ where: { dni: client.dni } })
 
@@ -80,54 +70,35 @@ reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>)
 
       const reservation = await prisma.reservation.create({
          data: {
-            date: parseDate(date),
+            date: date,
             shift,
-            // type,
+            type,
             ownerId: clientId,
             courtId: courtID,
-            price: 0, // Set a default price or get it from data if available
+            price: 0, //TODO: variable price in base to reservationType
          },
+         include: { owner: true },
       })
+
+      let owner = null
+
+      if (reservation) {
+         owner = await prisma.client.update({
+            where: { id: clientId },
+            data: {
+               lastVisit: new Date(),
+            },
+         })
+      }
 
       return res.status(201).send({
          message: 'Reserva creada correctamente',
-         reservation,
+         reservation: { ...reservation, owner } as any,
       })
    } catch (error) {
       console.error('Error al crear reserva:', error)
       return res.status(500).send({ message: 'Error interno del servidor' })
    }
 })
-
-// reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>) => {
-//    try {
-//       console.log('## reservation: ', req.body)
-//       const data = reservationSchema.parse(req.body)
-
-//       const existingReservation = await prisma.reservation.findFirst({
-//          where: { date: data.date, shift: data.shift, courtId: data.courtId },
-//       })
-
-//       if (existingReservation) {
-//          res.status(400).send({
-//             message: 'Ya existe una reserva para el turno seleccionado',
-//             reservation: existingReservation,
-//          })
-//          return
-//       }
-
-//       const reservation = await prisma.reservation.create({
-//          data,
-//       })
-
-//       res.status(201).send({ message: 'Reserva creada', reservation })
-//    } catch (error) {
-//       console.log(error)
-//       res.status(500).send({
-//          message: 'Error creando la reserva',
-//          error,
-//       })
-//    }
-// })
 
 export default reservationsRouter

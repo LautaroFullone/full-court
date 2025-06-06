@@ -1,6 +1,6 @@
 import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from '@shadcn'
 import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
-import { formatDateToString } from '@lib'
+import { formatDateToString, formatStringToDate } from '@lib'
 import { useAppStore } from '@stores'
 import { useCalendar } from '@hooks'
 import { es } from 'date-fns/locale'
@@ -38,10 +38,10 @@ const CalendarHandler: React.FC = () => {
 
             <PopoverContent className="w-auto p-0" align="start">
                <Calendar
-                  selected={selectedDate}
-                  onSelect={goToDate}
-                  mode="single"
                   locale={es}
+                  mode="single"
+                  onSelect={goToDate}
+                  selected={formatStringToDate(selectedDate)}
                />
             </PopoverContent>
          </Popover>

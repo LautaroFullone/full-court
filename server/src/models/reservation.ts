@@ -48,7 +48,13 @@ const baseReservationSchema = z.object({
    courtID: z.string().nonempty(),
    shift: z.string().nonempty(),
    type: z.string().nonempty(),
-   date: z.string().nonempty(), // formato "dd/mm/aaaa"
+   date: z
+      .string()
+      .nonempty('La fecha es obligatoria')
+      .regex(
+         /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
+         'La fecha debe tener el formato dd/mm/aaaa'
+      ),
 })
 
 // Unión discriminada por `clientType`

@@ -1,10 +1,11 @@
 import { Client, Court, Product, Reservation, ShiftType } from '@models'
 import { devtools } from 'zustand/middleware'
+import { formatDateToString } from '@lib'
 import { create } from 'zustand'
 
-function getToday(): Date {
+function getToday() {
    const now = new Date()
-   return new Date(now.getFullYear(), now.getMonth(), now.getDate())
+   return formatDateToString(now)
 }
 
 interface AppStoreProps {
@@ -12,7 +13,7 @@ interface AppStoreProps {
    selectedCategory: string
    selectedClient: Client | null
    selectedCourt: Court | null
-   selectedDate: Date
+   selectedDate: string
    selectedProduct: Product | null
    selectedReservation: Reservation | null
    selectedShift: ShiftType | null
@@ -22,7 +23,7 @@ interface AppStoreProps {
       dispatchSelectedCategory: (category: string) => void
       dispatchSelectedClient: (client: Client | null) => void
       dispatchSelectedCourt: (court: Court | null) => void
-      dispatchSelectedDate: (date: Date) => void
+      dispatchSelectedDate: (dateStr: string) => void
       dispatchSelectedProduct: (product: Product | null) => void
       dispatchSelectedReservation: (reservation: Reservation | null) => void
       dispatchSelectedShift: (shift: ShiftType | null) => void
@@ -64,8 +65,8 @@ const useAppStore = create<AppStoreProps>()(
             dispatchSelectedCourt: (court: Court) => {
                set({ selectedCourt: court })
             },
-            dispatchSelectedDate: (date: Date) => {
-               set({ selectedDate: date })
+            dispatchSelectedDate: (dateStr: string) => {
+               set({ selectedDate: dateStr })
             },
             dispatchSelectedProduct: (product: Product) => {
                set({ selectedProduct: product })
