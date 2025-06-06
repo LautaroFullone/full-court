@@ -3,7 +3,7 @@ import { formatDateToString, reservationResolver } from '@lib'
 import { useAppStore, useModalStore } from '@stores'
 import { InputForm, SaveButton } from '@shared'
 import { useForm } from 'react-hook-form'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import {
    Button,
    Dialog,
@@ -70,6 +70,14 @@ const FormReservationModal: React.FC = () => {
    const isEditMode = modalFlags['edit-reservation']
    const isLoading = isCreateLoading || isUpdateLoading
 
+   useEffect(() => {
+      if (isEditMode && selectedReservation) {
+         resetForm({
+            ...selectedReservation,
+         })
+      }
+   }, [isEditMode, selectedReservation])
+
    const formatedDate = useMemo(
       () => formatDateToString(selectedDate, true),
       [selectedDate]
@@ -107,8 +115,10 @@ const FormReservationModal: React.FC = () => {
 
    return (
       <Dialog
-         open={modalFlags['create-reservation']}
-         onOpenChange={() => closeModal('create-reservation')}
+         open={modalFlags['create-reservation'] || modalFlags['edit-reservation']}
+         onOpenChange={() =>
+            isEditMode ? closeModal('edit-reservation') : closeModal('create-reservation')
+         }
       >
          <DialogContent className="w-[500px] ">
             <DialogHeader>
@@ -125,7 +135,9 @@ const FormReservationModal: React.FC = () => {
                         readOnly
                         label="Cancha"
                         name="courtName"
-                        value={selectedCourt?.name}
+                        value={
+                           isEditMode ? selectedReservation?.courtId : selectedCourt?.name
+                        }
                         className="bg-muted/50"
                      />
                   </div>
@@ -135,7 +147,9 @@ const FormReservationModal: React.FC = () => {
                         readOnly
                         label="Horario"
                         name="shift"
-                        value={String(selectedShift)}
+                        value={
+                           isEditMode ? selectedReservation?.shift : String(selectedShift)
+                        }
                         className="bg-muted/50"
                      />
                   </div>

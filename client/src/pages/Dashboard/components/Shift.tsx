@@ -60,13 +60,25 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
                </DropdownMenuTrigger>
 
                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onSelect={() => {}}>
+                  <DropdownMenuItem className="cursor-pointer" onSelect={() => {}}>
                      Gestionar consumos
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem onSelect={() => {}}>Editar reserva</DropdownMenuItem>
+                  <DropdownMenuItem
+                     className="cursor-pointer"
+                     onSelect={() =>
+                        openModal('edit-reservation', {
+                           selectedReservation: reservation,
+                        })
+                     }
+                  >
+                     Editar reserva
+                  </DropdownMenuItem>
 
-                  <DropdownMenuItem onSelect={() => {}} className="text-destructive">
+                  <DropdownMenuItem
+                     onSelect={() => {}}
+                     className="text-destructive cursor-pointer"
+                  >
                      Cancelar reserva
                   </DropdownMenuItem>
                </DropdownMenuContent>

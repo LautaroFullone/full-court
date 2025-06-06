@@ -1,4 +1,4 @@
-import { useMobile, useMock } from '@hooks'
+import { useFetchReservations, useMobile, useMock } from '@hooks'
 import { Tabs, TabsContent } from '@shadcn'
 import { formatDateToString } from '@lib'
 import { useMemo, useState } from 'react'
@@ -18,11 +18,13 @@ import {
 } from './modals'
 
 const Dashboard = () => {
-   const { generateMockReservations } = useMock()
+   // const { generateMockReservations } = useMock()
    const isMobile = useMobile()
    const selectedDate = useAppStore((state) => state.selectedDate)
 
-   const [reservations] = useState(generateMockReservations())
+   // const [reservations] = useState(generateMockReservations())
+
+   const { reservations, isPending } = useFetchReservations(selectedDate)
 
    const reservationsBySelectedDay = useMemo(() => {
       return reservations.filter(
@@ -43,7 +45,7 @@ const Dashboard = () => {
 
                <TabsContent value="grid" className="mt-4">
                   <div className="rounded-lg border">
-                     <ReservationsTable reservations={reservationsBySelectedDay} />
+                     <ReservationsTable reservations={reservations} />
                   </div>
                </TabsContent>
 
