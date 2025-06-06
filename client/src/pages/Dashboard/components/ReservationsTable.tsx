@@ -1,5 +1,4 @@
 import { SHIFT_VALUES, Reservation, ShiftType } from '@models'
-import { formatDateToString } from '@lib'
 import { Loader2 } from 'lucide-react'
 import { useAppStore } from '@stores'
 import { useMobile } from '@hooks'
@@ -17,12 +16,10 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({ reservations }) =
    const isMobile = useMobile()
    const isLoading = false
 
-   console.log(reservations)
-
    function generateMobileShiftView(shiftSlot: ShiftType) {
       const hasReservation = reservations.find(
          (r) =>
-            r.date == formatDateToString(selectedDate) &&
+            r.date == selectedDate &&
             r.courtId === selectedCourt?.id &&
             r.shift === shiftSlot
       )
@@ -40,9 +37,7 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({ reservations }) =
       return COURTS.map((court) => {
          const hasReservation = reservations.find(
             (r) =>
-               r.date == formatDateToString(selectedDate) &&
-               r.courtId === court?.id &&
-               r.shift === shiftSlot
+               r.date == selectedDate && r.courtId === court?.id && r.shift === shiftSlot
          )
 
          return (

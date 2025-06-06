@@ -8,7 +8,7 @@ interface ResponseApi {
    message: string
 }
 
-export async function getReservationsByDate(date: Date) {
+export async function getReservationsByDate(date: Reservation['date']) {
    type Response = Pick<ResponseApi, 'message' | 'reservations'>
 
    try {

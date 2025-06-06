@@ -14,6 +14,7 @@ const CourtHandlerMobile: React.FC = () => {
                {COURTS.map((court) => (
                   <TabsTrigger
                      value={court.id}
+                     key={`tab-${court.id}`}
                      onClick={() => dispatchSelectedCourt(court)}
                   >
                      {court.name}

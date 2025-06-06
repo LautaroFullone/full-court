@@ -1,6 +1,10 @@
-export function formatDateToString(date: Date, isForCalendar: boolean = false) {
+import { formatStringToDate } from './formatStringToDate'
+
+export function formatDateToString(date: Date | string, isForCalendar?: boolean) {
+   const dateObj = typeof date === 'string' ? formatStringToDate(date) : date
+
    return (
-      date.toLocaleString('es-ES', {
+      dateObj.toLocaleString('es-ES', {
          ...(isForCalendar ? { weekday: 'long' } : {}),
          day: '2-digit',
          month: isForCalendar ? 'long' : '2-digit',

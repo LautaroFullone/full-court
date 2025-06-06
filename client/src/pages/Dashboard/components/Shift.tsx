@@ -2,6 +2,7 @@ import { Court, Reservation, ShiftType } from '@models'
 import { useAppStore, useModalStore } from '@stores'
 import { MoreHorizontal, Plus } from 'lucide-react'
 import { useStyles } from '@hooks'
+import { formatStringToDate } from '@lib'
 import {
    Button,
    DropdownMenu,
@@ -22,8 +23,10 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
 
    const { getReservationTypeClass } = useStyles()
 
-   function isPastDate(date: Date) {
+   function isPastDate(dateStr: string) {
       const today = new Date()
+      const date = formatStringToDate(dateStr)
+
       today.setHours(0, 0, 0, 0)
       return date < today
    }
@@ -36,7 +39,7 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
                onClick={() => openModal('details-reservation', { reservation })}
             >
                <span className="font-medium text-sm text-center">
-                  {reservation.owner.name}
+                  {reservation?.owner.name}
                </span>
 
                <span

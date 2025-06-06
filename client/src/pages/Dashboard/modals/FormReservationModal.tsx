@@ -76,6 +76,7 @@ const FormReservationModal: React.FC = () => {
             ...selectedReservation,
          })
       }
+      // eslint-disable-next-line
    }, [isEditMode, selectedReservation])
 
    const formatedDate = useMemo(
@@ -90,7 +91,7 @@ const FormReservationModal: React.FC = () => {
             reservationData: formData,
          })
 
-         closeModal('edit-product')
+         closeModal('edit-reservation')
       } else if (selectedCourt && selectedShift) {
          const { client } = formData
          const clientData =
@@ -99,17 +100,16 @@ const FormReservationModal: React.FC = () => {
                : { id: watch('client.id') }
 
          await createReservationMutate({
-            courtID: selectedCourt.id,
+            date: formatDateToString(selectedDate),
             shift: selectedShift!,
+            courtID: selectedCourt.id,
             type: formData.type,
             clientType: formData.clientType,
             client: clientData,
-            date: formatDateToString(selectedDate),
          })
 
-         closeModal('create-product')
+         closeModal('create-reservation')
       }
-
       resetForm()
    }
 
