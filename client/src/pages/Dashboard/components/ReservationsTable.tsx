@@ -17,6 +17,8 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({ reservations }) =
    const isMobile = useMobile()
    const isLoading = false
 
+   console.log(reservations)
+
    function generateMobileShiftView(shiftSlot: ShiftType) {
       const hasReservation = reservations.find(
          (r) =>

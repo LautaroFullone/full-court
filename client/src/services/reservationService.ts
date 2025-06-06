@@ -8,11 +8,13 @@ interface ResponseApi {
    message: string
 }
 
-export async function getReservationsByDate(date: string) {
+export async function getReservationsByDate(date: Date) {
    type Response = Pick<ResponseApi, 'message' | 'reservations'>
 
    try {
-      const { data } = await api.get<Response>(`/reservations/${date}`, {})
+      const { data } = await api.get<Response>(`/reservations`, {
+         params: { date },
+      })
       return data
    } catch (error) {
       throw handleApiError(error)

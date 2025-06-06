@@ -2,6 +2,11 @@ import { Client, Court, Product, Reservation, ShiftType } from '@models'
 import { devtools } from 'zustand/middleware'
 import { create } from 'zustand'
 
+function getToday(): Date {
+   const now = new Date()
+   return new Date(now.getFullYear(), now.getMonth(), now.getDate())
+}
+
 interface AppStoreProps {
    theme: 'light' | 'dark'
    selectedCategory: string
@@ -29,7 +34,7 @@ const INITIAL_STATE: Omit<AppStoreProps, 'appActions'> = {
    selectedCategory: 'todos',
    selectedClient: null,
    selectedCourt: null,
-   selectedDate: new Date(),
+   selectedDate: getToday(),
    selectedProduct: null,
    selectedReservation: null,
    selectedShift: null,

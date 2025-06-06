@@ -14,8 +14,14 @@ interface ResponseEntity {
 const reservationsRouter = Router()
 
 reservationsRouter.get('/', async (req: Request, res: Response<ResponseEntity>) => {
+   const { date } = req.query
+   console.log('# date: ', date)
+
    try {
+      const parsedDate = date ? new Date(date as string) : undefined
+
       const reservations = await prisma.reservation.findMany({
+         where: { date: parsedDate },
          orderBy: { date: 'desc' },
          include: { owner: true },
       })

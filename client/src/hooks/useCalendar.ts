@@ -15,9 +15,9 @@ const useCalendar = () => {
 
    const goToDate = (date: Date | undefined) => {
       if (date) {
-         console.log('## goToDate: ', date)
+         const formatDate = new Date(date.setHours(0, 0, 0, 0))
 
-         dispatchSelectedDate(date)
+         dispatchSelectedDate(formatDate)
          setIsCalendarOpen(false)
 
          //TODO: fetch date reservations
