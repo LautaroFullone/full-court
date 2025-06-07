@@ -53,7 +53,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
                   size="lg"
                   onClick={() =>
                      openModal('edit-client', {
-                        selectedClient: client,
+                        client,
                      })
                   }
                >

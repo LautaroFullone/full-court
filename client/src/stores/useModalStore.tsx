@@ -4,15 +4,15 @@ import useAppStore from './useAppStore'
 import { create } from 'zustand'
 
 type ModalPayload = {
-   'create-reservation': { selectedCourt: Court; selectedShift: ShiftType }
-   'edit-reservation': { selectedReservation: Reservation }
+   'create-reservation': { court: Court; shift: ShiftType }
+   'edit-reservation': { reservation: Reservation }
    'details-reservation': { reservation: Reservation }
    'confirm-reservation': void
    'create-product': void
-   'edit-product': { selectedProduct: Product }
+   'edit-product': { product: Product }
    'confirm-delete-product': { product: Product }
    'create-client': void
-   'edit-client': { selectedClient: Client }
+   'edit-client': { client: Client }
    'confirm-delete-client': void
 }
 
@@ -57,11 +57,11 @@ export const useModalStore = create<ModalStoreProps>()(
                openModal: (name, payload) => {
                   switch (name) {
                      case 'create-reservation': {
-                        const { selectedCourt, selectedShift } =
+                        const { court, shift } =
                            payload as ModalPayload['create-reservation']
 
-                        appActions.dispatchSelectedCourt(selectedCourt)
-                        appActions.dispatchSelectedShift(selectedShift)
+                        appActions.dispatchSelectedCourt(court)
+                        appActions.dispatchSelectedShift(shift)
                         break
                      }
                      case 'details-reservation': {
@@ -72,17 +72,16 @@ export const useModalStore = create<ModalStoreProps>()(
                         break
                      }
                      case 'edit-reservation': {
-                        const { selectedReservation } =
+                        const { reservation } =
                            payload as ModalPayload['edit-reservation']
 
-                        appActions.dispatchSelectedReservation(selectedReservation)
+                        appActions.dispatchSelectedReservation(reservation)
                         break
                      }
                      case 'edit-product': {
-                        const { selectedProduct } =
-                           payload as ModalPayload['edit-product']
+                        const { product } = payload as ModalPayload['edit-product']
 
-                        appActions.dispatchSelectedProduct(selectedProduct)
+                        appActions.dispatchSelectedProduct(product)
                         break
                      }
                      case 'confirm-delete-product': {
@@ -93,9 +92,9 @@ export const useModalStore = create<ModalStoreProps>()(
                         break
                      }
                      case 'edit-client': {
-                        const { selectedClient } = payload as ModalPayload['edit-client']
+                        const { client } = payload as ModalPayload['edit-client']
 
-                        appActions.dispatchSelectedClient(selectedClient)
+                        appActions.dispatchSelectedClient(client)
                         break
                      }
                   }

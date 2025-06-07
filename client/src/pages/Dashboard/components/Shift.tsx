@@ -71,7 +71,7 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
                      className="cursor-pointer"
                      onSelect={() =>
                         openModal('edit-reservation', {
-                           selectedReservation: reservation,
+                           reservation,
                         })
                      }
                   >
@@ -97,8 +97,8 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
          className="w-full h-full flex items-center justify-center"
          onClick={() => {
             openModal('create-reservation', {
-               selectedCourt: court,
-               selectedShift: shiftSlot,
+               court,
+               shift: shiftSlot,
             })
          }}
          disabled={isPastDate(selectedDate)}
