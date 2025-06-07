@@ -1,9 +1,10 @@
-import { useFetchReservations, useMobile, useMock } from '@hooks'
+import { useFetchReservations, useMobile } from '@hooks'
 import { Tabs, TabsContent } from '@shadcn'
 import { formatDateToString } from '@lib'
-import { useMemo, useState } from 'react'
+import { Loader2 } from 'lucide-react'
 import { useAppStore } from '@stores'
 import { AppLayout } from '@shared'
+import { useMemo } from 'react'
 import {
    CalendarHandler,
    CourtHandlerMobile,
@@ -45,7 +46,19 @@ const Dashboard = () => {
 
                <TabsContent value="grid" className="mt-4">
                   <div className="rounded-lg border">
-                     <ReservationsTable reservations={reservations} />
+                     {isPending ? (
+                        <div className="h-[70vh] flex items-center justify-center p-8">
+                           <div className="flex flex-col items-center justify-center">
+                              <Loader2 className="h-8 w-8 animate-spin" />
+
+                              <p className="text-sm text-muted-foreground mt-2">
+                                 Cargando reservas...
+                              </p>
+                           </div>
+                        </div>
+                     ) : (
+                        <ReservationsTable reservations={reservations} />
+                     )}
                   </div>
                </TabsContent>
 

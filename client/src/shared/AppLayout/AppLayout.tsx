@@ -102,7 +102,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
                <div className="container px-4 py-6 mx-auto">{children}</div>
             </main>
 
-            <footer className="py-4">
+            <footer>
                <div className="container px-4 text-center text-sm text-muted-foreground mx-auto">
                   ©2025 FullCourt - Todos los derechos reservados.
                </div>

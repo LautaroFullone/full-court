@@ -15,10 +15,7 @@ const useCalendar = () => {
    const goToDate = (date: Date | string | undefined) => {
       if (!date) return
 
-      // const dateObj = typeof date === 'string' ? new Date(date) : date
-
       const parsedDate = formatDateToString(date)
-      console.log('## goToDate', parsedDate)
 
       dispatchSelectedDate(parsedDate)
       setIsCalendarOpen(false)
