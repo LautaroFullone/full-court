@@ -49,91 +49,92 @@ const Products = () => {
 
    return (
       <AppLayout>
-         <div className="px-4 py-6">
-            <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-               <div>
-                  <h1 className="text-3xl font-bold tracking-tight">Productos</h1>
-                  <p className="text-muted-foreground">
-                     Gestioná el inventario de productos y servicios
+         <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+               <h1 className="text-3xl font-bold tracking-tight">Productos</h1>
+               <p className="text-muted-foreground">
+                  Gestioná el inventario de productos y servicios
+               </p>
+            </div>
+         </div>
+
+         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+            <div className="relative w-full sm:w-auto sm:flex-1">
+               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+
+               <Input
+                  type="search"
+                  placeholder="Buscar productos..."
+                  className="pl-8"
+                  value={searchTerm}
+                  disabled={isPending}
+                  onChange={(evt) => setSearchTerm(evt.target.value)}
+               />
+            </div>
+
+            <div className="flex gap-2 w-full sm:w-auto">
+               <CategoriesFilterHandler disabled={isPending} />
+
+               <Button
+                  size="lg"
+                  className="cursor-pointer"
+                  onClick={() => openModal('create-product')}
+               >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Nuevo
+               </Button>
+            </div>
+         </div>
+
+         {isPending ? (
+            <div className="h-[56vh] flex items-center justify-center p-8">
+               <div className="flex flex-col items-center justify-center h-screen">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+
+                  <p className="text-sm text-muted-foreground mt-2">
+                     Cargando productos...
                   </p>
                </div>
             </div>
-
-            <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-               <div className="relative w-full sm:w-auto sm:flex-1">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                     type="search"
-                     placeholder="Buscar productos..."
-                     className="pl-8"
-                     value={searchTerm}
-                     disabled={isPending}
-                     onChange={(evt) => setSearchTerm(evt.target.value)}
+         ) : currentProducts.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+               {currentProducts.map((product) => (
+                  <ProductCard
+                     key={product.id}
+                     product={product}
+                     onEdit={() =>
+                        openModal('edit-product', { selectedProduct: product })
+                     }
+                     onDelete={() => openModal('confirm-delete-product', { product })}
                   />
-               </div>
+               ))}
+            </div>
+         ) : (
+            <div className="h-[56vh] flex items-center justify-center p-8 text-center">
+               <div className="max-w-sm">
+                  <Package className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-20" />
 
-               <div className="flex gap-2 w-full sm:w-auto">
-                  <CategoriesFilterHandler disabled={isPending} />
+                  <h3 className="text-lg font-medium mb-2">
+                     No hay productos registrados
+                  </h3>
 
-                  <Button
-                     size="lg"
-                     className="cursor-pointer"
-                     onClick={() => openModal('create-product')}
-                  >
+                  <p className="text-muted-foreground mb-4">
+                     {searchTerm
+                        ? `No hay productos que coincidan con "${searchTerm}". Intenta con otros términos de búsqueda.`
+                        : selectedCategory !== 'todos'
+                        ? 'No hay productos que coincidan con la categoría. Intenta con otros términos de búsqueda.'
+                        : 'Comienza agregando tu primer producto para gestionar su stock y ventas.'}
+                  </p>
+
+                  <Button onClick={() => openModal('create-client')}>
                      <Plus className="mr-2 h-4 w-4" />
-                     Nuevo
+                     Nuevo Cliente
                   </Button>
                </div>
             </div>
+         )}
 
-            {isPending ? (
-               <div className="h-[60vh]  flex items-center justify-center p-8">
-                  <div className="flex flex-col items-center justify-center h-screen">
-                     <Loader2 className="h-8 w-8 animate-spin" />
-
-                     <p className="text-sm text-muted-foreground mt-2">
-                        Cargando productos...
-                     </p>
-                  </div>
-               </div>
-            ) : currentProducts.length > 0 ? (
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {currentProducts.map((product) => (
-                     <ProductCard
-                        key={product.id}
-                        product={product}
-                        onEdit={() =>
-                           openModal('edit-product', { selectedProduct: product })
-                        }
-                        onDelete={() => openModal('confirm-delete-product', { product })}
-                     />
-                  ))}
-               </div>
-            ) : (
-               <div className="flex items-center justify-center p-8 text-center">
-                  <div className="max-w-sm">
-                     <Package className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-20" />
-
-                     <h3 className="text-lg font-medium mb-2">
-                        No hay productos registrados
-                     </h3>
-
-                     <p className="text-muted-foreground mb-4">
-                        {searchTerm
-                           ? `No hay productos que coincidan con "${searchTerm}". Intenta con otros términos de búsqueda.`
-                           : selectedCategory !== 'todos'
-                           ? 'No hay productos que coincidan con la categoría. Intenta con otros términos de búsqueda.'
-                           : 'Comienza agregando tu primer producto para gestionar su stock y ventas.'}
-                     </p>
-
-                     <Button onClick={() => openModal('create-client')}>
-                        <Plus className="mr-2 h-4 w-4" />
-                        Nuevo Cliente
-                     </Button>
-                  </div>
-               </div>
-            )}
-
+         {!isPending && filteredProducts.length > 0 && (
             <div className="mt-6 flex justify-center">
                <Pagination>
                   <PaginationContent>
@@ -177,10 +178,10 @@ const Products = () => {
                   </PaginationContent>
                </Pagination>
             </div>
+         )}
 
-            <FormProductModal />
-            <ConfirmProductModal />
-         </div>
+         <FormProductModal />
+         <ConfirmProductModal />
       </AppLayout>
    )
 }

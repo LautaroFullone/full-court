@@ -2,11 +2,12 @@ import { reservationSchema } from '../models/reservation'
 import { Router, Request, Response } from 'express'
 import { Reservation } from '@prisma/client'
 import prisma from '../lib/prismaClient'
+import { sleep } from '../lib/sleep'
 
 interface ResponseEntity {
    message: string
-   reservation?: Reservation
-   reservations?: Reservation[]
+   reservation?: Partial<Reservation>
+   reservations?: Partial<Reservation>[]
    error?: unknown
 }
 
@@ -20,7 +21,10 @@ reservationsRouter.get('/', async (req: Request, res: Response<ResponseEntity>) 
          where: { date: date as string },
          orderBy: { date: 'desc' },
          include: { owner: true },
+         omit: { ownerId: true },
       })
+
+      await sleep(2000)
 
       res.status(200).send({ message: 'Reservas obtenidas', reservations })
    } catch (error) {
@@ -78,6 +82,7 @@ reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>)
             price: 0, //TODO: variable price in base to reservationType
          },
          include: { owner: true },
+         omit: { ownerId: true },
       })
 
       let owner = null

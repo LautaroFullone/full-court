@@ -81,8 +81,14 @@ const ReservationsTable: React.FC<ReservationsTableProps> = ({ reservations }) =
          )}
 
          {isLoading ? (
-            <div className="flex items-center justify-center h-96">
-               <Loader2 className="h-8 w-8 animate-spin" />
+            <div className="h-[60vh] flex items-center justify-center p-8">
+               <div className="flex flex-col items-center justify-center h-screen">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+
+                  <p className="text-sm text-muted-foreground mt-2">
+                     Cargando productos...
+                  </p>
+               </div>
             </div>
          ) : (
             <div className="divide-y">
