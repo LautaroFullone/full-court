@@ -150,13 +150,13 @@ const DetailsReservationModal: React.FC = () => {
                                                 No hay consumos registrados <br /> para
                                                 esta reserva
                                              </p>
-                                             {/* <Button
+                                             <Button
                                                 variant="outline"
                                                 size="sm"
                                                 onClick={() => {}}
                                              >
                                                 Agregar consumos
-                                             </Button> */}
+                                             </Button>
                                           </div>
                                        </TableCell>
                                     </TableRow>
@@ -178,7 +178,11 @@ const DetailsReservationModal: React.FC = () => {
                         variant="destructive"
                         size="lg"
                         className="gap-1 bg-amber-500 hover:bg-amber-500/90 dark:bg-amber-500/60"
-                        onClick={() => {}}
+                        onClick={() =>
+                           openModal('edit-reservation', {
+                              reservation: selectedReservation, //innecesary re-render
+                           })
+                        }
                      >
                         <Edit className="h-4 w-4" />
                         Editar

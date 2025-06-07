@@ -102,9 +102,7 @@ const Products = () => {
                   <ProductCard
                      key={product.id}
                      product={product}
-                     onEdit={() =>
-                        openModal('edit-product', { selectedProduct: product })
-                     }
+                     onEdit={() => openModal('edit-product', { product })}
                      onDelete={() => openModal('confirm-delete-product', { product })}
                   />
                ))}
