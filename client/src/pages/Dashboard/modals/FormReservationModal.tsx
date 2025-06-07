@@ -4,6 +4,7 @@ import { useAppStore, useModalStore } from '@stores'
 import { InputForm, SaveButton } from '@shared'
 import { useForm } from 'react-hook-form'
 import { useEffect, useMemo } from 'react'
+import { COURTS } from '@config'
 import {
    Button,
    Dialog,
@@ -72,8 +73,12 @@ const FormReservationModal: React.FC = () => {
 
    useEffect(() => {
       if (isEditMode && selectedReservation) {
+         console.log('# reserv: ', selectedReservation)
          resetForm({
-            ...selectedReservation,
+            ...initialFormData,
+            type: selectedReservation.type,
+            clientType: 'existing-client',
+            client: { id: selectedReservation?.owner.id },
          })
       }
       // eslint-disable-next-line
@@ -84,8 +89,13 @@ const FormReservationModal: React.FC = () => {
       [selectedDate]
    )
 
+   const getCourtName = (courtID: string | undefined) => {
+      return COURTS.find((c) => c.id === courtID)?.name || ''
+   }
+
    async function onSubmit(formData: ReservationFormData) {
       if (isEditMode && selectedReservation) {
+         console.log('## edit res: ', formData)
          await updateReservationMutate({
             reservationID: selectedReservation.id,
             reservationData: formData,
@@ -110,7 +120,7 @@ const FormReservationModal: React.FC = () => {
 
          closeModal('create-reservation')
       }
-      resetForm()
+      resetForm(initialFormData)
    }
 
    return (
@@ -136,7 +146,9 @@ const FormReservationModal: React.FC = () => {
                         label="Cancha"
                         name="courtName"
                         value={
-                           isEditMode ? selectedReservation?.courtId : selectedCourt?.name
+                           isEditMode
+                              ? getCourtName(selectedReservation?.courtId)
+                              : selectedCourt?.name
                         }
                         className="bg-muted/50"
                      />
@@ -191,8 +203,21 @@ const FormReservationModal: React.FC = () => {
                   className="mt-6"
                   value={watch('clientType')}
                   onValueChange={(value) => {
-                     resetForm()
-                     setValue('clientType', value as ReservationFormData['clientType'], {
+                     const newClientType = value as ReservationFormData['clientType']
+                     if (isEditMode)
+                        resetForm({
+                           client: {
+                              name: '',
+                              dni: '',
+                              phone: '',
+                              id:
+                                 newClientType === 'existing-client'
+                                    ? selectedReservation?.owner.id
+                                    : '',
+                           },
+                        })
+
+                     setValue('clientType', newClientType, {
                         shouldValidate: true,
                      })
                   }}
@@ -258,7 +283,12 @@ const FormReservationModal: React.FC = () => {
                            {clients.map((client) => (
                               <div
                                  key={client.id}
-                                 className="flex flex-col sm:flex-row sm:items-center justify-between p-2 hover:bg-muted/50 rounded-md cursor-pointer"
+                                 className={`flex flex-col sm:flex-row sm:items-center 
+                                            justify-between p-2 hover:bg-primary/5 rounded-md 
+                                            cursor-pointer ${
+                                               watch('client.id') === client.id &&
+                                               'bg-primary/5'
+                                            }`}
                               >
                                  <div className="mb-2 sm:mb-0">
                                     <div className="font-medium">{client.name}</div>
