@@ -2,8 +2,8 @@ import { RESERVATION_TYPES_VALUES, ReservationFormData } from '@models'
 import { formatDateToString, reservationResolver } from '@lib'
 import { useAppStore, useModalStore } from '@stores'
 import { InputForm, SaveButton } from '@shared'
-import { useForm } from 'react-hook-form'
 import { useEffect, useMemo } from 'react'
+import { useForm } from 'react-hook-form'
 import { COURTS } from '@config'
 import {
    Button,
@@ -47,6 +47,9 @@ const FormReservationModal: React.FC = () => {
    const selectedCourt = useAppStore((state) => state.selectedCourt)
    const selectedShift = useAppStore((state) => state.selectedShift)
    const selectedReservation = useAppStore((state) => state.selectedReservation)
+   const dispatchSelectedReservation = useAppStore(
+      (state) => state.appActions.dispatchSelectedReservation
+   )
    const modalFlags = useModalStore((state) => state.modalFlags)
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
@@ -71,14 +74,19 @@ const FormReservationModal: React.FC = () => {
    const isEditMode = modalFlags['edit-reservation']
    const isLoading = isCreateLoading || isUpdateLoading
 
+   console.log('# isEditMode: ', isEditMode)
    useEffect(() => {
       if (isEditMode && selectedReservation) {
-         console.log('# reserv: ', selectedReservation)
+         console.log('# selectedReservation: ', selectedReservation)
          resetForm({
-            ...initialFormData,
             type: selectedReservation.type,
             clientType: 'existing-client',
-            client: { id: selectedReservation?.owner.id },
+            client: {
+               id: selectedReservation.owner.id || '',
+               name: selectedReservation.owner.name || '',
+               dni: selectedReservation.owner.dni || '',
+               phone: selectedReservation.owner.phone || '',
+            },
          })
       }
       // eslint-disable-next-line
@@ -89,7 +97,7 @@ const FormReservationModal: React.FC = () => {
       [selectedDate]
    )
 
-   const getCourtName = (courtID: string | undefined) => {
+   function getCourtName(courtID: string | undefined) {
       return COURTS.find((c) => c.id === courtID)?.name || ''
    }
 
@@ -102,6 +110,7 @@ const FormReservationModal: React.FC = () => {
          })
 
          closeModal('edit-reservation')
+         dispatchSelectedReservation(null)
       } else if (selectedCourt && selectedShift) {
          const { client } = formData
          const clientData =
@@ -124,11 +133,17 @@ const FormReservationModal: React.FC = () => {
    }
 
    return (
+      //TODO arreglar el tema de cerrar modal, parece que eso es lo que hace que no se pueda interactuar despues de actualizar
+      // y cerrar el modal con el manejo del flag
       <Dialog
+         // key={isEditMode ? 'edit-modal-reservation' : 'create-dialog-reservation'}
          open={modalFlags['create-reservation'] || modalFlags['edit-reservation']}
-         onOpenChange={() =>
-            isEditMode ? closeModal('edit-reservation') : closeModal('create-reservation')
-         }
+         onOpenChange={() => {
+            if (isEditMode) closeModal('edit-reservation')
+            else closeModal('create-reservation')
+
+            dispatchSelectedReservation(null)
+         }}
       >
          <DialogContent className="w-[500px] ">
             <DialogHeader>
@@ -204,22 +219,26 @@ const FormReservationModal: React.FC = () => {
                   value={watch('clientType')}
                   onValueChange={(value) => {
                      const newClientType = value as ReservationFormData['clientType']
-                     if (isEditMode)
+
+                     if (isEditMode) {
                         resetForm({
+                           type: selectedReservation?.type ?? 'clase',
+                           clientType: newClientType,
                            client: {
+                              id:
+                                 newClientType === 'existing-client'
+                                    ? selectedReservation?.owner.id ?? ''
+                                    : '',
                               name: '',
                               dni: '',
                               phone: '',
-                              id:
-                                 newClientType === 'existing-client'
-                                    ? selectedReservation?.owner.id
-                                    : '',
                            },
                         })
-
-                     setValue('clientType', newClientType, {
-                        shouldValidate: true,
-                     })
+                     } else {
+                        setValue('clientType', newClientType, {
+                           shouldValidate: true,
+                        })
+                     }
                   }}
                >
                   <TabsList className="grid w-full grid-cols-2">
@@ -337,6 +356,7 @@ const FormReservationModal: React.FC = () => {
             <DialogFooter className={`${isMobile ? 'flex-col space-y-2' : ''}`}>
                <DialogClose asChild>
                   <Button
+                     // id="boton-de-prueba"
                      size="lg"
                      variant="outline"
                      disabled={isLoading}

@@ -27,11 +27,11 @@ const Dashboard = () => {
 
    const { reservations, isPending } = useFetchReservations(selectedDate)
 
-   const reservationsBySelectedDay = useMemo(() => {
-      return reservations.filter(
-         (reservation) => reservation.date === formatDateToString(selectedDate)
-      )
-   }, [reservations, selectedDate])
+   // const reservationsBySelectedDay = useMemo(() => {
+   //    return reservations.filter(
+   //       (reservation) => reservation.date === formatDateToString(selectedDate)
+   //    )
+   // }, [reservations, selectedDate])
 
    return (
       <AppLayout>
@@ -64,7 +64,7 @@ const Dashboard = () => {
 
                <TabsContent value="list" className="mt-4">
                   <div className="rounded-lg border">
-                     <ReservationsList reservations={reservationsBySelectedDay} />
+                     <ReservationsList reservations={reservations} />
                   </div>
                </TabsContent>
             </Tabs>

@@ -69,17 +69,19 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
 
                   <DropdownMenuItem
                      className="cursor-pointer"
-                     onSelect={() =>
-                        openModal('edit-reservation', {
-                           reservation,
-                        })
-                     }
+                     onSelect={() => {
+                        Promise.resolve().then(
+                           () => openModal('edit-reservation', { reservation }) //used to fix focus radix error
+                        )
+                     }}
                   >
                      Editar reserva
                   </DropdownMenuItem>
 
                   <DropdownMenuItem
-                     onSelect={() => {}}
+                     onSelect={() => {
+                        Promise.resolve().then(() => openModal('confirm-reservation'))
+                     }}
                      className="text-destructive cursor-pointer"
                   >
                      Cancelar reserva

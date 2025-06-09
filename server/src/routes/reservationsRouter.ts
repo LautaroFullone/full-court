@@ -70,6 +70,8 @@ reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>)
          })
 
          clientId = newClient.id
+      } else {
+         return res.status(400).send({ message: 'Tipo de cliente inválido' })
       }
 
       const reservation = await prisma.reservation.create({
@@ -85,16 +87,12 @@ reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>)
          omit: { ownerId: true },
       })
 
-      let owner = null
-
-      if (reservation) {
-         owner = await prisma.client.update({
-            where: { id: clientId },
-            data: {
-               lastVisit: new Date(),
-            },
-         })
-      }
+      const owner = await prisma.client.update({
+         where: { id: clientId },
+         data: {
+            lastVisit: new Date(),
+         },
+      })
 
       return res.status(201).send({
          message: 'Reserva creada correctamente',
@@ -102,6 +100,75 @@ reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>)
       })
    } catch (error) {
       console.error('Error al crear reserva:', error)
+      return res.status(500).send({ message: 'Error interno del servidor' })
+   }
+})
+
+reservationsRouter.put('/:id', async (req: Request, res: Response<ResponseEntity>) => {
+   try {
+      const { id } = req.params
+      const { type, clientType, client } = req.body
+
+      const existingReservation = await prisma.reservation.findUnique({ where: { id } })
+
+      if (!existingReservation) {
+         return res.status(404).send({ message: 'Reserva no encontrada' })
+      }
+
+      let clientId = ''
+
+      if (clientType === 'existing-client') {
+         if (!client.id) {
+            return res.status(400).send({ message: 'Debe seleccionar un cliente existente' })
+         }
+
+         const existingClient = await prisma.client.findUnique({ where: { id: client.id } })
+
+         if (!existingClient) {
+            return res.status(404).send({ message: 'Cliente no encontrado' })
+         }
+
+         clientId = existingClient.id
+      } else if (clientType === 'new-client') {
+         const { name, dni, phone } = client
+
+         const alreadyExists = await prisma.client.findUnique({ where: { dni } })
+
+         if (alreadyExists) {
+            return res.status(400).send({ message: 'Ya existe un cliente con ese DNI' })
+         }
+
+         const newClient = await prisma.client.create({
+            data: { name, dni, phone },
+         })
+
+         clientId = newClient.id
+      } else {
+         return res.status(400).send({ message: 'Tipo de cliente inválido' })
+      }
+
+      const updatedReservation = await prisma.reservation.update({
+         where: { id },
+         data: {
+            type,
+            ownerId: clientId,
+         },
+         include: { owner: true },
+      })
+
+      await prisma.client.update({
+         where: { id: clientId },
+         data: {
+            lastVisit: new Date(),
+         },
+      })
+
+      return res.send({
+         message: 'Reserva actualizada correctamente',
+         reservation: updatedReservation,
+      })
+   } catch (error) {
+      console.error('Error al actualizar reserva:', error)
       return res.status(500).send({ message: 'Error interno del servidor' })
    }
 })
