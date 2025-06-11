@@ -75,13 +75,21 @@ const FormReservationModal: React.FC = () => {
 
    const isLoading = isCreateLoading || isUpdateLoading
 
-   const filteredClients = useMemo(
-      () =>
-         clients.filter((client) =>
-            client.name.toLowerCase().includes(searchTerm?.toLowerCase())
-         ),
-      [clients, searchTerm]
-   )
+   const filteredClients = useMemo(() => {
+      const term = searchTerm.toLowerCase()
+      let list = clients.filter((client) => client.name.toLowerCase().includes(term))
+
+      if (isEditMode && selectedReservation) {
+         const ownerID = selectedReservation.owner.id
+         const selectedClient = clients.find((c) => c.id === ownerID)
+
+         if (selectedClient) {
+            list = [selectedClient, ...list.filter((c) => c.id !== ownerID)]
+         }
+      }
+
+      return list
+   }, [clients, searchTerm, isEditMode, selectedReservation])
 
    useEffect(() => {
       if (isEditMode && selectedReservation) {
