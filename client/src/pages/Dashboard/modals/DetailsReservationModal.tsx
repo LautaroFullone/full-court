@@ -180,7 +180,7 @@ const DetailsReservationModal: React.FC = () => {
                         className="gap-1 bg-amber-500 hover:bg-amber-500/90 dark:bg-amber-500/60"
                         onClick={() =>
                            openModal('edit-reservation', {
-                              reservation: selectedReservation, //innecesary re-render
+                              reservation: selectedReservation,
                            })
                         }
                      >
@@ -192,7 +192,11 @@ const DetailsReservationModal: React.FC = () => {
                         variant="destructive"
                         size="lg"
                         className="gap-1"
-                        onClick={() => openModal('confirm-reservation')}
+                        onClick={() =>
+                           openModal('confirm-reservation', {
+                              reservation: selectedReservation,
+                           })
+                        }
                      >
                         <Trash2 className="h-4 w-4" />
                         Cancelar

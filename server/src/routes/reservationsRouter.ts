@@ -26,9 +26,9 @@ reservationsRouter.get('/', async (req: Request, res: Response<ResponseEntity>) 
 
       await sleep(2000)
 
-      res.status(200).send({ message: 'Reservas obtenidas', reservations })
+      return res.status(200).send({ message: 'Reservas obtenidas', reservations })
    } catch (error) {
-      res.status(500).send({ message: 'Error obteniendo las reservas', error })
+      return res.status(500).send({ message: 'Error obteniendo las reservas', error })
    }
 })
 
@@ -169,6 +169,29 @@ reservationsRouter.put('/:id', async (req: Request, res: Response<ResponseEntity
       })
    } catch (error) {
       console.error('Error al actualizar reserva:', error)
+      return res.status(500).send({ message: 'Error interno del servidor' })
+   }
+})
+
+reservationsRouter.delete('/:id', async (req: Request, res: Response<ResponseEntity>) => {
+   try {
+      const { id } = req.params
+
+      const existingReservation = await prisma.reservation.findUnique({
+         where: { id },
+      })
+
+      if (!existingReservation) {
+         return res.status(404).send({ message: 'Reserva no encontrada' })
+      }
+
+      const reservation = await prisma.reservation.delete({
+         where: { id },
+      })
+
+      return res.send({ message: 'Reserva eliminada correctamente', reservation })
+   } catch (error) {
+      console.error('Error al eliminar reserva:', error)
       return res.status(500).send({ message: 'Error interno del servidor' })
    }
 })

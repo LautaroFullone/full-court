@@ -124,9 +124,9 @@ const Products = () => {
                         : 'Comienza agregando tu primer producto para gestionar su stock y ventas.'}
                   </p>
 
-                  <Button onClick={() => openModal('create-client')}>
+                  <Button onClick={() => openModal('create-product')}>
                      <Plus className="mr-2 h-4 w-4" />
-                     Nuevo Cliente
+                     Nuevo Producto
                   </Button>
                </div>
             </div>

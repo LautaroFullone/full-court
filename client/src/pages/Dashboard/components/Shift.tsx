@@ -80,9 +80,11 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
 
                   <DropdownMenuItem
                      onSelect={() => {
-                        Promise.resolve().then(() => openModal('confirm-reservation'))
+                        Promise.resolve().then(() =>
+                           openModal('confirm-reservation', { reservation })
+                        )
                      }}
-                     className="text-destructive cursor-pointer"
+                     className="text-destructive hover:text-destructive cursor-pointer"
                   >
                      Cancelar reserva
                   </DropdownMenuItem>

@@ -1,5 +1,6 @@
-import { useModalStore } from '@stores'
-import { useMobile } from '@hooks'
+import { useDeleteReservation, useMobile } from '@hooks'
+import { useAppStore, useModalStore } from '@stores'
+import { SaveButton } from '@shared'
 import {
    Button,
    Dialog,
@@ -11,13 +12,22 @@ import {
 } from '@shadcn'
 
 const ConfirmReservationModal = () => {
-   const isMobile = useMobile()
-
+   const selectedReservation = useAppStore((state) => state.selectedReservation)
+   const dispatchSelectedReservation = useAppStore(
+      (state) => state.appActions.dispatchSelectedReservation
+   )
    const modalFlags = useModalStore((state) => state.modalFlags)
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
-   function handleDeleteReservation() {
-      console.log('Deleting reservation...')
+   const isMobile = useMobile()
+   const { deleteReservationMutate, isLoading } = useDeleteReservation()
+
+   async function handleDeleteReservation() {
+      if (selectedReservation) {
+         await deleteReservationMutate(selectedReservation.id)
+         closeModal('confirm-reservation')
+         dispatchSelectedReservation(null)
+      }
    }
 
    return (
@@ -51,13 +61,13 @@ const ConfirmReservationModal = () => {
                   No, mantener reserva
                </Button>
 
-               <Button
+               <SaveButton
+                  isLoading={isLoading}
+                  model="reservation"
+                  action="cancel"
+                  onClick={() => handleDeleteReservation()}
                   variant="destructive"
-                  size="lg"
-                  onClick={() => handleDeleteReservation}
-               >
-                  Sí, cancelar reserva
-               </Button>
+               />
             </DialogFooter>
          </DialogContent>
       </Dialog>

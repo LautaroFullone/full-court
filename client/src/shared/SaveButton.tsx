@@ -12,13 +12,14 @@ const actionLabels = {
    create: 'Guardando...',
    update: 'Actualizando...',
    delete: 'Eliminando...',
+   cancel: 'Cancelando...',
 }
 
 interface SaveButtonProps {
    disabled?: boolean
    isLoading: boolean
    variant?: 'default' | 'destructive' | 'outline'
-   action: 'create' | 'delete' | 'update'
+   action: keyof typeof actionLabels
    model: keyof typeof modelLabels
    onClick: () => void
    className?: string
@@ -41,6 +42,8 @@ const SaveButton: React.FC<SaveButtonProps> = ({
          ? 'Guardar'
          : action === 'update'
          ? 'Actualizar'
+         : action === 'cancel'
+         ? 'Si, cancelar'
          : 'Si, eliminar'
    } ${modelLabels[model]}`
 

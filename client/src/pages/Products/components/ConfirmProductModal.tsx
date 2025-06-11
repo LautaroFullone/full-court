@@ -24,7 +24,7 @@ const ConfirmProductModal = () => {
 
    async function handleDeleteProduct() {
       if (selectedProduct) {
-         await deleteProductMutate(selectedProduct?.id)
+         await deleteProductMutate(selectedProduct.id)
          closeModal('confirm-delete-product')
          dispatchSelectedProduct(null)
       }

@@ -7,7 +7,7 @@ type ModalPayload = {
    'create-reservation': { court: Court; shift: ShiftType }
    'edit-reservation': { reservation: Reservation }
    'details-reservation': { reservation: Reservation }
-   'confirm-reservation': void
+   'confirm-reservation': { reservation: Reservation }
    'create-product': void
    'edit-product': { product: Product }
    'confirm-delete-product': { product: Product }
@@ -48,6 +48,7 @@ const INITIAL_STATE: Omit<ModalStoreProps, 'modalActions'> = {
 export const useModalStore = create<ModalStoreProps>()(
    devtools(
       (set) => {
+         const selectedReservation = useAppStore.getState().selectedReservation
          const appActions = useAppStore.getState().appActions
 
          return {
@@ -95,6 +96,15 @@ export const useModalStore = create<ModalStoreProps>()(
                         const { client } = payload as ModalPayload['edit-client']
 
                         appActions.dispatchSelectedClient(client)
+                        break
+                     }
+                     case 'confirm-reservation': {
+                        const { reservation } =
+                           payload as ModalPayload['confirm-reservation']
+
+                        if (selectedReservation?.id != reservation.id) {
+                           appActions.dispatchSelectedReservation(reservation)
+                        }
                         break
                      }
                   }

@@ -133,15 +133,10 @@ const FormReservationModal: React.FC = () => {
    }
 
    return (
-      //TODO arreglar el tema de cerrar modal, parece que eso es lo que hace que no se pueda interactuar despues de actualizar
-      // y cerrar el modal con el manejo del flag
       <Dialog
-         // key={isEditMode ? 'edit-modal-reservation' : 'create-dialog-reservation'}
          open={modalFlags['create-reservation'] || modalFlags['edit-reservation']}
          onOpenChange={() => {
-            if (isEditMode) closeModal('edit-reservation')
-            else closeModal('create-reservation')
-
+            closeModal(isEditMode ? 'edit-reservation' : 'create-reservation')
             dispatchSelectedReservation(null)
          }}
       >
@@ -201,11 +196,11 @@ const FormReservationModal: React.FC = () => {
                            />
                            <Label
                               htmlFor={type}
-                              className="flex flex-col items-center justify-between 
-                                 rounded-md border-2 border-muted bg-popover p-4 
-                                 hover:bg-accent hover:text-accent-foreground 
-                                 peer-data-[state=checked]:border-primary 
-                                 cursor-pointer capitalize"
+                              className="flex flex-col items-center justify-between
+                        rounded-md border-2 border-muted bg-popover p-4
+                        hover:bg-accent hover:text-accent-foreground
+                        peer-data-[state=checked]:border-primary
+                        cursor-pointer capitalize"
                            >
                               {type}
                            </Label>
@@ -302,12 +297,11 @@ const FormReservationModal: React.FC = () => {
                            {clients.map((client) => (
                               <div
                                  key={client.id}
-                                 className={`flex flex-col sm:flex-row sm:items-center 
-                                            justify-between p-2 hover:bg-primary/5 rounded-md 
-                                            cursor-pointer ${
-                                               watch('client.id') === client.id &&
-                                               'bg-primary/5'
-                                            }`}
+                                 className={`flex flex-col sm:flex-row sm:items-center
+                                   justify-between p-2 hover:bg-primary/5 rounded-md
+                                   cursor-pointer ${
+                                      watch('client.id') === client.id && 'bg-primary/5'
+                                   }`}
                               >
                                  <div className="mb-2 sm:mb-0">
                                     <div className="font-medium">{client.name}</div>
@@ -348,9 +342,9 @@ const FormReservationModal: React.FC = () => {
                </Tabs>
 
                {/* <div className="space-y-2 mt-6">
-                  <Label htmlFor="notes">Notas adicionales (opcional)</Label>
-                  <Input id="notes" placeholder="Ej: Solicita préstamo de paletas" />
-               </div> */}
+         <Label htmlFor="notes">Notas adicionales (opcional)</Label>
+         <Input id="notes" placeholder="Ej: Solicita préstamo de paletas" />
+      </div> */}
             </ScrollArea>
 
             <DialogFooter className={`${isMobile ? 'flex-col space-y-2' : ''}`}>
