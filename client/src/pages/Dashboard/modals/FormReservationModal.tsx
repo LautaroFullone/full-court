@@ -26,6 +26,7 @@ import {
    useCreateReservation,
    useFetchClients,
    useMobile,
+   useSearchFilter,
    useUpdateReservation,
 } from '@hooks'
 
@@ -56,7 +57,11 @@ const FormReservationModal: React.FC = () => {
    const { createReservationMutate, isLoading: isCreateLoading } = useCreateReservation()
    const { updateReservationMutate, isLoading: isUpdateLoading } = useUpdateReservation()
 
-   const [searchTerm, setSearchTerm] = useState<string>('')
+   const {
+      searchTerm,
+      setSearchTerm,
+      filteredValues: filteredClients,
+   } = useSearchFilter(clients, ['name', 'dni', 'phone'])
 
    const {
       watch,
@@ -75,21 +80,21 @@ const FormReservationModal: React.FC = () => {
 
    const isLoading = isCreateLoading || isUpdateLoading
 
-   const filteredClients = useMemo(() => {
-      const term = searchTerm.toLowerCase()
-      let list = clients.filter((client) => client.name.toLowerCase().includes(term))
-
+   const filteredClientsWithOwner = useMemo(() => {
       if (isEditMode && selectedReservation) {
-         const ownerID = selectedReservation.owner.id
-         const selectedClient = clients.find((c) => c.id === ownerID)
+         const selectedClient = clients.find((c) => c.id === selectedReservation.owner.id)
 
          if (selectedClient) {
-            list = [selectedClient, ...list.filter((c) => c.id !== ownerID)]
+            return [
+               selectedClient,
+               ...filteredClients.filter((c) => c.id !== selectedClient.id),
+            ]
          }
       }
 
-      return list
-   }, [clients, searchTerm, isEditMode, selectedReservation])
+      return filteredClients
+      // eslint-disable-next-line
+   }, [filteredClients, isEditMode, selectedReservation])
 
    useEffect(() => {
       if (isEditMode && selectedReservation) {
@@ -293,7 +298,7 @@ const FormReservationModal: React.FC = () => {
                <div className="border rounded-md p-4 h-[150px] overflow-y-auto">
                   <input type="hidden" {...register('client.id')} />
 
-                  {filteredClients.map((client) => (
+                  {filteredClientsWithOwner.map((client) => (
                      <div
                         key={client.id}
                         className={`flex flex-col sm:flex-row sm:items-center

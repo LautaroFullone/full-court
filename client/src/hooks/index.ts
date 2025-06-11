@@ -4,6 +4,7 @@ import useMobile from './useMobile'
 import useMock from './useMock'
 import useStyles from './useStyles'
 import useBasicForm from './useBasicForm'
+import useSearchFilter from './useSearchFilter'
 
 import useFetchClients from './clients/useFetchClients'
 import useCreateClient from './clients/useCreateClient'
@@ -25,6 +26,7 @@ export {
    useMock,
    useStyles,
    useBasicForm,
+   useSearchFilter,
    useFetchClients,
    useCreateClient,
    useDeleteClient,
