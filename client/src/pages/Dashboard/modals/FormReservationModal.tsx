@@ -2,7 +2,7 @@ import { RESERVATION_TYPES_VALUES, ReservationFormData } from '@models'
 import { formatDateToString, reservationResolver } from '@lib'
 import { useAppStore, useModalStore } from '@stores'
 import { InputForm, SaveButton } from '@shared'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { COURTS } from '@config'
 import {
@@ -17,7 +17,6 @@ import {
    Label,
    RadioGroup,
    RadioGroupItem,
-   ScrollArea,
    Tabs,
    TabsContent,
    TabsList,
@@ -53,9 +52,11 @@ const FormReservationModal: React.FC = () => {
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
    const isMobile = useMobile()
-   const { clients } = useFetchClients()
+   const { clients, isPending } = useFetchClients()
    const { createReservationMutate, isLoading: isCreateLoading } = useCreateReservation()
    const { updateReservationMutate, isLoading: isUpdateLoading } = useUpdateReservation()
+
+   const [searchTerm, setSearchTerm] = useState<string>('')
 
    const {
       watch,
@@ -73,6 +74,14 @@ const FormReservationModal: React.FC = () => {
    const isEditMode = currentModal?.name === 'edit-reservation'
 
    const isLoading = isCreateLoading || isUpdateLoading
+
+   const filteredClients = useMemo(
+      () =>
+         clients.filter((client) =>
+            client.name.toLowerCase().includes(searchTerm?.toLowerCase())
+         ),
+      [clients, searchTerm]
+   )
 
    useEffect(() => {
       if (isEditMode && selectedReservation) {
@@ -131,204 +140,192 @@ const FormReservationModal: React.FC = () => {
    }
 
    return (
-      <DialogContent className="sm:max-w-2xl w-[95%] max-w-[95%]">
+      <DialogContent className=" sm:max-w-2xl w-[95%] max-w-[95%]">
          <DialogHeader>
             <DialogTitle>Nueva Reserva</DialogTitle>
             <DialogDescription className="capitalize">{formatedDate}</DialogDescription>
          </DialogHeader>
 
-         <ScrollArea className="pr-4 -mr-4 space-y-4 py-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
-               <div className="space-y-2">
-                  <InputForm
-                     readOnly
-                     label="Cancha"
-                     name="courtName"
-                     value={
-                        isEditMode
-                           ? getCourtName(selectedReservation?.courtId)
-                           : selectedCourt?.name
-                     }
-                     className="bg-muted/50"
-                  />
-               </div>
+         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
+            <InputForm
+               readOnly
+               label="Cancha"
+               name="courtName"
+               value={
+                  isEditMode
+                     ? getCourtName(selectedReservation?.courtId)
+                     : selectedCourt?.name
+               }
+               className="bg-muted/50"
+            />
 
-               <div className="space-y-2">
-                  <InputForm
-                     readOnly
-                     label="Horario"
-                     name="shift"
-                     value={
-                        isEditMode ? selectedReservation?.shift : String(selectedShift)
-                     }
-                     className="bg-muted/50"
-                  />
-               </div>
-            </div>
+            <InputForm
+               readOnly
+               label="Horario"
+               name="shift"
+               value={isEditMode ? selectedReservation?.shift : String(selectedShift)}
+               className="bg-muted/50"
+            />
+         </div>
 
-            <div className="space-y-2 mt-6">
-               <Label>Tipo de Reserva</Label>
-               <RadioGroup
-                  defaultValue="partido"
-                  value={watch('type')}
-                  onValueChange={(value) =>
-                     setValue('type', value as ReservationFormData['type'])
-                  }
-                  className="grid grid-cols-2 sm:grid-cols-4 gap-4"
-               >
-                  {RESERVATION_TYPES_VALUES.map((type) => (
-                     <div key={`reservation-type-${type}`}>
-                        <RadioGroupItem value={type} id={type} className="peer sr-only" />
-                        <Label
-                           htmlFor={type}
-                           className="flex flex-col items-center justify-between
-                        rounded-md border-2 border-muted bg-popover p-4
-                        hover:bg-accent hover:text-accent-foreground
-                        peer-data-[state=checked]:border-primary
-                        cursor-pointer capitalize"
-                        >
-                           {type}
-                        </Label>
-                     </div>
-                  ))}
-               </RadioGroup>
-            </div>
-
-            <Tabs
-               className="mt-6"
-               value={watch('clientType')}
-               onValueChange={(value) => {
-                  const newClientType = value as ReservationFormData['clientType']
-
-                  if (isEditMode) {
-                     resetForm({
-                        type: selectedReservation?.type ?? 'clase',
-                        clientType: newClientType,
-                        client: {
-                           id:
-                              newClientType === 'existing-client'
-                                 ? selectedReservation?.owner.id ?? ''
-                                 : '',
-                           name: '',
-                           dni: '',
-                           phone: '',
-                        },
-                     })
-                  } else {
-                     setValue('clientType', newClientType, {
-                        shouldValidate: true,
-                     })
-                  }
-               }}
+         <div className="space-y-2 mt-2">
+            <Label>Tipo de Reserva</Label>
+            <RadioGroup
+               defaultValue="partido"
+               value={watch('type')}
+               onValueChange={(value) =>
+                  setValue('type', value as ReservationFormData['type'])
+               }
+               className="grid grid-cols-2 sm:grid-cols-4 gap-4"
             >
-               <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="new-client" className="cursor-pointer">
-                     Cliente Nuevo
-                  </TabsTrigger>
-
-                  <TabsTrigger value="existing-client" className="cursor-pointer">
-                     Cliente Existente
-                  </TabsTrigger>
-               </TabsList>
-
-               <TabsContent value="new-client" className="space-y-4 mt-4">
-                  <div className="space-y-2">
-                     <InputForm
-                        label="Nombre Completo"
-                        name="client.name"
-                        type="text"
-                        placeholder="Ej: Valentina Roldán"
-                        disabled={isLoading}
-                        register={register('client.name')}
-                        errors={errors}
-                     />
+               {RESERVATION_TYPES_VALUES.map((type) => (
+                  <div key={`reservation-type-${type}`}>
+                     <RadioGroupItem value={type} id={type} className="peer sr-only" />
+                     <Label
+                        htmlFor={type}
+                        className="flex flex-col items-center justify-between
+                                    rounded-md border-2 border-muted bg-popover p-4
+                                    hover:bg-accent hover:text-accent-foreground
+                                    peer-data-[state=checked]:border-primary
+                                    cursor-pointer capitalize"
+                     >
+                        {type}
+                     </Label>
                   </div>
+               ))}
+            </RadioGroup>
+         </div>
 
-                  <div className="space-y-2">
-                     <InputForm
-                        label="DNI / Documento"
-                        name="client.dni"
-                        type="number"
-                        placeholder="Ej: 4433229"
-                        disabled={isLoading}
-                        register={register('client.dni')}
-                        errors={errors}
-                     />
-                  </div>
+         <Tabs
+            className="mt-2"
+            value={watch('clientType')}
+            onValueChange={(value) => {
+               const newClientType = value as ReservationFormData['clientType']
 
-                  <div className="space-y-2">
-                     <InputForm
-                        label="Celular"
-                        name="client.phone"
-                        type="number"
-                        placeholder="Ej: 2236839493"
-                        disabled={isLoading}
-                        register={register('client.phone')}
-                        errors={errors}
-                     />
-                  </div>
-               </TabsContent>
+               if (isEditMode) {
+                  resetForm({
+                     type: selectedReservation?.type ?? 'clase',
+                     clientType: newClientType,
+                     client: {
+                        id:
+                           newClientType === 'existing-client'
+                              ? selectedReservation?.owner.id ?? ''
+                              : '',
+                        name: '',
+                        dni: '',
+                        phone: '',
+                     },
+                  })
+               } else {
+                  setValue('clientType', newClientType, {
+                     shouldValidate: true,
+                  })
+               }
+            }}
+         >
+            <TabsList className="grid w-full grid-cols-2">
+               <TabsTrigger value="new-client" className="cursor-pointer">
+                  Cliente Nuevo
+               </TabsTrigger>
 
-               <TabsContent value="existing-client" className="space-y-4 mt-4">
-                  <div className="space-y-2">
-                     <Label htmlFor="search-client">Buscar Cliente</Label>
-                     <Input id="search-client" placeholder="Nombre, celular o email" />
-                  </div>
+               <TabsTrigger value="existing-client" className="cursor-pointer">
+                  Cliente Existente
+               </TabsTrigger>
+            </TabsList>
 
-                  <div className="border rounded-md p-4 max-h-[200px] overflow-y-auto">
-                     <div className="space-y-2">
-                        <input type="hidden" {...register('client.id')} />
+            <TabsContent value="new-client" className="space-y-4 mt-4">
+               <InputForm
+                  label="Nombre Completo"
+                  name="client.name"
+                  type="text"
+                  placeholder="Ej: Valentina Roldán"
+                  disabled={isLoading}
+                  register={register('client.name')}
+                  errors={errors}
+               />
 
-                        {clients.map((client) => (
-                           <div
-                              key={client.id}
-                              className={`flex flex-col sm:flex-row sm:items-center
+               <div className="space-y-2">
+                  <InputForm
+                     label="DNI / Documento"
+                     name="client.dni"
+                     type="number"
+                     placeholder="Ej: 4433229"
+                     disabled={isLoading}
+                     register={register('client.dni')}
+                     errors={errors}
+                  />
+               </div>
+
+               <div className="space-y-2">
+                  <InputForm
+                     label="Celular"
+                     name="client.phone"
+                     type="number"
+                     placeholder="Ej: 2236839493"
+                     disabled={isLoading}
+                     register={register('client.phone')}
+                     errors={errors}
+                  />
+               </div>
+            </TabsContent>
+
+            <TabsContent value="existing-client" className="space-y-4 mt-4">
+               <div className="space-y-2 mb-1">
+                  <Label htmlFor="search-client">Buscar Cliente</Label>
+                  <Input
+                     id="search-client"
+                     placeholder="Nombre, dni o celular"
+                     value={searchTerm}
+                     disabled={isPending}
+                     className="m-0"
+                     onChange={(evt) => setSearchTerm(evt.target.value)}
+                  />
+               </div>
+
+               <div className="border rounded-md p-4 h-[150px] overflow-y-auto">
+                  <input type="hidden" {...register('client.id')} />
+
+                  {filteredClients.map((client) => (
+                     <div
+                        key={client.id}
+                        className={`flex flex-col sm:flex-row sm:items-center
                                    justify-between p-2 hover:bg-primary/5 rounded-md
                                    cursor-pointer ${
                                       watch('client.id') === client.id && 'bg-primary/5'
                                    }`}
-                           >
-                              <div className="mb-2 sm:mb-0">
-                                 <div className="font-medium">{client.name}</div>
-                                 <div className="text-sm text-muted-foreground">
-                                    {client.phone}
-                                 </div>
-                              </div>
-
-                              <Button
-                                 size="default"
-                                 className="w-full sm:w-auto"
-                                 variant={
-                                    watch('client.id') === client.id
-                                       ? 'default'
-                                       : 'outline'
-                                 }
-                                 onClick={() =>
-                                    setValue(
-                                       'client.id',
-                                       watch('client.id') === client.id ? '' : client.id,
-                                       {
-                                          shouldValidate: true,
-                                       }
-                                    )
-                                 }
-                              >
-                                 {watch('client.id') === client.id
-                                    ? 'Seleccionado'
-                                    : 'Seleccionar'}
-                              </Button>
+                     >
+                        <div className="mb-2 sm:mb-0">
+                           <div className="font-medium">{client.name}</div>
+                           <div className="text-sm text-muted-foreground">
+                              {client.phone}
                            </div>
-                        ))}
-                     </div>
-                  </div>
-               </TabsContent>
-            </Tabs>
+                        </div>
 
-            {/* <div className="space-y-2 mt-6">
-               <Label htmlFor="notes">Notas adicionales (opcional)</Label>
-               <Input id="notes" placeholder="Ej: Solicita préstamo de paletas" />
-            </div> */}
-         </ScrollArea>
+                        <Button
+                           size="default"
+                           className="w-full sm:w-auto"
+                           variant={
+                              watch('client.id') === client.id ? 'default' : 'outline'
+                           }
+                           onClick={() =>
+                              setValue(
+                                 'client.id',
+                                 watch('client.id') === client.id ? '' : client.id,
+                                 {
+                                    shouldValidate: true,
+                                 }
+                              )
+                           }
+                        >
+                           {watch('client.id') === client.id
+                              ? 'Seleccionado'
+                              : 'Seleccionar'}
+                        </Button>
+                     </div>
+                  ))}
+               </div>
+            </TabsContent>
+         </Tabs>
 
          <DialogFooter className={`${isMobile ? 'flex-col space-y-2' : ''}`}>
             <DialogClose asChild>

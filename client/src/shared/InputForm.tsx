@@ -26,7 +26,7 @@ const InputForm: React.FC<InputFormProps> = ({
    const hasError = !!fieldError
 
    return (
-      <>
+      <div className="space-y-2">
          <Label htmlFor={name}>{label}</Label>
          <div className="relative">
             {isCurrency && (
@@ -53,7 +53,7 @@ const InputForm: React.FC<InputFormProps> = ({
                {fieldError.message}
             </p>
          )}
-      </>
+      </div>
    )
 }
 
