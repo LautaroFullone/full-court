@@ -3,7 +3,6 @@ import { useAppStore, useModalStore } from '@stores'
 import { SaveButton } from '@shared'
 import {
    Button,
-   Dialog,
    DialogContent,
    DialogDescription,
    DialogFooter,
@@ -16,7 +15,6 @@ const ConfirmReservationModal = () => {
    const dispatchSelectedReservation = useAppStore(
       (state) => state.appActions.dispatchSelectedReservation
    )
-   const modalFlags = useModalStore((state) => state.modalFlags)
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
    const isMobile = useMobile()
@@ -31,46 +29,39 @@ const ConfirmReservationModal = () => {
    }
 
    return (
-      <Dialog
-         open={modalFlags['confirm-reservation']}
-         onOpenChange={() => closeModal('confirm-reservation')}
-      >
-         <DialogContent className="w-[95%] max-w-[95%] sm:w-auto sm:max-w-md">
-            <DialogHeader>
-               <DialogTitle>
-                  ¿Estás seguro de que quieres cancelar esta reserva?
-               </DialogTitle>
+      <DialogContent className="sm:max-w-md w-[95%] max-w-[95%] ">
+         <DialogHeader>
+            <DialogTitle>¿Estás seguro de que quieres cancelar esta reserva?</DialogTitle>
 
-               <DialogDescription>
-                  Esta acción no se puede deshacer. Esto eliminará permanentemente la
-                  reserva y todos los datos asociados.
-               </DialogDescription>
-            </DialogHeader>
+            <DialogDescription>
+               Esta acción no se puede deshacer. Esto eliminará permanentemente la reserva
+               y todos los datos asociados.
+            </DialogDescription>
+         </DialogHeader>
 
-            <DialogFooter
-               className={`w-full ${
-                  isMobile ? 'flex flex-col space-y-2' : 'grid grid-cols-2 gap-2'
-               }`}
+         <DialogFooter
+            className={`w-full ${
+               isMobile ? 'flex flex-col space-y-2' : 'grid grid-cols-2 gap-2'
+            }`}
+         >
+            <Button
+               variant="outline"
+               size="lg"
+               onClick={() => closeModal('confirm-reservation')}
+               className="m-0"
             >
-               <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => closeModal('confirm-reservation')}
-                  className="m-0"
-               >
-                  No, mantener reserva
-               </Button>
+               No, mantener reserva
+            </Button>
 
-               <SaveButton
-                  isLoading={isLoading}
-                  model="reservation"
-                  action="cancel"
-                  onClick={() => handleDeleteReservation()}
-                  variant="destructive"
-               />
-            </DialogFooter>
-         </DialogContent>
-      </Dialog>
+            <SaveButton
+               isLoading={isLoading}
+               model="reservation"
+               action="cancel"
+               onClick={() => handleDeleteReservation()}
+               variant="destructive"
+            />
+         </DialogFooter>
+      </DialogContent>
    )
 }
 export default ConfirmReservationModal

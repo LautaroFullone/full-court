@@ -18,49 +18,42 @@ type ModalPayload = {
 
 type ModalType = keyof ModalPayload
 
+type ModalEntry<T extends ModalType = ModalType> = {
+   name: T
+   payload?: ModalPayload[T]
+}
+
 interface ModalStoreProps {
-   modalFlags: Record<ModalType, boolean>
+   currentModal: ModalEntry | null
+   previousModal: ModalEntry | null
 
    modalActions: {
       openModal: <T extends ModalType>(
          name: T,
-         ...payload: ModalPayload[T] extends void ? [] : [payload: ModalPayload[T]]
+         ...payload: ModalPayload[T] extends void ? [] : [ModalPayload[T]]
       ) => void
-      closeModal: (modal: ModalType) => void
+      closeModal: (name: ModalType) => void
    }
 }
 
-const INITIAL_STATE: Omit<ModalStoreProps, 'modalActions'> = {
-   modalFlags: {
-      'create-reservation': false,
-      'edit-reservation': false,
-      'details-reservation': false,
-      'confirm-reservation': false,
-      'create-product': false,
-      'edit-product': false,
-      'confirm-delete-product': false,
-      'create-client': false,
-      'edit-client': false,
-      'confirm-delete-client': false,
-   },
-}
-
-export const useModalStore = create<ModalStoreProps>()(
+const useModalStore = create<ModalStoreProps>()(
    devtools(
-      (set) => {
-         const selectedReservation = useAppStore.getState().selectedReservation
+      (set, get) => {
          const appActions = useAppStore.getState().appActions
+         const selectedReservation = useAppStore.getState().selectedReservation
 
          return {
-            modalFlags: { ...INITIAL_STATE.modalFlags },
+            currentModal: null,
+            previousModal: null,
 
             modalActions: {
                openModal: (name, payload) => {
+                  const { currentModal } = get()
+
                   switch (name) {
                      case 'create-reservation': {
                         const { court, shift } =
                            payload as ModalPayload['create-reservation']
-
                         appActions.dispatchSelectedCourt(court)
                         appActions.dispatchSelectedShift(shift)
                         break
@@ -68,55 +61,65 @@ export const useModalStore = create<ModalStoreProps>()(
                      case 'details-reservation': {
                         const { reservation } =
                            payload as ModalPayload['details-reservation']
-
                         appActions.dispatchSelectedReservation(reservation)
                         break
                      }
                      case 'edit-reservation': {
                         const { reservation } =
                            payload as ModalPayload['edit-reservation']
-
                         appActions.dispatchSelectedReservation(reservation)
-                        break
-                     }
-                     case 'edit-product': {
-                        const { product } = payload as ModalPayload['edit-product']
-
-                        appActions.dispatchSelectedProduct(product)
-                        break
-                     }
-                     case 'confirm-delete-product': {
-                        const { product } =
-                           payload as ModalPayload['confirm-delete-product']
-
-                        appActions.dispatchSelectedProduct(product)
-                        break
-                     }
-                     case 'edit-client': {
-                        const { client } = payload as ModalPayload['edit-client']
-
-                        appActions.dispatchSelectedClient(client)
                         break
                      }
                      case 'confirm-reservation': {
                         const { reservation } =
                            payload as ModalPayload['confirm-reservation']
 
-                        if (selectedReservation?.id != reservation.id) {
+                        if (selectedReservation?.id !== reservation.id) {
                            appActions.dispatchSelectedReservation(reservation)
                         }
                         break
                      }
+                     case 'edit-product': {
+                        const { product } = payload as ModalPayload['edit-product']
+                        appActions.dispatchSelectedProduct(product)
+                        break
+                     }
+                     case 'confirm-delete-product': {
+                        const { product } =
+                           payload as ModalPayload['confirm-delete-product']
+                        appActions.dispatchSelectedProduct(product)
+                        break
+                     }
+                     case 'edit-client': {
+                        const { client } = payload as ModalPayload['edit-client']
+                        appActions.dispatchSelectedClient(client)
+                        break
+                     }
                   }
 
-                  set((state) => ({
-                     modalFlags: { ...state.modalFlags, [name]: true },
-                  }))
+                  if (currentModal && currentModal.name !== name) {
+                     set({
+                        previousModal: currentModal,
+                        currentModal: { name, payload },
+                     })
+                  } else {
+                     set({ currentModal: { name, payload } })
+                  }
                },
-               closeModal: (modal) => {
-                  set((state) => ({
-                     modalFlags: { ...state.modalFlags, [modal]: false },
-                  }))
+
+               closeModal: (name) => {
+                  const { currentModal, previousModal } = get()
+
+                  if (currentModal?.name !== name) return
+
+                  if (previousModal) {
+                     set({
+                        currentModal: previousModal,
+                        previousModal: null,
+                     })
+                  } else {
+                     set({ currentModal: null })
+                  }
                },
             },
          }

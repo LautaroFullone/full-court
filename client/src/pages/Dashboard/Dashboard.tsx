@@ -4,11 +4,6 @@ import { Loader2 } from 'lucide-react'
 import { useAppStore } from '@stores'
 import { AppLayout } from '@shared'
 import { Tabs } from '@shadcn'
-import {
-   ConfirmReservationModal,
-   DetailsReservationModal,
-   FormReservationModal,
-} from './modals'
 
 const Dashboard = () => {
    // const { generateMockReservations } = useMock()
@@ -62,9 +57,9 @@ const Dashboard = () => {
             </Tabs>
          </div>
 
-         <FormReservationModal />
+         {/* <FormReservationModal />
          <DetailsReservationModal />
-         <ConfirmReservationModal />
+         <ConfirmReservationModal /> */}
       </AppLayout>
    )
 }
