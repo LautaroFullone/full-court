@@ -1,11 +1,10 @@
-import { useBasicForm, useCreateProduct, useMobile, useUpdateProduct } from '@hooks'
+import { useCreateProduct, useMobile, useUpdateProduct } from '@hooks'
 import { CATEGORY_TYPES_VALUES, ProductFormData } from '@models'
 import { SaveButton, InputForm, SelectForm } from '@shared'
 import { useAppStore, useModalStore } from '@stores'
 import { useEffect } from 'react'
 import {
    Button,
-   Dialog,
    DialogClose,
    DialogContent,
    DialogDescription,
@@ -13,6 +12,8 @@ import {
    DialogHeader,
    DialogTitle,
 } from '@shadcn'
+import { useForm } from 'react-hook-form'
+import { productResolver } from '@lib'
 
 const initialFormData: ProductFormData = {
    name: '',
@@ -21,39 +22,45 @@ const initialFormData: ProductFormData = {
    category: '',
 }
 
-const FormProductModal: React.FC = () => {
+const FormProductModal = () => {
    const selectedProduct = useAppStore((state) => state.selectedProduct)
-   const modalFlags = useModalStore((state) => state.modalFlags)
+   const currentModal = useModalStore((state) => state.currentModal)
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
-   const dispatchSelectedProduct = useAppStore(
-      (state) => state.appActions.dispatchSelectedProduct
-   )
 
    const isMobile = useMobile()
    const { createProductMutate, isLoading: isCreateLoading } = useCreateProduct()
    const { updateProductMutate, isLoading: isUpdateLoading } = useUpdateProduct()
 
-   const { formData, handleChange, setFormData, resetForm, errors, isValid } =
-      useBasicForm<ProductFormData>(initialFormData, 'product')
+   const {
+      watch,
+      setValue,
+      register,
+      trigger,
+      reset: resetForm,
+      handleSubmit: handleFormSubmit,
+      formState: { errors, isValid },
+   } = useForm<ProductFormData>({
+      mode: 'onChange',
+      resolver: productResolver,
+      defaultValues: initialFormData,
+   })
 
-   const isEditMode = modalFlags['edit-product']
+   const isEditMode = currentModal?.name === 'edit-product'
    const isLoading = isCreateLoading || isUpdateLoading
 
    useEffect(() => {
       if (isEditMode && selectedProduct) {
-         setFormData({
+         resetForm({
             name: selectedProduct.name,
             price: String(selectedProduct.price),
             stock: String(selectedProduct.stock),
             category: selectedProduct.category,
          })
-      } else {
-         resetForm()
       }
       // eslint-disable-next-line
-   }, [isEditMode])
+   }, [isEditMode, selectedProduct])
 
-   async function handleSubmit() {
+   async function onSubmit(formData: ProductFormData) {
       if (isEditMode && selectedProduct) {
          await updateProductMutate({
             productID: selectedProduct.id,
@@ -65,115 +72,102 @@ const FormProductModal: React.FC = () => {
          closeModal('create-product')
       }
 
-      resetForm()
+      resetForm(initialFormData)
    }
 
    return (
-      <Dialog
-         open={modalFlags['create-product'] || modalFlags['edit-product']}
-         onOpenChange={() => {
-            if (isEditMode) {
-               closeModal('edit-product')
-               resetForm()
-               return dispatchSelectedProduct(null)
-            }
+      <DialogContent className="sm:max-w-2xl w-[95%] max-w-[95%]">
+         <DialogHeader>
+            <DialogTitle>
+               {!selectedProduct ? 'Agregar nuevo' : 'Editar '} Producto
+            </DialogTitle>
 
-            closeModal('create-product')
-            resetForm()
-         }}
-      >
-         <DialogContent className="w-[95%] max-w-[95%] sm:w-auto sm:max-w-md">
-            <DialogHeader>
-               <DialogTitle>
-                  {!selectedProduct ? 'Agregar nuevo' : 'Editar '} Producto
-               </DialogTitle>
+            <DialogDescription>
+               Completa la información del producto para{' '}
+               {!selectedProduct ? 'agregarlo al ' : 'actualizarlo en el '}
+               inventario.
+            </DialogDescription>
+         </DialogHeader>
 
-               <DialogDescription>
-                  Completa la información del producto para{' '}
-                  {!selectedProduct ? 'agregarlo al ' : 'actualizarlo en el '}
-                  inventario.
-               </DialogDescription>
-            </DialogHeader>
+         <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+               <InputForm
+                  label="Nombre del Producto"
+                  name="name"
+                  type="text"
+                  placeholder="Ej: Café mediano"
+                  disabled={isLoading}
+                  register={register('name')}
+                  errors={errors}
+               />
+            </div>
 
-            <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
                <div className="space-y-2">
                   <InputForm
-                     label="Nombre del Producto"
-                     name="name"
-                     value={formData.name}
-                     onChange={(evt) => handleChange('name', evt.target.value)}
-                     placeholder="Ej: Café mediano"
+                     isCurrency
+                     label="Precio"
+                     name="price"
+                     type="number"
+                     placeholder="Ej: $2500"
                      disabled={isLoading}
+                     register={register('price')}
                      errors={errors}
                   />
                </div>
 
-               <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                     <InputForm
-                        isCurrency
-                        label="Precio"
-                        name="price"
-                        type="number"
-                        value={formData.price}
-                        onChange={(evt) => handleChange('price', evt.target.value)}
-                        placeholder="Ej: $2500"
-                        disabled={isLoading}
-                        errors={errors}
-                     />
-                  </div>
-
-                  <div className="space-y-2">
-                     <InputForm
-                        label="Stock"
-                        name="stock"
-                        type="number"
-                        value={formData.stock}
-                        onChange={(evt) => handleChange('stock', evt.target.value)}
-                        placeholder="Ej: 25"
-                        disabled={isLoading}
-                        errors={errors}
-                     />
-                  </div>
-               </div>
-
                <div className="space-y-2">
-                  <SelectForm
-                     name="category"
-                     label="Categoría"
-                     value={formData.category}
-                     onChange={(value) => handleChange('category', value)}
+                  <InputForm
+                     label="Stock"
+                     name="stock"
+                     type="number"
+                     placeholder="Ej: 25"
+                     disabled={isLoading}
+                     register={register('stock')}
                      errors={errors}
-                     options={CATEGORY_TYPES_VALUES.map((cat) => ({
-                        label: String(cat).charAt(0).toUpperCase() + String(cat).slice(1),
-                        value: cat,
-                     }))}
                   />
                </div>
             </div>
 
-            <DialogFooter className={isMobile ? 'flex-col space-y-2' : ''}>
-               <DialogClose asChild>
-                  <Button
-                     size="lg"
-                     variant="outline"
-                     disabled={isLoading}
-                     className={isMobile ? 'w-full' : ''}
-                  >
-                     Cancelar
-                  </Button>
-               </DialogClose>
-
-               <SaveButton
-                  model="product"
-                  action={isEditMode ? 'update' : 'create'}
-                  disabled={!isValid || isLoading}
-                  isLoading={isLoading}
-                  onClick={handleSubmit}
+            <div className="space-y-2">
+               <SelectForm
+                  name="category"
+                  label="Categoría"
+                  value={watch('category')}
+                  onChange={(value) => {
+                     setValue('category', value)
+                     trigger('category')
+                  }}
+                  errors={errors}
+                  options={CATEGORY_TYPES_VALUES.map((cat) => ({
+                     label: cat.charAt(0).toUpperCase() + cat.slice(1),
+                     value: cat,
+                  }))}
                />
-            </DialogFooter>
-         </DialogContent>
-      </Dialog>
+            </div>
+         </div>
+
+         <DialogFooter className={isMobile ? 'flex-col space-y-2' : ''}>
+            <DialogClose asChild>
+               <Button
+                  size="lg"
+                  variant="outline"
+                  disabled={isLoading}
+                  className={isMobile ? 'w-full' : ''}
+               >
+                  Cancelar
+               </Button>
+            </DialogClose>
+
+            <SaveButton
+               model="product"
+               isLoading={isLoading}
+               onClick={handleFormSubmit(onSubmit)}
+               disabled={!isValid || isLoading}
+               action={isEditMode ? 'update' : 'create'}
+            />
+         </DialogFooter>
+      </DialogContent>
    )
 }
 export default FormProductModal

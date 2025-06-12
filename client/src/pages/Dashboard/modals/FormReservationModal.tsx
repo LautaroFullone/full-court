@@ -123,7 +123,6 @@ const FormReservationModal = () => {
 
    async function onSubmit(formData: ReservationFormData) {
       if (isEditMode && selectedReservation) {
-         console.log('## edit res: ', formData)
          await updateReservationMutate({
             reservationID: selectedReservation.id,
             reservationData: formData,

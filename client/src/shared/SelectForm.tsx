@@ -7,6 +7,7 @@ import {
    SelectTrigger,
    SelectValue,
 } from '@shadcn'
+import { FieldErrors } from 'react-hook-form'
 
 interface SelectOption {
    label: string
@@ -20,7 +21,7 @@ interface SelectFormProps {
    onChange: (value: string) => void
    options: SelectOption[]
    placeholder?: string
-   errors?: Record<string, string>
+   errors?: FieldErrors
    className?: string
 }
 
@@ -33,8 +34,9 @@ const SelectForm: React.FC<SelectFormProps> = ({
    placeholder = 'Selecciona una opción',
    errors = {},
    className = '',
-}: SelectFormProps) => {
-   const hasError = !!errors[name]
+}) => {
+   const fieldError = name.split('.').reduce((acc, key) => acc?.[key], errors as any)
+   const hasError = !!fieldError
 
    return (
       <div>
@@ -64,7 +66,7 @@ const SelectForm: React.FC<SelectFormProps> = ({
          {hasError && (
             <p className="mt-1 text-xs text-red-500 flex items-center gap-1">
                <OctagonAlert size={13} />
-               {errors[name]}
+               {fieldError.message}
             </p>
          )}
       </div>

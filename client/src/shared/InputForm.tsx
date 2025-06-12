@@ -19,17 +19,20 @@ const InputForm: React.FC<InputFormProps> = ({
    isCurrency = false,
    placeholder,
    className = '',
+   value = '',
    ...props
 }) => {
    // eslint-disable-next-line
    const fieldError = name.split('.').reduce((acc, key) => acc?.[key], errors as any)
    const hasError = !!fieldError
 
+   const currencyAvaliable = isCurrency && value
+
    return (
       <div className="space-y-2">
          <Label htmlFor={name}>{label}</Label>
          <div className="relative">
-            {isCurrency && (
+            {currencyAvaliable && (
                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
                   $
                </span>
@@ -37,7 +40,7 @@ const InputForm: React.FC<InputFormProps> = ({
             <Input
                id={`input-${name}`}
                placeholder={placeholder}
-               className={`mb-0 ${isCurrency ? 'pl-6' : ''} ${
+               className={`mb-0 ${currencyAvaliable ? 'pl-6' : ''} ${
                   hasError
                      ? 'border-red-500 focus:border-0 focus-visible:ring-red-500'
                      : ''
