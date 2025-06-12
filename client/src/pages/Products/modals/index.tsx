@@ -1,3 +1,4 @@
 import FormProductModal from './FormProductModal'
+import ConfirmProductModal from './ConfirmProductModal'
 
-export { FormProductModal }
+export { FormProductModal, ConfirmProductModal }

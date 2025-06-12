@@ -29,7 +29,7 @@ const ConfirmReservationModal = () => {
    }
 
    return (
-      <DialogContent className="sm:max-w-md w-[95%] max-w-[95%] ">
+      <DialogContent className="sm:max-w-md w-[95%] max-w-[95%]">
          <DialogHeader>
             <DialogTitle>¿Estás seguro de que quieres cancelar esta reserva?</DialogTitle>
 

@@ -177,9 +177,6 @@ const Products = () => {
                </Pagination>
             </div>
          )}
-
-         <FormProductModal />
-         <ConfirmProductModal />
       </AppLayout>
    )
 }

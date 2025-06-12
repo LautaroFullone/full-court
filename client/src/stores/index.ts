@@ -1,4 +1,5 @@
 import useAppStore from './useAppStore'
-import useModalStore from './useModalStore'
+import useModalStore, { ModalType } from './useModalStore'
 
 export { useAppStore, useModalStore }
+export type { ModalType }

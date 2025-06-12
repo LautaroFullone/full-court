@@ -16,16 +16,16 @@ type ModalPayload = {
    'confirm-delete-client': void
 }
 
-type ModalType = keyof ModalPayload
+export type ModalType = keyof ModalPayload
 
-type ModalEntry<T extends ModalType = ModalType> = {
+type ModalData<T extends ModalType = ModalType> = {
    name: T
    payload?: ModalPayload[T]
 }
 
 interface ModalStoreProps {
-   currentModal: ModalEntry | null
-   previousModal: ModalEntry | null
+   currentModal: ModalData | null
+   previousModal: ModalData | null
 
    modalActions: {
       openModal: <T extends ModalType>(
@@ -111,6 +111,22 @@ const useModalStore = create<ModalStoreProps>()(
                   const { currentModal, previousModal } = get()
 
                   if (currentModal?.name !== name) return
+
+                  switch (name) {
+                     case 'details-reservation':
+                        appActions.dispatchSelectedReservation(null)
+                        break
+                     case 'edit-reservation':
+                        appActions.dispatchSelectedReservation(null)
+                        break
+                     case 'edit-product':
+                     case 'confirm-delete-product':
+                        appActions.dispatchSelectedProduct(null)
+                        break
+                     case 'edit-client':
+                        appActions.dispatchSelectedClient(null)
+                        break
+                  }
 
                   if (previousModal) {
                      set({

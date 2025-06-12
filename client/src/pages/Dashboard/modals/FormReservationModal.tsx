@@ -2,7 +2,7 @@ import { RESERVATION_TYPES_VALUES, ReservationFormData } from '@models'
 import { formatDateToString, reservationResolver } from '@lib'
 import { useAppStore, useModalStore } from '@stores'
 import { InputForm, SaveButton } from '@shared'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { COURTS } from '@config'
 import {
@@ -41,7 +41,7 @@ const initialFormData: ReservationFormData = {
    },
 }
 
-const FormReservationModal: React.FC = () => {
+const FormReservationModal = () => {
    const selectedDate = useAppStore((state) => state.selectedDate)
    const selectedCourt = useAppStore((state) => state.selectedCourt)
    const selectedShift = useAppStore((state) => state.selectedShift)
@@ -96,6 +96,15 @@ const FormReservationModal: React.FC = () => {
       // eslint-disable-next-line
    }, [filteredClients, isEditMode, selectedReservation])
 
+   const formatedDate = useMemo(
+      () => formatDateToString(selectedDate, true),
+      [selectedDate]
+   )
+
+   function getCourtName(courtID: string | undefined) {
+      return COURTS.find((c) => c.id === courtID)?.name || ''
+   }
+
    useEffect(() => {
       if (isEditMode && selectedReservation) {
          resetForm({
@@ -111,15 +120,6 @@ const FormReservationModal: React.FC = () => {
       }
       // eslint-disable-next-line
    }, [isEditMode, selectedReservation])
-
-   const formatedDate = useMemo(
-      () => formatDateToString(selectedDate, true),
-      [selectedDate]
-   )
-
-   function getCourtName(courtID: string | undefined) {
-      return COURTS.find((c) => c.id === courtID)?.name || ''
-   }
 
    async function onSubmit(formData: ReservationFormData) {
       if (isEditMode && selectedReservation) {
@@ -153,7 +153,7 @@ const FormReservationModal: React.FC = () => {
    }
 
    return (
-      <DialogContent className=" sm:max-w-2xl w-[95%] max-w-[95%]">
+      <DialogContent className="sm:max-w-2xl w-[95%] max-w-[95%]">
          <DialogHeader>
             <DialogTitle>Nueva Reserva</DialogTitle>
             <DialogDescription className="capitalize">{formatedDate}</DialogDescription>
