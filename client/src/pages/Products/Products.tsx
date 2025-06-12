@@ -1,9 +1,7 @@
+import { useFetchProducts, useMobile, useSearchFilter } from '@hooks'
 import { CategoriesFilterHandler, ProductCard } from './components'
-import ConfirmProductModal from './components/ConfirmProductModal'
-import { useFetchProducts, useMobile } from '@hooks'
-import { useAppStore, useModalStore } from '@stores'
-import { FormProductModal } from './modals'
 import { Loader2, Package, Plus, Search } from 'lucide-react'
+import { useAppStore, useModalStore } from '@stores'
 import { useMemo, useState } from 'react'
 import { AppLayout } from '@shared'
 import {
@@ -26,26 +24,31 @@ const Products = () => {
    const isMobile = useMobile()
    const { products, isPending } = useFetchProducts()
 
-   const [searchTerm, setSearchTerm] = useState<string>('')
+   const {
+      searchTerm,
+      setSearchTerm,
+      filteredValues: filteredProducts,
+   } = useSearchFilter(products, ['name'])
+
    const [currentPage, setCurrentPage] = useState(1)
 
-   const filteredProducts = useMemo(
+   const filteredProductsByCategory = useMemo(
       () =>
-         products
-            .filter(
-               (product) =>
-                  selectedCategory === 'todos' || product.category === selectedCategory
-            )
-            .filter((product) =>
-               product.name.toLowerCase().includes(searchTerm?.toLowerCase())
-            ),
-      [products, selectedCategory, searchTerm]
+         filteredProducts.filter(
+            (product) =>
+               selectedCategory === 'todos' || product.category === selectedCategory
+         ),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [filteredProducts, selectedCategory, searchTerm]
    )
 
    const indexOfLastProduct = currentPage * PRODUCTS_PER_PAGE
    const indexOfFirstProduct = indexOfLastProduct - PRODUCTS_PER_PAGE
-   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct)
-   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE)
+   const currentProducts = filteredProductsByCategory.slice(
+      indexOfFirstProduct,
+      indexOfLastProduct
+   )
+   const totalPages = Math.ceil(filteredProductsByCategory.length / PRODUCTS_PER_PAGE)
 
    return (
       <AppLayout>
@@ -132,7 +135,7 @@ const Products = () => {
             </div>
          )}
 
-         {!isPending && filteredProducts.length > 0 && (
+         {!isPending && filteredProductsByCategory.length > 0 && (
             <div className="mt-6 flex justify-center">
                <Pagination>
                   <PaginationContent>

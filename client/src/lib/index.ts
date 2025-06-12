@@ -7,7 +7,9 @@ import { formatDateToString } from './formatDateToString'
 import { formatStringToDate } from './formatStringToDate'
 import { getClientInitials } from './getClientInitials'
 import { formatPriceDisplay } from './formatPriceDisplay'
-import { reservationResolver } from './reservatioResolver'
+
+import { reservationResolver } from './reservationResolver'
+import { productResolver } from './productResolver'
 
 export {
    api,
@@ -17,4 +19,5 @@ export {
    handleApiError,
    formatPriceDisplay,
    reservationResolver,
+   productResolver,
 }
