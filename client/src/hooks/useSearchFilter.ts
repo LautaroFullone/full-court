@@ -8,10 +8,7 @@ const useSearchFilter = <T>(values: T[], fieldsToSearch: (keyof T)[]) => {
 
       return values.filter((value) =>
          fieldsToSearch.some((field) => {
-            return (
-               typeof value[field] === 'string' &&
-               value[field].toLowerCase().includes(term)
-            )
+            return String(value[field]).toLowerCase().includes(term)
          })
       )
    }, [values, searchTerm, fieldsToSearch])
