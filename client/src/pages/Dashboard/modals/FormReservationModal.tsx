@@ -46,9 +46,7 @@ const FormReservationModal = () => {
    const selectedCourt = useAppStore((state) => state.selectedCourt)
    const selectedShift = useAppStore((state) => state.selectedShift)
    const selectedReservation = useAppStore((state) => state.selectedReservation)
-   const dispatchSelectedReservation = useAppStore(
-      (state) => state.appActions.dispatchSelectedReservation
-   )
+
    const currentModal = useModalStore((state) => state.currentModal)
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
@@ -77,7 +75,6 @@ const FormReservationModal = () => {
    })
 
    const isEditMode = currentModal?.name === 'edit-reservation'
-
    const isLoading = isCreateLoading || isUpdateLoading
 
    const filteredClientsWithOwner = useMemo(() => {
@@ -129,7 +126,6 @@ const FormReservationModal = () => {
          })
 
          closeModal('edit-reservation')
-         dispatchSelectedReservation(null)
       } else if (selectedCourt && selectedShift) {
          const { client } = formData
          const clientData =
@@ -342,7 +338,6 @@ const FormReservationModal = () => {
          <DialogFooter className={`${isMobile ? 'flex-col space-y-2' : ''}`}>
             <DialogClose asChild>
                <Button
-                  // id="boton-de-prueba"
                   size="lg"
                   variant="outline"
                   disabled={isLoading}

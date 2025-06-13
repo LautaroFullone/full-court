@@ -1,11 +1,12 @@
-import { useBasicForm, useCreateClient, useMobile, useUpdateClient } from '@hooks'
+import { useCreateClient, useMobile, useUpdateClient } from '@hooks'
 import { useAppStore, useModalStore } from '@stores'
 import { InputForm, SaveButton } from '@shared'
+import { useForm } from 'react-hook-form'
 import { ClientFormData } from '@models'
+import { clientResolver } from '@lib'
 import { useEffect } from 'react'
 import {
    Button,
-   Dialog,
    DialogClose,
    DialogContent,
    DialogDescription,
@@ -23,140 +24,142 @@ const initialFormData: ClientFormData = {
 
 const FormClientModal = () => {
    const selectedClient = useAppStore((state) => state.selectedClient)
-   const modalFlags = useModalStore((state) => state.modalFlags)
+   const currentModal = useModalStore((state) => state.currentModal)
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
    const isMobile = useMobile()
    const { createClientMutate, isLoading: isCreateLoading } = useCreateClient()
    const { updateClientMutate, isLoading: isUpdateLoading } = useUpdateClient()
 
-   const { formData, handleChange, setFormData, resetForm, errors, isValid } =
-      useBasicForm(initialFormData, 'client')
+   const {
+      register,
+      reset: resetForm,
+      handleSubmit: handleFormSubmit,
+      formState: { errors, isValid },
+   } = useForm<ClientFormData>({
+      mode: 'onChange',
+      resolver: clientResolver,
+      defaultValues: initialFormData,
+   })
 
-   const isEditMode = modalFlags['edit-client']
+   const isEditMode = currentModal?.name === 'edit-client'
    const isLoading = isCreateLoading || isUpdateLoading
 
    useEffect(() => {
       if (isEditMode && selectedClient) {
-         setFormData({
+         resetForm({
             name: selectedClient.name,
             dni: selectedClient.dni,
             phone: selectedClient.phone,
             email: selectedClient?.email,
          })
-      } else {
-         resetForm()
       }
       // eslint-disable-next-line
-   }, [isEditMode])
+   }, [isEditMode, selectedClient])
 
-   async function handleSubmit() {
+   async function onSubmit(formData: ClientFormData) {
+      console.log('# submit: ', formData)
+      const sanitizedData = {
+         ...formData,
+         email: formData.email?.trim() || '',
+      }
       if (isEditMode && selectedClient) {
-         await updateClientMutate({ clientID: selectedClient.id, clientData: formData })
+         await updateClientMutate({
+            clientID: selectedClient.id,
+            clientData: sanitizedData,
+         })
          closeModal('edit-client')
       } else {
          await createClientMutate(formData)
          closeModal('create-client')
       }
 
-      resetForm()
+      resetForm(initialFormData)
    }
 
    return (
-      <Dialog
-         open={modalFlags['create-client'] || modalFlags['edit-client']}
-         onOpenChange={() =>
-            isEditMode ? closeModal('edit-client') : closeModal('create-client')
-         }
-      >
-         <DialogContent className="w-[400px]">
-            <DialogHeader>
-               <DialogTitle>
-                  {!isEditMode ? 'Agregar nuevo' : 'Editar '} Cliente
-               </DialogTitle>
+      <DialogContent className="sm:max-w-2xl w-[95%] max-w-[95%]">
+         <DialogHeader>
+            <DialogTitle>{!isEditMode ? 'Agregar nuevo' : 'Editar '} Cliente</DialogTitle>
 
-               <DialogDescription>
-                  {!isEditMode
-                     ? 'Ingresa la información del cliente'
-                     : 'Actualiza la información del cliente'}
-               </DialogDescription>
-            </DialogHeader>
+            <DialogDescription>
+               {!isEditMode
+                  ? 'Ingresa la información del cliente'
+                  : 'Actualiza la información del cliente'}
+            </DialogDescription>
+         </DialogHeader>
 
-            <div className="grid gap-4 py-4">
-               <div className="space-y-2">
-                  <InputForm
-                     label="Nombre Completo"
-                     name="name"
-                     value={formData.name}
-                     onChange={(evt) => handleChange('name', evt.target.value)}
-                     placeholder="Ej: Valentina Roldan"
-                     disabled={isLoading}
-                     errors={errors}
-                  />
-               </div>
-
-               <div className="space-y-2">
-                  <InputForm
-                     label="DNI / Documento"
-                     name="dni"
-                     type="number"
-                     value={formData.dni}
-                     onChange={(evt) => handleChange('dni', evt.target.value)}
-                     placeholder="Ej: 4433229"
-                     disabled={isLoading}
-                     errors={errors}
-                  />
-               </div>
-
-               <div className="space-y-2">
-                  <InputForm
-                     label="Celular"
-                     name="phone"
-                     type="number"
-                     value={formData.phone}
-                     onChange={(evt) => handleChange('phone', evt.target.value)}
-                     placeholder="Ej: 555-1234"
-                     disabled={isLoading}
-                     errors={errors}
-                  />
-               </div>
-
-               <div className="space-y-2">
-                  <InputForm
-                     label="Email (opcional)"
-                     name="email"
-                     type="email"
-                     value={formData.email}
-                     onChange={(evt) => handleChange('email', evt.target.value)}
-                     placeholder="Ej: valentinaroldan@ejemplo.com"
-                     disabled={isLoading}
-                     errors={errors}
-                  />
-               </div>
+         <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+               <InputForm
+                  label="Nombre Completo"
+                  name="name"
+                  type="text"
+                  placeholder="Ej: Valentina Roldan"
+                  disabled={isLoading}
+                  register={register('name')}
+                  errors={errors}
+               />
             </div>
 
-            <DialogFooter className={isMobile ? 'flex-col space-y-2' : ''}>
-               <DialogClose asChild>
-                  <Button
-                     size="lg"
-                     variant="outline"
-                     disabled={!isValid || isLoading}
-                     className={isMobile ? 'w-full' : ''}
-                  >
-                     Cancelar
-                  </Button>
-               </DialogClose>
-
-               <SaveButton
-                  model="client"
-                  isLoading={isLoading}
-                  onClick={handleSubmit}
-                  disabled={!isValid || isLoading}
-                  action={isEditMode ? 'update' : 'create'}
+            <div className="space-y-2">
+               <InputForm
+                  label="DNI / Documento"
+                  name="dni"
+                  type="number"
+                  placeholder="Ej: 4433229"
+                  disabled={isLoading}
+                  register={register('dni')}
+                  errors={errors}
                />
-            </DialogFooter>
-         </DialogContent>
-      </Dialog>
+            </div>
+
+            <div className="space-y-2">
+               <InputForm
+                  label="Celular"
+                  name="client.phone"
+                  type="number"
+                  placeholder="Ej: 2236839493"
+                  disabled={isLoading}
+                  register={register('phone')}
+                  errors={errors}
+               />
+            </div>
+
+            <div className="space-y-2">
+               <InputForm
+                  label="Email (opcional)"
+                  name="email"
+                  type="email"
+                  placeholder="Ej: valentinaroldan@ejemplo.com"
+                  disabled={isLoading}
+                  register={register('email')}
+                  errors={errors}
+               />
+            </div>
+         </div>
+
+         <DialogFooter className={isMobile ? 'flex-col space-y-2' : ''}>
+            <DialogClose asChild>
+               <Button
+                  size="lg"
+                  variant="outline"
+                  disabled={!isValid || isLoading}
+                  className={isMobile ? 'w-full' : ''}
+               >
+                  Cancelar
+               </Button>
+            </DialogClose>
+
+            <SaveButton
+               model="client"
+               isLoading={isLoading}
+               onClick={handleFormSubmit(onSubmit)}
+               disabled={!isValid || isLoading}
+               action={isEditMode ? 'update' : 'create'}
+            />
+         </DialogFooter>
+      </DialogContent>
    )
 }
 export default FormClientModal

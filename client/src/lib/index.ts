@@ -10,6 +10,7 @@ import { formatPriceDisplay } from './formatPriceDisplay'
 
 import { reservationResolver } from './reservationResolver'
 import { productResolver } from './productResolver'
+import { clientResolver } from './clientResolver'
 
 export {
    api,
@@ -20,4 +21,5 @@ export {
    formatPriceDisplay,
    reservationResolver,
    productResolver,
+   clientResolver,
 }

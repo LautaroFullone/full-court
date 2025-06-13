@@ -123,9 +123,6 @@ const useModalStore = create<ModalStoreProps>()(
                      case 'confirm-delete-product':
                         appActions.dispatchSelectedProduct(null)
                         break
-                     case 'edit-client':
-                        appActions.dispatchSelectedClient(null)
-                        break
                   }
 
                   if (previousModal) {

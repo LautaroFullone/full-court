@@ -1,9 +1,8 @@
 import { Filter, Loader2, Plus, Search, UserRoundSearch } from 'lucide-react'
-import { ConfirmClientModal, FormClientModal } from './modals'
 import { ClientCard, ClientDetails } from './components'
 import { useAppStore, useModalStore } from '@stores'
 import { useEffect, useState } from 'react'
-import { useFetchClients } from '@hooks'
+import { useFetchClients, useSearchFilter } from '@hooks'
 import { AppLayout } from '@shared'
 import {
    Badge,
@@ -17,25 +16,22 @@ import {
 } from '@shadcn'
 
 const Clients = () => {
+   const openModal = useModalStore((state) => state.modalActions.openModal)
    const selectedClient = useAppStore((state) => state.selectedClient)
    const dispatchSelectedClient = useAppStore(
       (state) => state.appActions.dispatchSelectedClient
    )
-   const openModal = useModalStore((state) => state.modalActions.openModal)
 
    const { clients, isPending } = useFetchClients()
 
-   const [searchTerm, setSearchTerm] = useState('')
+   const {
+      searchTerm,
+      setSearchTerm,
+      filteredValues: filteredClients,
+   } = useSearchFilter(clients, ['name', 'dni', 'phone', 'email'])
+
    const [sortBy, setSortBy] = useState<string>('name')
    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
-
-   const filteredClients = clients.filter(
-      (client) =>
-         client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         client.dni.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         client.phone.includes(searchTerm) ||
-         client.email?.toLowerCase().includes(searchTerm.toLowerCase())
-   )
 
    const sortedClients = filteredClients?.sort((a, b) => {
       if (sortBy === 'name') {
@@ -194,9 +190,6 @@ const Clients = () => {
                <ClientDetails client={selectedClient} />
             </div>
          </div>
-
-         <FormClientModal />
-         <ConfirmClientModal />
       </AppLayout>
    )
 }
