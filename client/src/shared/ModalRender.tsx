@@ -35,8 +35,6 @@ const ModalRender = () => {
    const ModalComponent = MODAL_COMPONENTS[name]
    const contentWidth = name.includes('confirm') ? 'sm:max-w-md' : 'sm:max-w-2xl'
 
-   if (!ModalComponent) return null
-
    return (
       <Dialog open onOpenChange={(open) => open || closeModal(name)}>
          <DialogContent className={`${contentWidth} w-[95%] max-w-[95%]`}>
