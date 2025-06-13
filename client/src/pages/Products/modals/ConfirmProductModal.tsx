@@ -3,7 +3,6 @@ import { useAppStore, useModalStore } from '@stores'
 import { SaveButton } from '@shared'
 import {
    Button,
-   DialogContent,
    DialogDescription,
    DialogFooter,
    DialogHeader,
@@ -29,7 +28,7 @@ const ConfirmProductModal = () => {
    }
 
    return (
-      <DialogContent className="sm:max-w-md w-[95%] max-w-[95%]">
+      <>
          <DialogHeader>
             <DialogTitle>
                ¿Estás seguro de que querés eliminar el producto {''}
@@ -63,7 +62,7 @@ const ConfirmProductModal = () => {
                variant="destructive"
             />
          </DialogFooter>
-      </DialogContent>
+      </>
    )
 }
 export default ConfirmProductModal

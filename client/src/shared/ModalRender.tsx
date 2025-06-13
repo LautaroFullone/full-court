@@ -1,6 +1,5 @@
 import { ModalType, useModalStore } from '@stores'
-import { ReactElement, useMemo } from 'react'
-import { Dialog } from '@shadcn'
+import { Dialog, DialogContent } from '@shadcn'
 import {
    ConfirmClientModal,
    ConfirmProductModal,
@@ -12,23 +11,20 @@ import {
 } from '@pages'
 
 const ModalRender = () => {
-   const MODAL_COMPONENTS: Record<ModalType, ReactElement> = useMemo(
-      () => ({
-         'create-reservation': <FormReservationModal />,
-         'edit-reservation': <FormReservationModal />,
-         'details-reservation': <DetailsReservationModal />,
-         'confirm-reservation': <ConfirmReservationModal />,
+   const MODAL_COMPONENTS: Record<ModalType, React.FC> = {
+      'create-reservation': FormReservationModal,
+      'edit-reservation': FormReservationModal,
+      'details-reservation': DetailsReservationModal,
+      'confirm-reservation': ConfirmReservationModal,
 
-         'edit-product': <FormProductModal />,
-         'create-product': <FormProductModal />,
-         'confirm-delete-product': <ConfirmProductModal />,
+      'edit-product': FormProductModal,
+      'create-product': FormProductModal,
+      'confirm-delete-product': ConfirmProductModal,
 
-         'create-client': <FormClientModal />,
-         'edit-client': <FormClientModal />,
-         'confirm-delete-client': <ConfirmClientModal />,
-      }),
-      []
-   )
+      'create-client': FormClientModal,
+      'edit-client': FormClientModal,
+      'confirm-delete-client': ConfirmClientModal,
+   }
 
    const currentModal = useModalStore((state) => state.currentModal)
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
@@ -36,14 +32,16 @@ const ModalRender = () => {
    if (!currentModal) return null
 
    const { name } = currentModal
-
    const ModalComponent = MODAL_COMPONENTS[name]
+   const contentWidth = name.includes('confirm') ? 'sm:max-w-md' : 'sm:max-w-2xl'
 
    if (!ModalComponent) return null
 
    return (
       <Dialog open onOpenChange={(open) => open || closeModal(name)}>
-         {ModalComponent}
+         <DialogContent className={`${contentWidth} w-[95%] max-w-[95%]`}>
+            <ModalComponent />
+         </DialogContent>
       </Dialog>
    )
 }

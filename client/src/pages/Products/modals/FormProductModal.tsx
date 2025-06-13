@@ -6,7 +6,6 @@ import { useEffect } from 'react'
 import {
    Button,
    DialogClose,
-   DialogContent,
    DialogDescription,
    DialogFooter,
    DialogHeader,
@@ -76,7 +75,7 @@ const FormProductModal = () => {
    }
 
    return (
-      <DialogContent className="sm:max-w-2xl w-[95%] max-w-[95%]">
+      <>
          <DialogHeader>
             <DialogTitle>
                {!selectedProduct ? 'Agregar nuevo' : 'Editar '} Producto
@@ -167,7 +166,7 @@ const FormProductModal = () => {
                action={isEditMode ? 'update' : 'create'}
             />
          </DialogFooter>
-      </DialogContent>
+      </>
    )
 }
 export default FormProductModal

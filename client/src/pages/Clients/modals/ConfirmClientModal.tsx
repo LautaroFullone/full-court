@@ -3,7 +3,6 @@ import { useDeleteClient, useMobile } from '@hooks'
 import { SaveButton } from '@shared'
 import {
    Button,
-   DialogContent,
    DialogDescription,
    DialogFooter,
    DialogHeader,
@@ -29,7 +28,7 @@ const ConfirmClientModal = () => {
    }
 
    return (
-      <DialogContent className="sm:max-w-md w-[95%] max-w-[95%]">
+      <>
          <DialogHeader>
             <DialogTitle>
                ¿Estás seguro de que querés eliminar a {''}
@@ -64,7 +63,7 @@ const ConfirmClientModal = () => {
                variant="destructive"
             />
          </DialogFooter>
-      </DialogContent>
+      </>
    )
 }
 export default ConfirmClientModal

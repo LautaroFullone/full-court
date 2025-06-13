@@ -3,7 +3,6 @@ import { useAppStore, useModalStore } from '@stores'
 import { SaveButton } from '@shared'
 import {
    Button,
-   DialogContent,
    DialogDescription,
    DialogFooter,
    DialogHeader,
@@ -29,7 +28,7 @@ const ConfirmReservationModal = () => {
    }
 
    return (
-      <DialogContent className="sm:max-w-md w-[95%] max-w-[95%]">
+      <>
          <DialogHeader>
             <DialogTitle>¿Estás seguro de que quieres cancelar esta reserva?</DialogTitle>
 
@@ -61,7 +60,7 @@ const ConfirmReservationModal = () => {
                variant="destructive"
             />
          </DialogFooter>
-      </DialogContent>
+      </>
    )
 }
 export default ConfirmReservationModal

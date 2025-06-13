@@ -8,7 +8,6 @@ import { useEffect } from 'react'
 import {
    Button,
    DialogClose,
-   DialogContent,
    DialogDescription,
    DialogFooter,
    DialogHeader,
@@ -78,7 +77,7 @@ const FormClientModal = () => {
    }
 
    return (
-      <DialogContent className="sm:max-w-2xl w-[95%] max-w-[95%]">
+      <>
          <DialogHeader>
             <DialogTitle>{!isEditMode ? 'Agregar nuevo' : 'Editar '} Cliente</DialogTitle>
 
@@ -159,7 +158,7 @@ const FormClientModal = () => {
                action={isEditMode ? 'update' : 'create'}
             />
          </DialogFooter>
-      </DialogContent>
+      </>
    )
 }
 export default FormClientModal

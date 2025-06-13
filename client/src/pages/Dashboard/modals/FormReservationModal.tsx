@@ -8,7 +8,6 @@ import { COURTS } from '@config'
 import {
    Button,
    DialogClose,
-   DialogContent,
    DialogDescription,
    DialogFooter,
    DialogHeader,
@@ -148,7 +147,7 @@ const FormReservationModal = () => {
    }
 
    return (
-      <DialogContent className="sm:max-w-2xl w-[95%] max-w-[95%]">
+      <>
          <DialogHeader>
             <DialogTitle>Nueva Reserva</DialogTitle>
             <DialogDescription className="capitalize">{formatedDate}</DialogDescription>
@@ -355,7 +354,7 @@ const FormReservationModal = () => {
                action={isEditMode ? 'update' : 'create'}
             />
          </DialogFooter>
-      </DialogContent>
+      </>
    )
 }
 

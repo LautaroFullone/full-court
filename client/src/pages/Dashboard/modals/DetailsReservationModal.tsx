@@ -3,7 +3,6 @@ import { useAppStore, useModalStore } from '@stores'
 import { useMobile, useStyles } from '@hooks'
 import {
    Button,
-   DialogContent,
    DialogDescription,
    DialogFooter,
    DialogHeader,
@@ -27,7 +26,7 @@ const DetailsReservationModal = () => {
    if (!selectedReservation) return null
 
    return (
-      <DialogContent className="sm:max-w-2xl w-[95%] max-w-[95%]">
+      <>
          <DialogHeader>
             <DialogTitle>Detalle de Reserva #{selectedReservation.id}</DialogTitle>
             <DialogDescription>Información completa de la reserva</DialogDescription>
@@ -202,7 +201,7 @@ const DetailsReservationModal = () => {
                </Button>
             </div>
          </DialogFooter>
-      </DialogContent>
+      </>
    )
 }
 
