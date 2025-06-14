@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AxiosError } from 'axios'
 
 export function handleApiError(error: unknown): Error {
@@ -5,7 +6,10 @@ export function handleApiError(error: unknown): Error {
       const message =
          error.response?.data?.message || error.message || 'Ocurrió un problema con axios'
 
-      return new Error(message)
+      const err = new Error(message) as Error & { data?: any }
+      console.log('# err response: ', err)
+      err.data = error.response?.data
+      return err
    }
 
    if (error instanceof Error) {

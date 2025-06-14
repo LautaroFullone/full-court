@@ -1,9 +1,10 @@
-import { Client, ClientFormData } from '@models'
+import { Client, ClientFormData, Reservation } from '@models'
 import { api, handleApiError } from '@lib'
 
 interface ResponseApi {
    client: Client
    clients: Client[]
+   reservations: Reservation[]
    message: string
 }
 
@@ -32,12 +33,8 @@ export async function createClient(clientData: ClientFormData) {
 export async function deleteClient(clientID: Client['id']) {
    type Response = Pick<ResponseApi, 'message' | 'client'>
 
-   try {
-      const { data } = await api.delete<Response>(`/clients/${clientID}`)
-      return data
-   } catch (error) {
-      throw handleApiError(error)
-   }
+   const { data } = await api.delete<Response>(`/clients/${clientID}`)
+   return data
 }
 
 export async function updateClient({

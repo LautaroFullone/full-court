@@ -1,10 +1,19 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Client, Reservation } from '@models'
 import { deleteClient } from '@services'
+import { useModalStore } from '@stores'
 import { toast } from 'react-toastify'
+import { getApiError } from '@lib'
 import { useState } from 'react'
-import { Client } from '@models'
+
+export type DeleteClientError = {
+   message: string
+   reservations: Reservation[]
+}
 
 function useDeleteClient() {
+   const closeModal = useModalStore((state) => state.modalActions.closeModal)
+
    const [isLoading, setIsLoading] = useState(false)
    const queryClient = useQueryClient()
 
@@ -14,13 +23,20 @@ function useDeleteClient() {
       onSettled: () => setIsLoading(false),
       onSuccess: (data) => {
          toast.success(data.message)
+
          queryClient.setQueryData(['clients'], (old: Client[]) =>
             old.filter((client) => client?.id !== data?.client.id)
          )
       },
       onError: (error) => {
-         console.log('## deleteClient : ', error)
-         toast.error(error.message)
+         const { message, errorCode, reservations } = getApiError(error)
+
+         if (errorCode === 'CLIENT_HAS_RESERVATIONS') {
+            console.log('Reservas asociadas:', reservations)
+         }
+
+         closeModal('confirm-delete-client')
+         toast.error(message)
       },
    })
 

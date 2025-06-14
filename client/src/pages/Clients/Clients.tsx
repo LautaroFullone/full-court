@@ -1,8 +1,8 @@
 import { Filter, Loader2, Plus, Search, UserRoundSearch } from 'lucide-react'
+import { useFetchClients, useSearchFilter } from '@hooks'
 import { ClientCard, ClientDetails } from './components'
 import { useAppStore, useModalStore } from '@stores'
 import { useEffect, useState } from 'react'
-import { useFetchClients, useSearchFilter } from '@hooks'
 import { AppLayout } from '@shared'
 import {
    Badge,

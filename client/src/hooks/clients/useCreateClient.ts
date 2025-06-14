@@ -16,7 +16,6 @@ const useCreateClient = () => {
          queryClient.setQueryData(['clients'], (old: []) => [...old, data.client])
       },
       onError: (error) => {
-         console.log('## createClient: ', error)
          toast.error(error.message)
       },
    })

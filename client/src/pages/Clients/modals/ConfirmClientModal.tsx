@@ -11,9 +11,6 @@ import {
 
 const ConfirmClientModal = () => {
    const selectedClient = useAppStore((state) => state.selectedClient)
-   const dispatchSelectedClient = useAppStore(
-      (state) => state.appActions.dispatchSelectedClient
-   )
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
 
    const isMobile = useMobile()
@@ -22,8 +19,7 @@ const ConfirmClientModal = () => {
    async function handleDeleteClient() {
       if (selectedClient) {
          await deleteClientMutate(selectedClient.id)
-         closeModal('confirm-delete-client')
-         dispatchSelectedClient(null)
+         closeModal('confirm-delete-client', true)
       }
    }
 

@@ -32,7 +32,7 @@ interface ModalStoreProps {
          name: T,
          ...payload: ModalPayload[T] extends void ? [] : [ModalPayload[T]]
       ) => void
-      closeModal: (name: ModalType) => void
+      closeModal: (name: ModalType, resetSelected?: boolean) => void
    }
 }
 
@@ -107,22 +107,30 @@ const useModalStore = create<ModalStoreProps>()(
                   }
                },
 
-               closeModal: (name) => {
+               closeModal: (name, resetSelected) => {
                   const { currentModal, previousModal } = get()
 
                   if (currentModal?.name !== name) return
 
-                  switch (name) {
-                     case 'details-reservation':
-                        appActions.dispatchSelectedReservation(null)
-                        break
-                     case 'edit-reservation':
-                        appActions.dispatchSelectedReservation(null)
-                        break
-                     case 'edit-product':
-                     case 'confirm-delete-product':
-                        appActions.dispatchSelectedProduct(null)
-                        break
+                  if (resetSelected) {
+                     switch (name) {
+                        case 'details-reservation': {
+                           appActions.dispatchSelectedReservation(null)
+                           break
+                        }
+                        case 'edit-reservation': {
+                           appActions.dispatchSelectedReservation(null)
+                           break
+                        }
+                        case 'confirm-delete-client': {
+                           appActions.dispatchSelectedClient(null)
+                           break
+                        }
+                        case 'confirm-delete-product': {
+                           appActions.dispatchSelectedProduct(null)
+                           break
+                        }
+                     }
                   }
 
                   if (previousModal) {

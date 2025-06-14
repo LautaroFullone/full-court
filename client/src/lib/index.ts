@@ -1,6 +1,7 @@
 export * from './utils'
 
 import { api } from './axios'
+import { getApiError } from './apiError'
 import { handleApiError } from './handleApiError'
 
 import { formatDateToString } from './formatDateToString'
@@ -14,6 +15,7 @@ import { clientResolver } from './clientResolver'
 
 export {
    api,
+   getApiError,
    formatDateToString,
    formatStringToDate,
    getClientInitials,
