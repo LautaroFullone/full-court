@@ -1,21 +1,11 @@
 import { useFetchProducts, useMobile, useSearchFilter } from '@hooks'
-import { CategoriesFilterHandler, ProductCard } from './components'
+import ProductsPagination from './components/ProductsPagination'
 import { Loader2, Package, Plus, Search } from 'lucide-react'
+import { CategoriesFilterHandler } from './components'
 import { useAppStore, useModalStore } from '@stores'
-import { useMemo, useState } from 'react'
+import { Button, Input } from '@shadcn'
 import { AppLayout } from '@shared'
-import {
-   Button,
-   Input,
-   Pagination,
-   PaginationContent,
-   PaginationItem,
-   PaginationLink,
-   PaginationNext,
-   PaginationPrevious,
-} from '@shadcn'
-
-const PRODUCTS_PER_PAGE = 10
+import { useMemo } from 'react'
 
 const Products = () => {
    const selectedCategory = useAppStore((state) => state.selectedCategory)
@@ -30,25 +20,15 @@ const Products = () => {
       filteredValues: filteredProducts,
    } = useSearchFilter(products, ['name'])
 
-   const [currentPage, setCurrentPage] = useState(1)
-
    const filteredProductsByCategory = useMemo(
       () =>
          filteredProducts.filter(
             (product) =>
                selectedCategory === 'todos' || product.category === selectedCategory
          ),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line
       [filteredProducts, selectedCategory, searchTerm]
    )
-
-   const indexOfLastProduct = currentPage * PRODUCTS_PER_PAGE
-   const indexOfFirstProduct = indexOfLastProduct - PRODUCTS_PER_PAGE
-   const currentProducts = filteredProductsByCategory.slice(
-      indexOfFirstProduct,
-      indexOfLastProduct
-   )
-   const totalPages = Math.ceil(filteredProductsByCategory.length / PRODUCTS_PER_PAGE)
 
    return (
       <AppLayout>
@@ -99,17 +79,11 @@ const Products = () => {
                   </p>
                </div>
             </div>
-         ) : currentProducts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-               {currentProducts.map((product) => (
-                  <ProductCard
-                     key={product.id}
-                     product={product}
-                     onEdit={() => openModal('edit-product', { product })}
-                     onDelete={() => openModal('confirm-delete-product', { product })}
-                  />
-               ))}
-            </div>
+         ) : filteredProductsByCategory.length > 0 ? (
+            <ProductsPagination
+               itemsPerPage={isMobile ? 6 : 12}
+               products={filteredProductsByCategory}
+            />
          ) : (
             <div className="h-[56vh] flex items-center justify-center p-8 text-center">
                <div className="max-w-sm">
@@ -132,52 +106,6 @@ const Products = () => {
                      Nuevo Producto
                   </Button>
                </div>
-            </div>
-         )}
-
-         {!isPending && filteredProductsByCategory.length > 0 && (
-            <div className="mt-6 flex justify-center">
-               <Pagination>
-                  <PaginationContent>
-                     <PaginationItem>
-                        <PaginationPrevious
-                           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                           // disabled={currentPage === 1}
-                        />
-                     </PaginationItem>
-
-                     {!isMobile &&
-                        Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                           (page) => (
-                              <PaginationItem key={page}>
-                                 <PaginationLink
-                                    onClick={() => setCurrentPage(page)}
-                                    isActive={currentPage === page}
-                                 >
-                                    {page}
-                                 </PaginationLink>
-                              </PaginationItem>
-                           )
-                        )}
-
-                     {isMobile && (
-                        <PaginationItem>
-                           <span className="text-sm">
-                              Página {currentPage} de {totalPages}
-                           </span>
-                        </PaginationItem>
-                     )}
-
-                     <PaginationItem>
-                        <PaginationNext
-                           onClick={() =>
-                              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                           }
-                           // disabled={currentPage === totalPages}
-                        />
-                     </PaginationItem>
-                  </PaginationContent>
-               </Pagination>
             </div>
          )}
       </AppLayout>
