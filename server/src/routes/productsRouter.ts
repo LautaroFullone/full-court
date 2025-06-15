@@ -1,37 +1,38 @@
 import { productSchema, productUpdateSchema } from '../models/product'
+import { ResponseEntity } from '../lib/ResponseEntity'
 import { Router, Request, Response } from 'express'
 import prisma from '../lib/prismaClient'
-import { Product } from '@prisma/client'
 import { sleep } from '../lib/sleep'
-
-interface ResponseEntity {
-   message: string
-   product?: Product
-   products?: Product[]
-   error?: unknown
-}
+import { ApiError } from '../lib/ApiError'
 
 const productsRouter = Router()
 
-productsRouter.get('/', async (_req: Request, res: Response<ResponseEntity>) => {
+productsRouter.get('/', async (req: Request, res: Response<ResponseEntity>) => {
+   await sleep(2000)
    try {
       const products = await prisma.product.findMany({
          orderBy: { createdAt: 'desc' },
       })
 
-      await sleep(2000)
-
-      res.status(200).send({
+      return res.status(200).send({
          message: 'Productos obtenidos',
          products,
       })
    } catch (error) {
       console.log(error)
-      res.status(500).send({ message: 'Error obteniendo los productos', error })
+      if (error instanceof ApiError) {
+         return res.status(error.statusCode).send({
+            message: error.message,
+            ...error.data,
+         })
+      }
+
+      return res.status(500).send({ message: 'Ocurrió un error inesperado del servidor' })
    }
 })
 
 productsRouter.post('/', async (req: Request, res: Response<ResponseEntity>) => {
+   await sleep(2000)
    try {
       const data = productSchema.parse(req.body)
 
@@ -39,23 +40,23 @@ productsRouter.post('/', async (req: Request, res: Response<ResponseEntity>) => 
          where: { name: data.name },
       })
 
-      await sleep(3000)
       if (existingProduct) {
-         res.status(400).send({
-            message: 'Ya existe un producto con este nombre',
-            product: existingProduct,
-         })
-         return
+         throw new ApiError('Ya existe un producto con este nombre', { product: existingProduct })
       }
+
       const product = await prisma.product.create({ data })
 
-      res.status(201).send({ message: 'Producto creado', product })
+      return res.status(201).send({ message: 'Producto creado', product })
    } catch (error) {
       console.log(error)
-      res.status(500).send({
-         message: 'Error creando el producto',
-         error,
-      })
+      if (error instanceof ApiError) {
+         return res.status(error.statusCode).send({
+            message: error.message,
+            ...error.data,
+         })
+      }
+
+      return res.status(500).send({ message: 'Ocurrió un error inesperado del servidor' })
    }
 })
 
@@ -64,20 +65,26 @@ productsRouter.put('/:id', async (req: Request, res: Response<ResponseEntity>) =
       const { id } = req.params
       const productData = productUpdateSchema.parse(req.body)
 
+      //TODO: verificar que el nuevo nombre no sea uno existente
       const productUpdated = await prisma.product.update({
          where: { id },
          data: productData,
       })
 
-      res.status(200).send({
+      return res.status(200).send({
          message: 'Producto actualizado',
          product: productUpdated,
       })
    } catch (error) {
-      res.status(500).send({
-         message: 'Error actualizando el producto',
-         error,
-      })
+      console.log(error)
+      if (error instanceof ApiError) {
+         return res.status(error.statusCode).send({
+            message: error.message,
+            ...error.data,
+         })
+      }
+
+      return res.status(500).send({ message: 'Ocurrió un error inesperado del servidor' })
    }
 })
 
@@ -90,8 +97,7 @@ productsRouter.delete('/:id', async (req: Request, res: Response<ResponseEntity>
       })
 
       if (!productToDelete) {
-         res.status(404).send({ message: 'Producto no encontrado' })
-         return
+         throw new ApiError('Producto no encontrado')
       }
 
       await prisma.product.delete({ where: { id } })
@@ -99,10 +105,14 @@ productsRouter.delete('/:id', async (req: Request, res: Response<ResponseEntity>
       res.status(200).send({ message: 'Producto eliminado', product: productToDelete })
    } catch (error: any) {
       console.log(error)
-      res.status(500).send({
-         message: 'Error eliminando el producto',
-         error,
-      })
+      if (error instanceof ApiError) {
+         return res.status(error.statusCode).send({
+            message: error.message,
+            ...error.data,
+         })
+      }
+
+      return res.status(500).send({ message: 'Ocurrió un error inesperado del servidor' })
    }
 })
 

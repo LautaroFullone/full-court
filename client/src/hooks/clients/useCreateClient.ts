@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@services'
 import { toast } from 'react-toastify'
+import { getApiError } from '@lib'
 import { useState } from 'react'
 
 const useCreateClient = () => {
@@ -16,7 +17,9 @@ const useCreateClient = () => {
          queryClient.setQueryData(['clients'], (old: []) => [...old, data.client])
       },
       onError: (error) => {
-         toast.error(error.message)
+         const errore = getApiError(error)
+         console.log('# createClient: ', errore)
+         toast.error(errore.message)
       },
    })
 

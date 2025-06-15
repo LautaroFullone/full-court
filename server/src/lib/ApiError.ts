@@ -1,13 +1,24 @@
+import { Client, Product, Reservation } from '@prisma/client'
+
+type ApiErrorData =
+   | { client: Client }
+   | { clients: Client[] }
+   | { product: Product }
+   | { products: Product[] }
+   | { reservation: Reservation }
+   | { reservations: Reservation[] }
+   | undefined
+
 export class ApiError extends Error {
    statusCode: number
-   errorCode: string
-   data?: any
+   message: string
+   data?: ApiErrorData
 
-   constructor(statusCode: number, errorCode: string, data?: any) {
-      super(errorCode)
+   constructor(message: string, data?: ApiErrorData, statusCode = 400) {
+      super(message)
       this.name = 'ApiError'
       this.statusCode = statusCode
-      this.errorCode = errorCode
+      this.message = message
       this.data = data
    }
 }

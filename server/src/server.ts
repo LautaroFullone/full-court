@@ -8,8 +8,8 @@ dotenv.config()
 const PORT = process.env.PORT || 3030
 const app = express()
 
-app.use(cors())
 app.use(express.json())
+app.use(cors())
 
 app.use('/api/reservations', reservationsRouter)
 app.use('/api/clients', clientsRouter)

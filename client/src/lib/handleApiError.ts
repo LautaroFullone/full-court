@@ -7,7 +7,6 @@ export function handleApiError(error: unknown): Error {
          error.response?.data?.message || error.message || 'Ocurrió un problema con axios'
 
       const err = new Error(message) as Error & { data?: any }
-      console.log('# err response: ', err)
       err.data = error.response?.data
       return err
    }

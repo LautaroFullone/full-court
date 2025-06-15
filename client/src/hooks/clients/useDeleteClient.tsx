@@ -29,11 +29,7 @@ function useDeleteClient() {
          )
       },
       onError: (error) => {
-         const { message, errorCode, reservations } = getApiError(error)
-
-         if (errorCode === 'CLIENT_HAS_RESERVATIONS') {
-            console.log('Reservas asociadas:', reservations)
-         }
+         const { message } = getApiError(error)
 
          closeModal('confirm-delete-client')
          toast.error(message)

@@ -1,19 +1,15 @@
 import { reservationSchema } from '../models/reservation'
+import { ResponseEntity } from '../lib/ResponseEntity'
 import { Router, Request, Response } from 'express'
-import { Reservation } from '@prisma/client'
+import { ApiError } from '../lib/ApiError'
 import prisma from '../lib/prismaClient'
 import { sleep } from '../lib/sleep'
-
-interface ResponseEntity {
-   message: string
-   reservation?: Partial<Reservation>
-   reservations?: Partial<Reservation>[]
-   error?: unknown
-}
+import { Reservation } from '@prisma/client'
 
 const reservationsRouter = Router()
 
 reservationsRouter.get('/', async (req: Request, res: Response<ResponseEntity>) => {
+   await sleep(2000)
    const { date } = req.query
 
    try {
@@ -21,18 +17,25 @@ reservationsRouter.get('/', async (req: Request, res: Response<ResponseEntity>) 
          where: { date: date as string },
          orderBy: { date: 'desc' },
          include: { owner: true },
-         omit: { ownerId: true },
+         // omit: { ownerId: true },
       })
-
-      await sleep(2000)
 
       return res.status(200).send({ message: 'Reservas obtenidas', reservations })
    } catch (error) {
-      return res.status(500).send({ message: 'Error obteniendo las reservas', error })
+      console.log(error)
+      if (error instanceof ApiError) {
+         return res.status(error.statusCode).send({
+            message: error.message,
+            ...error.data,
+         })
+      }
+
+      return res.status(500).send({ message: 'Ocurrió un error inesperado del servidor' })
    }
 })
 
 reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>) => {
+   await sleep(2000)
    try {
       const data = reservationSchema.parse(req.body)
 
@@ -42,13 +45,13 @@ reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>)
 
       if (clientType === 'existing-client') {
          if (!client.id) {
-            return res.status(400).send({ message: 'Debe seleccionar un cliente existente' })
+            throw new ApiError('Debe seleccionar un cliente existente')
          }
 
          const existingClient = await prisma.client.findUnique({ where: { id: client.id } })
 
          if (!existingClient) {
-            return res.status(404).send({ message: 'Cliente no encontrado' })
+            throw new ApiError('Cliente no encontrado')
          }
 
          clientId = existingClient.id
@@ -58,7 +61,7 @@ reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>)
          const existingClient = await prisma.client.findUnique({ where: { dni: client.dni } })
 
          if (existingClient) {
-            return res.status(404).send({ message: 'Ya existe un cliente con ese DNI' })
+            throw new ApiError('Ya existe un cliente con ese DNI')
          }
 
          const newClient = await prisma.client.create({
@@ -71,7 +74,7 @@ reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>)
 
          clientId = newClient.id
       } else {
-         return res.status(400).send({ message: 'Tipo de cliente inválido' })
+         throw new ApiError('Tipo de cliente inválido')
       }
 
       const reservation = await prisma.reservation.create({
@@ -84,7 +87,7 @@ reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>)
             price: 0, //TODO: variable price in base to reservationType
          },
          include: { owner: true },
-         omit: { ownerId: true },
+         // omit: { ownerId: true },
       })
 
       const owner = await prisma.client.update({
@@ -95,37 +98,45 @@ reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>)
       })
 
       return res.status(201).send({
-         message: 'Reserva creada correctamente',
+         message: 'Reserva creada',
          reservation: { ...reservation, owner } as any,
       })
    } catch (error) {
-      console.error('Error al crear reserva:', error)
-      return res.status(500).send({ message: 'Error interno del servidor' })
+      console.log(error)
+      if (error instanceof ApiError) {
+         return res.status(error.statusCode).send({
+            message: error.message,
+            ...error.data,
+         })
+      }
+
+      return res.status(500).send({ message: 'Ocurrió un error inesperado del servidor' })
    }
 })
 
 reservationsRouter.put('/:id', async (req: Request, res: Response<ResponseEntity>) => {
-   try {
-      const { id } = req.params
-      const { type, clientType, client } = req.body
+   await sleep(2000)
+   const { id } = req.params
+   const { type, clientType, client } = req.body
 
+   try {
       const existingReservation = await prisma.reservation.findUnique({ where: { id } })
 
       if (!existingReservation) {
-         return res.status(404).send({ message: 'Reserva no encontrada' })
+         throw new ApiError('Reserva no encontrada')
       }
 
       let clientId = ''
 
       if (clientType === 'existing-client') {
          if (!client.id) {
-            return res.status(400).send({ message: 'Debe seleccionar un cliente existente' })
+            throw new ApiError('Debe seleccionar un cliente existente')
          }
 
          const existingClient = await prisma.client.findUnique({ where: { id: client.id } })
 
          if (!existingClient) {
-            return res.status(404).send({ message: 'Cliente no encontrado' })
+            throw new ApiError('Cliente no encontrado')
          }
 
          clientId = existingClient.id
@@ -135,7 +146,7 @@ reservationsRouter.put('/:id', async (req: Request, res: Response<ResponseEntity
          const alreadyExists = await prisma.client.findUnique({ where: { dni } })
 
          if (alreadyExists) {
-            return res.status(400).send({ message: 'Ya existe un cliente con ese DNI' })
+            throw new ApiError('Ya existe un cliente con ese DNI')
          }
 
          const newClient = await prisma.client.create({
@@ -144,7 +155,7 @@ reservationsRouter.put('/:id', async (req: Request, res: Response<ResponseEntity
 
          clientId = newClient.id
       } else {
-         return res.status(400).send({ message: 'Tipo de cliente inválido' })
+         throw new ApiError('Tipo de cliente inválido')
       }
 
       const updatedReservation = await prisma.reservation.update({
@@ -164,35 +175,49 @@ reservationsRouter.put('/:id', async (req: Request, res: Response<ResponseEntity
       })
 
       return res.send({
-         message: 'Reserva actualizada correctamente',
+         message: 'Reserva actualizada',
          reservation: updatedReservation,
       })
    } catch (error) {
-      console.error('Error al actualizar reserva:', error)
-      return res.status(500).send({ message: 'Error interno del servidor' })
+      console.log(error)
+      if (error instanceof ApiError) {
+         return res.status(error.statusCode).send({
+            message: error.message,
+            ...error.data,
+         })
+      }
+
+      return res.status(500).send({ message: 'Ocurrió un error inesperado del servidor' })
    }
 })
 
 reservationsRouter.delete('/:id', async (req: Request, res: Response<ResponseEntity>) => {
+   await sleep(2000)
+   const { id } = req.params
    try {
-      const { id } = req.params
-
       const existingReservation = await prisma.reservation.findUnique({
          where: { id },
       })
 
       if (!existingReservation) {
-         return res.status(404).send({ message: 'Reserva no encontrada' })
+         throw new ApiError('Reserva no encontrada')
       }
 
       const reservation = await prisma.reservation.delete({
          where: { id },
       })
 
-      return res.send({ message: 'Reserva eliminada correctamente', reservation })
+      return res.send({ message: 'Reserva eliminada', reservation })
    } catch (error) {
-      console.error('Error al eliminar reserva:', error)
-      return res.status(500).send({ message: 'Error interno del servidor' })
+      console.log(error)
+      if (error instanceof ApiError) {
+         return res.status(error.statusCode).send({
+            message: error.message,
+            ...error.data,
+         })
+      }
+
+      return res.status(500).send({ message: 'Ocurrió un error inesperado del servidor' })
    }
 })
 
