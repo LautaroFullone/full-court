@@ -19,7 +19,7 @@ const InputForm: React.FC<InputFormProps> = ({
    isCurrency = false,
    placeholder,
    className = '',
-   value = '',
+   value,
    ...props
 }) => {
    // eslint-disable-next-line
@@ -38,6 +38,7 @@ const InputForm: React.FC<InputFormProps> = ({
                </span>
             )}
             <Input
+               value={value}
                id={`input-${name}`}
                placeholder={placeholder}
                className={`mb-0 ${currencyAvaliable ? 'pl-6' : ''} ${

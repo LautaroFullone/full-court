@@ -6,19 +6,10 @@ import { AppLayout } from '@shared'
 import { Tabs } from '@shadcn'
 
 const Dashboard = () => {
-   // const { generateMockReservations } = useMock()
    const isMobile = useMobile()
    const selectedDate = useAppStore((state) => state.selectedDate)
 
-   // const [reservations] = useState(generateMockReservations())
-
    const { reservations, isPending } = useFetchReservations(selectedDate)
-
-   // const reservationsBySelectedDay = useMemo(() => {
-   //    return reservations.filter(
-   //       (reservation) => reservation.date === formatDateToString(selectedDate)
-   //    )
-   // }, [reservations, selectedDate])
 
    return (
       <AppLayout>
@@ -56,10 +47,6 @@ const Dashboard = () => {
                </TabsContent> */}
             </Tabs>
          </div>
-
-         {/* <FormReservationModal />
-         <DetailsReservationModal />
-         <ConfirmReservationModal /> */}
       </AppLayout>
    )
 }
