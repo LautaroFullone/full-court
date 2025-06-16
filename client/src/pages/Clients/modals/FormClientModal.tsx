@@ -57,7 +57,6 @@ const FormClientModal = () => {
    }, [isEditMode, selectedClient])
 
    async function onSubmit(formData: ClientFormData) {
-      console.log('# submit: ', formData)
       const sanitizedData = {
          ...formData,
          email: formData.email?.trim() || '',
