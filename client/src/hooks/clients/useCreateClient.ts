@@ -5,21 +5,23 @@ import { getApiError } from '@lib'
 import { useState } from 'react'
 
 const useCreateClient = () => {
-   const [isLoading, setIsLoading] = useState(false)
    const queryClient = useQueryClient()
+
+   const [isLoading, setIsLoading] = useState(false)
 
    const { mutateAsync: createClientMutate } = useMutation({
       mutationFn: createClient,
       onMutate: () => setIsLoading(true),
       onSettled: () => setIsLoading(false),
-      onSuccess: (data) => {
+      onSuccess: ({ data }) => {
          toast.success(data.message)
+
+         //TODO: ordenar dependiendo lo qu esté seleccionado
          queryClient.setQueryData(['clients'], (old: []) => [...old, data.client])
       },
       onError: (error) => {
-         const errore = getApiError(error)
-         console.log('# createClient: ', errore)
-         toast.error(errore.message)
+         const { message } = getApiError(error)
+         toast.error(message)
       },
    })
 

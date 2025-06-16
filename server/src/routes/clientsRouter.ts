@@ -11,7 +11,7 @@ clientsRouter.get('/', async (req: Request, res: Response<ResponseEntity>) => {
    await sleep(2000)
    try {
       const clients = await prisma.client.findMany({
-         orderBy: { createdAt: 'desc' },
+         orderBy: { name: 'asc' },
       })
 
       return res.status(200).send({ message: 'Clientes obtenidos', clients })

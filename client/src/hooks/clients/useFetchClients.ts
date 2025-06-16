@@ -8,7 +8,7 @@ function useFetchClients() {
       queryFn: async () => {
          //el retorno de la funcion es lo unico que se va a cachear
          const response = await getClients()
-         return response.clients // en este caso solo cacheamos en array de clientes y no 'message'
+         return response.data.clients // en este caso solo cacheamos en array de clientes y no 'message'
       },
       staleTime: 20 * 60 * 1000, //20min
       retry: 1,

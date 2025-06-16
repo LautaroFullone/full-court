@@ -2,7 +2,6 @@ export * from './utils'
 
 import { api } from './axios'
 import { getApiError } from './apiError'
-import { handleApiError } from './handleApiError'
 
 import { formatDateToString } from './formatDateToString'
 import { formatStringToDate } from './formatStringToDate'
@@ -19,7 +18,6 @@ export {
    formatDateToString,
    formatStringToDate,
    getClientInitials,
-   handleApiError,
    formatPriceDisplay,
    reservationResolver,
    productResolver,

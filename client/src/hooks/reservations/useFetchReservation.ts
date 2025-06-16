@@ -9,7 +9,7 @@ function useFetchReservations(date: Reservation['date']) {
       queryFn: async () => {
          //el retorno de la funcion es lo unico que se va a cachear
          const response = await getReservationsByDate(date)
-         return response.reservations // en este caso solo cacheamos en array de reservas y no 'message'
+         return response.data.reservations // en este caso solo cacheamos en array de reservas y no 'message'
       },
       staleTime: 20 * 60 * 1000, //20min
       retry: 1,

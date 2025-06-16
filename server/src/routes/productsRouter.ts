@@ -11,7 +11,7 @@ productsRouter.get('/', async (req: Request, res: Response<ResponseEntity>) => {
    await sleep(2000)
    try {
       const products = await prisma.product.findMany({
-         orderBy: { createdAt: 'desc' },
+         orderBy: { name: 'asc' },
       })
 
       return res.status(200).send({

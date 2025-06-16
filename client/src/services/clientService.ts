@@ -1,5 +1,10 @@
 import { Client, ClientFormData, Reservation } from '@models'
-import { api, handleApiError } from '@lib'
+import { api } from '@lib'
+
+interface UpdateClientParams {
+   clientID: Client['id']
+   clientData: ClientFormData
+}
 
 interface ResponseApi {
    client: Client
@@ -10,46 +15,20 @@ interface ResponseApi {
 
 export async function getClients() {
    type Response = Pick<ResponseApi, 'message' | 'clients'>
-
-   try {
-      const { data } = await api.get<Response>(`/clients`, {})
-      return data
-   } catch (error) {
-      throw handleApiError(error)
-   }
+   return await api.get<Response>(`/clients`, {})
 }
 
 export async function createClient(clientData: ClientFormData) {
    type Response = Pick<ResponseApi, 'message' | 'client'>
-
-   try {
-      const { data } = await api.post<Response>(`/clients`, clientData, {})
-      return data
-   } catch (error) {
-      throw handleApiError(error)
-   }
+   return await api.post<Response>(`/clients`, clientData, {})
 }
 
 export async function deleteClient(clientID: Client['id']) {
    type Response = Pick<ResponseApi, 'message' | 'client'>
-
-   const { data } = await api.delete<Response>(`/clients/${clientID}`)
-   return data
+   return await api.delete<Response>(`/clients/${clientID}`)
 }
 
-export async function updateClient({
-   clientID,
-   clientData,
-}: {
-   clientID: Client['id']
-   clientData: ClientFormData
-}) {
+export async function updateClient({ clientID, clientData }: UpdateClientParams) {
    type Response = Pick<ResponseApi, 'message' | 'client'>
-
-   try {
-      const { data } = await api.put<Response>(`/clients/${clientID}`, clientData)
-      return data
-   } catch (error) {
-      throw handleApiError(error)
-   }
+   return await api.put<Response>(`/clients/${clientID}`, clientData)
 }

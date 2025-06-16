@@ -1,24 +1,10 @@
 import { Court, Reservation, ReservationFormData, ShiftType } from '@models'
+import { ResponseApi } from './ResponseApi'
+import { api } from '@lib'
 
-import { api, handleApiError } from '@lib'
-
-interface ResponseApi {
-   reservation: Reservation
-   reservations: Reservation[]
-   message: string
-}
-
-export async function getReservationsByDate(date: Reservation['date']) {
-   type Response = Pick<ResponseApi, 'message' | 'reservations'>
-
-   try {
-      const { data } = await api.get<Response>(`/reservations`, {
-         params: { date },
-      })
-      return data
-   } catch (error) {
-      throw handleApiError(error)
-   }
+interface UpdateReservationParams {
+   reservationID: Reservation['id']
+   reservationData: ReservationFormData
 }
 
 interface ReservationData extends ReservationFormData {
@@ -27,45 +13,27 @@ interface ReservationData extends ReservationFormData {
    shift: ShiftType
 }
 
-export async function createReservation(reservationData: ReservationData) {
-   console.log('## createReservation: ', reservationData)
-   type Response = Pick<ResponseApi, 'message' | 'reservation'>
+export async function getReservationsByDate(date: Reservation['date']) {
+   type Response = Pick<ResponseApi, 'message' | 'reservations'>
+   return await api.get<Response>(`/reservations`, {
+      params: { date },
+   })
+}
 
-   try {
-      const { data } = await api.post<Response>(`/reservations`, reservationData, {})
-      return data
-   } catch (error) {
-      throw handleApiError(error)
-   }
+export async function createReservation(reservationData: ReservationData) {
+   type Response = Pick<ResponseApi, 'message' | 'reservation'>
+   return await api.post<Response>(`/reservations`, reservationData, {})
 }
 
 export async function deleteReservation(reservationID: Reservation['id']) {
    type Response = Pick<ResponseApi, 'message' | 'reservation'>
-
-   try {
-      const { data } = await api.delete<Response>(`/reservations/${reservationID}`)
-      return data
-   } catch (error) {
-      throw handleApiError(error)
-   }
+   return await api.delete<Response>(`/reservations/${reservationID}`)
 }
 
 export async function updateReservation({
    reservationID,
    reservationData,
-}: {
-   reservationID: Reservation['id']
-   reservationData: ReservationFormData
-}) {
+}: UpdateReservationParams) {
    type Response = Pick<ResponseApi, 'message' | 'reservation'>
-
-   try {
-      const { data } = await api.put<Response>(
-         `/reservations/${reservationID}`,
-         reservationData
-      )
-      return data
-   } catch (error) {
-      throw handleApiError(error)
-   }
+   return await api.put<Response>(`/reservations/${reservationID}`, reservationData)
 }

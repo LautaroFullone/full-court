@@ -13,15 +13,15 @@ export type DeleteClientError = {
 
 function useDeleteClient() {
    const closeModal = useModalStore((state) => state.modalActions.closeModal)
+   const queryClient = useQueryClient()
 
    const [isLoading, setIsLoading] = useState(false)
-   const queryClient = useQueryClient()
 
    const { mutateAsync: deleteClientMutate } = useMutation({
       mutationFn: deleteClient,
       onMutate: () => setIsLoading(true),
       onSettled: () => setIsLoading(false),
-      onSuccess: (data) => {
+      onSuccess: ({ data }) => {
          toast.success(data.message)
 
          queryClient.setQueryData(['clients'], (old: Client[]) =>

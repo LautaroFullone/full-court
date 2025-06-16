@@ -7,7 +7,6 @@ import { useState } from 'react'
 
 function useUpdateReservation() {
    const selectedDate = useAppStore((state) => state.selectedDate)
-
    const queryClient = useQueryClient()
 
    const [isLoading, setIsLoading] = useState(false)
@@ -16,8 +15,9 @@ function useUpdateReservation() {
       mutationFn: updateReservation,
       onMutate: () => setIsLoading(true),
       onSettled: () => setIsLoading(false),
-      onSuccess: (data) => {
+      onSuccess: ({ data }) => {
          toast.success(data.message)
+
          queryClient.setQueryData(['reservations', selectedDate], (old: Reservation[]) =>
             old.map((reservation) =>
                reservation.id === data.reservation.id ? data.reservation : reservation

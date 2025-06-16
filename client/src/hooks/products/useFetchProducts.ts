@@ -8,7 +8,7 @@ function useFetchProducts() {
       queryFn: async () => {
          //el retorno de la funcion es lo unico que se va a cachear
          const response = await getProducts()
-         return response.products // en este caso solo cacheamos en array de products y no 'message'
+         return response.data.products // en este caso solo cacheamos en array de products y no 'message'
       },
       staleTime: 20 * 60 * 1000, //20min
       retry: 1,

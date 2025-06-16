@@ -2,7 +2,7 @@ import { Filter, Loader2, Plus, Search, UserRoundSearch } from 'lucide-react'
 import { useFetchClients, useSearchFilter } from '@hooks'
 import { ClientCard, ClientDetails } from './components'
 import { useAppStore, useModalStore } from '@stores'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AppLayout } from '@shared'
 import {
    Badge,
@@ -33,20 +33,24 @@ const Clients = () => {
    const [sortBy, setSortBy] = useState<string>('name')
    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
 
-   const sortedClients = filteredClients?.sort((a, b) => {
-      if (sortBy === 'name') {
-         return sortOrder === 'asc'
-            ? a.name.localeCompare(b.name)
-            : b.name.localeCompare(a.name)
-      } else if (sortBy === 'lastVisit') {
-         return sortOrder === 'asc'
-            ? new Date(a.lastVisit || '').getTime() -
-                 new Date(b.lastVisit || '').getTime()
-            : new Date(b.lastVisit || '').getTime() -
-                 new Date(a.lastVisit || '').getTime()
-      }
-      return 0
-   })
+   const sortedClients = useMemo(
+      () =>
+         filteredClients?.sort((a, b) => {
+            if (sortBy === 'name') {
+               return sortOrder === 'asc'
+                  ? a.name.localeCompare(b.name)
+                  : b.name.localeCompare(a.name)
+            } else if (sortBy === 'lastVisit') {
+               return sortOrder === 'asc'
+                  ? new Date(a.lastVisit || '').getTime() -
+                       new Date(b.lastVisit || '').getTime()
+                  : new Date(b.lastVisit || '').getTime() -
+                       new Date(a.lastVisit || '').getTime()
+            }
+            return 0
+         }),
+      [filteredClients, sortBy, sortOrder]
+   )
 
    useEffect(() => {
       return dispatchSelectedClient(null)

@@ -7,14 +7,15 @@ import { useState } from 'react'
 
 function useDeleteReservation() {
    const selectedDate = useAppStore((state) => state.selectedDate)
-   const [isLoading, setIsLoading] = useState(false)
    const queryClient = useQueryClient()
+
+   const [isLoading, setIsLoading] = useState(false)
 
    const { mutateAsync: deleteReservationMutate } = useMutation({
       mutationFn: deleteReservation,
       onMutate: () => setIsLoading(true),
       onSettled: () => setIsLoading(false),
-      onSuccess: (data) => {
+      onSuccess: ({ data }) => {
          toast.success(data.message)
          queryClient.setQueryData(['reservations', selectedDate], (old: Reservation[]) =>
             old.filter((reservation) => reservation?.id !== data?.reservation.id)
