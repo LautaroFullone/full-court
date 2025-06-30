@@ -1,3 +1,4 @@
+import { formatDateToString } from '../lib/formatDateToString'
 import { reservationSchema } from '../models/reservation'
 import { ResponseEntity } from '../lib/ResponseEntity'
 import { Router, Request, Response } from 'express'
@@ -93,7 +94,7 @@ reservationsRouter.post('/', async (req: Request, res: Response<ResponseEntity>)
       const owner = await prisma.client.update({
          where: { id: clientId },
          data: {
-            lastVisit: new Date(),
+            lastVisit: formatDateToString(new Date()),
          },
       })
 
@@ -165,13 +166,6 @@ reservationsRouter.put('/:id', async (req: Request, res: Response<ResponseEntity
             ownerId: clientId,
          },
          include: { owner: true },
-      })
-
-      await prisma.client.update({
-         where: { id: clientId },
-         data: {
-            lastVisit: new Date(),
-         },
       })
 
       return res.send({

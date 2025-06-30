@@ -1,8 +1,9 @@
 import { Court, Reservation, ShiftType } from '@models'
 import { useAppStore, useModalStore } from '@stores'
 import { MoreHorizontal, Plus } from 'lucide-react'
-import { useStyles } from '@hooks'
+import { useCallback, useState } from 'react'
 import { formatStringToDate } from '@lib'
+import { useStyles } from '@hooks'
 import {
    Button,
    DropdownMenu,
@@ -21,15 +22,17 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
    const selectedDate = useAppStore((state) => state.selectedDate)
    const openModal = useModalStore((state) => state.modalActions.openModal)
 
+   const [openDropdown, setOpenDropdown] = useState(false)
+
    const { getReservationTypeClass } = useStyles()
 
-   function isPastDate(dateStr: string) {
+   const isPastDate = useCallback((dateStr: string) => {
       const today = new Date()
       const date = formatStringToDate(dateStr)
 
       today.setHours(0, 0, 0, 0)
       return date < today
-   }
+   }, [])
 
    if (reservation) {
       return (
@@ -51,7 +54,7 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
                </span>
             </div>
 
-            <DropdownMenu>
+            <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
                <DropdownMenuTrigger asChild>
                   <Button
                      className="absolute top-0 right-0 h-6 w-6"
@@ -70,9 +73,8 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
                   <DropdownMenuItem
                      className="cursor-pointer"
                      onSelect={() => {
-                        Promise.resolve().then(
-                           () => openModal('edit-reservation', { reservation }) //used to fix focus radix error
-                        )
+                        setOpenDropdown(false)
+                        openModal('edit-reservation', { reservation })
                      }}
                   >
                      Editar reserva
@@ -80,13 +82,12 @@ const Shift: React.FC<ShiftProps> = ({ court, shiftSlot, reservation }) => {
 
                   <DropdownMenuItem
                      onSelect={() => {
-                        Promise.resolve().then(() =>
-                           openModal('confirm-reservation', { reservation })
-                        )
+                        setOpenDropdown(false)
+                        openModal('confirm-reservation', { reservation })
                      }}
                      className="text-destructive hover:text-destructive cursor-pointer"
                   >
-                     Cancelar reserva
+                     {isPastDate(selectedDate) ? 'Eliminar' : 'Cancelar'} reserva
                   </DropdownMenuItem>
                </DropdownMenuContent>
             </DropdownMenu>

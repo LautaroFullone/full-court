@@ -31,7 +31,7 @@ interface AppStoreProps {
 }
 
 const INITIAL_STATE: Omit<AppStoreProps, 'appActions'> = {
-   theme: 'light',
+   theme: 'dark',
    selectedCategory: 'todos',
    selectedClient: null,
    selectedCourt: null,

@@ -20,7 +20,7 @@ model Client {
   phone         String
   email         String?
   reservations  Reservation[]
-  lastVisit     DateTime?      
+  lastVisit     String?      
   createdAt     DateTime  @default(now())
 }
 

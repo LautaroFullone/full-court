@@ -1,4 +1,4 @@
-import { Filter, Loader2, Plus, Search, UserRoundSearch } from 'lucide-react'
+import { Filter, Loader2, Plus, Search, UserRoundX } from 'lucide-react'
 import { useFetchClients, useSearchFilter } from '@hooks'
 import { ClientCard, ClientDetails } from './components'
 import { useAppStore, useModalStore } from '@stores'
@@ -169,7 +169,7 @@ const Clients = () => {
                ) : (
                   <div className="h-[60vh] flex items-center justify-center p-8 text-center">
                      <div className="max-w-sm">
-                        <UserRoundSearch className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-20" />
+                        <UserRoundX className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-20" />
 
                         <h3 className="text-lg font-medium mb-2">
                            No hay clientes registrados

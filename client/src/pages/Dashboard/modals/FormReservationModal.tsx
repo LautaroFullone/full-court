@@ -4,6 +4,7 @@ import { useAppStore, useModalStore } from '@stores'
 import { InputForm, SaveButton } from '@shared'
 import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { Loader2 } from 'lucide-react'
 import { COURTS } from '@config'
 import {
    Button,
@@ -75,6 +76,8 @@ const FormReservationModal = () => {
 
    const isEditMode = currentModal?.name === 'edit-reservation'
    const isLoading = isCreateLoading || isUpdateLoading
+   const existsClients = Boolean(clients.length > 0)
+   console.log('existsClients', existsClients)
 
    const filteredClientsWithOwner = useMemo(() => {
       if (isEditMode && selectedReservation) {
@@ -92,6 +95,8 @@ const FormReservationModal = () => {
       // eslint-disable-next-line
    }, [filteredClients, isEditMode, selectedReservation])
 
+   console.log('filteredClients', filteredClients)
+   console.log('filteredClientsWithOwner', filteredClientsWithOwner)
    const formatedDate = useMemo(
       () => formatDateToString(selectedDate, true),
       [selectedDate]
@@ -283,53 +288,84 @@ const FormReservationModal = () => {
                      id="search-client"
                      placeholder="Nombre, dni o celular"
                      value={searchTerm}
-                     disabled={isPending}
+                     disabled={isPending || !existsClients}
                      className="m-0"
                      onChange={(evt) => setSearchTerm(evt.target.value)}
                   />
                </div>
 
-               <div className="border rounded-md p-4 h-[150px] overflow-y-auto">
+               <div className="border rounded-md p-4 max-h-[150px] overflow-y-auto">
                   <input type="hidden" {...register('client.id')} />
+                  {isPending ? (
+                     <div className="flex items-center justify-center">
+                        <div className="flex flex-col items-center justify-center">
+                           <Loader2 className="h-8 w-8 animate-spin" />
 
-                  {filteredClientsWithOwner.map((client) => (
-                     <div
-                        key={client.id}
-                        className={`flex flex-col sm:flex-row sm:items-center
-                                   justify-between p-2 hover:bg-primary/5 rounded-md
-                                   cursor-pointer ${
-                                      watch('client.id') === client.id && 'bg-primary/5'
-                                   }`}
-                     >
-                        <div className="mb-2 sm:mb-0">
-                           <div className="font-medium">{client.name}</div>
-                           <div className="text-sm text-muted-foreground">
-                              {client.phone}
-                           </div>
+                           <p className="text-sm text-muted-foreground mt-2">
+                              Cargando clientes...
+                           </p>
                         </div>
-
-                        <Button
-                           size="default"
-                           className="w-full sm:w-auto"
-                           variant={
-                              watch('client.id') === client.id ? 'default' : 'outline'
-                           }
-                           onClick={() =>
-                              setValue(
-                                 'client.id',
-                                 watch('client.id') === client.id ? '' : client.id,
-                                 {
-                                    shouldValidate: true,
-                                 }
-                              )
-                           }
-                        >
-                           {watch('client.id') === client.id
-                              ? 'Seleccionado'
-                              : 'Seleccionar'}
-                        </Button>
                      </div>
-                  ))}
+                  ) : clients.length === 0 ? (
+                     <div className="flex items-center justify-center">
+                        <p className="text-sm text-muted-foreground text-center">
+                           No hay clientes registrados. <br />
+                           <span
+                              onClick={() => setValue('clientType', 'new-client')}
+                              className="text-primary underline cursor-pointer"
+                           >
+                              Agregá tu primer cliente
+                           </span>{' '}
+                           para gestionar sus reservas y datos de contacto.
+                        </p>
+                     </div>
+                  ) : filteredClientsWithOwner.length > 0 ? (
+                     filteredClientsWithOwner.map((client) => (
+                        <div
+                           key={client.id}
+                           className={`flex flex-col sm:flex-row sm:items-center
+                                    justify-between p-2 hover:bg-primary/5 rounded-md
+                                    cursor-pointer ${
+                                       watch('client.id') === client.id && 'bg-primary/5'
+                                    }`}
+                        >
+                           <div className="mb-2 sm:mb-0">
+                              <div className="font-medium">{client.name}</div>
+                              <div className="text-sm text-muted-foreground">
+                                 {client.phone}
+                              </div>
+                           </div>
+
+                           <Button
+                              size="default"
+                              className="w-full sm:w-auto"
+                              variant={
+                                 watch('client.id') === client.id ? 'default' : 'outline'
+                              }
+                              onClick={() =>
+                                 setValue(
+                                    'client.id',
+                                    watch('client.id') === client.id ? '' : client.id,
+                                    {
+                                       shouldValidate: true,
+                                    }
+                                 )
+                              }
+                           >
+                              {watch('client.id') === client.id
+                                 ? 'Seleccionado'
+                                 : 'Seleccionar'}
+                           </Button>
+                        </div>
+                     ))
+                  ) : (
+                     <div className="flex items-center justify-center">
+                        <p className="text-sm text-muted-foreground text-center">
+                           No hay clientes que coincidan con "{searchTerm}" <br />
+                           Intenta con otros términos de búsqueda.
+                        </p>
+                     </div>
+                  )}
                </div>
             </TabsContent>
          </Tabs>

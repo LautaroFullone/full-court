@@ -1,6 +1,6 @@
 import { Calendar, Edit, Mail, Phone, Trash2, UserRoundPen } from 'lucide-react'
 import { Avatar, AvatarFallback, Badge, Button } from '@shadcn'
-import { getClientInitials } from '@lib'
+import { formatDateToString, getClientInitials } from '@lib'
 import { useModalStore } from '@stores'
 import { Client } from '@models'
 
@@ -100,7 +100,11 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ client }) => {
 
                      <div>
                         <div className="text-sm text-muted-foreground">Última visita</div>
-                        <div>{client.lastVisit}</div>
+                        <div>
+                           {client.lastVisit
+                              ? formatDateToString(client.lastVisit)
+                              : 'Nunca'}
+                        </div>
                      </div>
                   </div>
                </div>
